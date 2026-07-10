@@ -16,7 +16,8 @@ window.__ADMIN_CONFIG = {
   siteUrl: menuUrl.startsWith('http') ? menuUrl : 'https://juststartedhere.github.io/cafe/menu/',
   dataPath: 'data/menu.json',
   imageDir: 'images',
-  imageBases: ['images/'],
+  // Upload sendiri ke images/ + boleh pakai foto contoh bersama showcase/menu-img/.
+  imageBases: ['images/', 'showcase/menu-img/'],
   imagePreviewBase: '../',
 };
 

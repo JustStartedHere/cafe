@@ -31,9 +31,9 @@ export function formatPrice(price, currency, lang) {
   }).format(price);
 }
 
-// Hanya path relatif ke `images/` atau `assets/` yang diterima. Tanpa skema, tanpa
-// traversal, tanpa `//host`.
-const SAFE_IMAGE = /^(images|assets)\/[A-Za-z0-9._/-]+$/;
+// Hanya path relatif ke `images/`, `assets/`, atau `showcase/` yang diterima. Tanpa skema,
+// tanpa traversal, tanpa `//host`. (`showcase/menu-img/` = foto contoh bersama.)
+const SAFE_IMAGE = /^(images|assets|showcase)\/[A-Za-z0-9._/-]+$/;
 
 /**
  * Path gambar item, dengan placeholder saat kosong atau tidak tepercaya.
