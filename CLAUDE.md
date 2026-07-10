@@ -8,23 +8,25 @@ Website statis untuk menampilkan menu cafe. Pelanggan scan QR di meja → langsu
 Requirement asli ada di `Product Discovery.md`. Rencana implementasi lengkap (sudah disetujui) ada di
 **`PLAN.md`** — baca itu sebelum mulai bekerja.
 
-Di atasnya kini ada pekerjaan kedua: **etalase 5 opsi desain untuk client**, rencananya di
+Di atasnya kini ada pekerjaan kedua: **etalase opsi desain untuk client**, rencananya di
 **`SHOWCASE_PLAN.md`**. Baca itu sebelum menyentuh `/` atau `showcase/`.
 
 ## Status saat ini
 
-Situs pelanggan selesai (Phase 1–8). **Showcase SELESAI (2026-07-11):** galeri di root + tema 1–4,
-masing-masing dengan `data.json` + admin tabel sendiri lewat satu mesin admin bersama.
+Situs pelanggan selesai (Phase 1–8). **Showcase SELESAI (2026-07-11):** galeri 7 kartu di root
+(cafe + tema 1–6), masing-masing tema dengan `data.json` + admin tabel sendiri lewat satu mesin
+admin bersama. Tema 5 & 6 ditambahkan setia ke referensi 3 & 4 (poster); tema 3 & 4 lama dibiarkan
+apa adanya atas keputusan user meski tak sepenuhnya menyerupai referensinya.
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Showcase 5 desain lengkap** (galeri + tema 1–4 + admin tabel) — `SHOWCASE_PLAN.md` |
+| Fase terakhir selesai | **Showcase 6 tema + galeri 7 kartu + admin tabel per tema** — `SHOWCASE_PLAN.md` |
 | Berikutnya | **Serah terima**: transfer repo ke akun client, ganti placeholder sosial, cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs pelanggan | `https://juststartedhere.github.io/cafe/menu/` ← **yang di-encode QR cafe** |
 | Galeri showcase | `https://juststartedhere.github.io/cafe/` — sementara, boleh dihapus nanti |
-| Tema showcase | `…/cafe/showcase/1..4/` (+ `…/showcase/N/admin/`) |
+| Tema showcase | `…/cafe/showcase/1..6/` (+ `…/showcase/N/admin/`) |
 | Blocker | — |
 
 Update tabel ini setiap kali sebuah fase selesai.
@@ -36,9 +38,14 @@ Update tabel ini setiap kali sebuah fase selesai.
   `admin/table-editor.js` (editor **tabel** + panel identitas/sosial). Modul keamanan lama dipakai apa adanya.
 - **`boot.js` per admin** — CSP `script-src 'self'` melarang `<script>` inline, jadi config di modul
   same-origin yang **dynamic-import** admin-core (static import di-hoist → jalan sebelum config di-set).
-- **Halaman tema** membaca `data.json` runtime: tema 1 pakai `showcase/lib.js`; tema 2–4 pakai engine
+- **Halaman tema** membaca `data.json` runtime: tema 1 pakai `showcase/lib.js`; tema 2–6 pakai engine
   bersama `showcase/menu-view.js`. Foto seed 31 hidangan di `showcase/menu-img/`. **CSP tema
   `connect-src 'self'`** (perlu fetch data sendiri).
+- **Tema 5 "Rimba Hijau"** (poster hijau, ref 3) & **tema 6 "Dolce Dessert"** (poster dwiwarna
+  krem+olive, ref 4) juga memakai engine bersama; kesetiaan visual ada di CSS + shell HTML masing-masing.
+  Tema 6 memakai `clip-path: url(#dolce-wave)` (`clipPathUnits="objectBoundingBox"`, ikut skala) untuk
+  lekuk pemisah krem/olive, dan menyembunyikan `.menu__title` secara visual (referensi tak punya judul
+  kolom kanan) sambil tetap menyediakannya untuk pembaca layar + `aria-labelledby` #tabs.
 - **Meta `cafe`** kini memuat `whatsapp/instagram/tiktok/maps` (divalidasi `normalizeCafe`: URL wajib
   `https`, WA disaring digit). Item punya `badge:'new'` selain `featured`. Halaman `/menu/` cafe kini
   punya footer sosial (`renderFooter`, href https-only).

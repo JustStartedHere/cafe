@@ -1,19 +1,26 @@
-# Showcase — 5 desain, tiap desain punya admin sendiri
+# Showcase — 6 desain, tiap desain punya admin sendiri
 
-Etalase untuk client: satu tautan, lima gaya tampilan, semuanya berfungsi penuh dan
-punya admin GitHub-token sendiri. Client mencoba, memilih, lalu desain yang tak dipakai
-boleh dihapus.
+Etalase untuk client: satu tautan, enam gaya tampilan (+ situs cafe siap pakai), semuanya
+berfungsi penuh dan punya admin GitHub-token sendiri. Client mencoba, memilih, lalu desain
+yang tak dipakai boleh dihapus.
+
+**Catatan revisi (2026-07-11):** tema 3 & 4 lama tak sepenuhnya menyerupai referensi 3 & 4
+(hanya menyerap warnanya). Atas keputusan user, keduanya **dibiarkan apa adanya**, dan
+**tema 5 & 6 ditambahkan** sebagai versi yang benar-benar setia ke referensi 3 (poster hijau)
+dan referensi 4 (poster dwiwarna krem+olive). Galeri root kini 7 kartu.
 
 ## Peta URL
 
 | URL | Isi |
 |---|---|
-| `/` | Galeri 5 opsi. **Sementara.** |
+| `/` | Galeri 7 kartu (cafe + tema 1–6). **Sementara.** |
 | `/menu/` + `/admin/` | Cafe "Kopi Senja" — situs pelanggan + admin. Data: `data/menu.json`. **QR menunjuk `/menu/`.** |
 | `/showcase/1/` + `/showcase/1/admin/` | Tema 1 "Klasik Fine Dining". Data: `showcase/1/data.json`. |
 | `/showcase/2/` + `/showcase/2/admin/` | Tema 2 "Savoria Kitchen". Data: `showcase/2/data.json`. |
-| `/showcase/3/` + `/showcase/3/admin/` | Tema 3 "Poster Hijau". Data: `showcase/3/data.json`. |
-| `/showcase/4/` + `/showcase/4/admin/` | Tema 4 "Dolce Dessert". Data: `showcase/4/data.json`. |
+| `/showcase/3/` + `/showcase/3/admin/` | Tema 3 "Verde — Poster Hijau" (lama, dipertahankan). Data: `showcase/3/data.json`. |
+| `/showcase/4/` + `/showcase/4/admin/` | Tema 4 "Dolce — Dessert" (lama, dipertahankan). Data: `showcase/4/data.json`. |
+| `/showcase/5/` + `/showcase/5/admin/` | Tema 5 "Rimba Hijau" — poster hijau **setia ref 3**. Data: `showcase/5/data.json`. |
+| `/showcase/6/` + `/showcase/6/admin/` | Tema 6 "Dolce Dessert" — poster krem+olive **setia ref 4**. Data: `showcase/6/data.json`. |
 
 ## Arsitektur (keputusan 2026-07-11)
 

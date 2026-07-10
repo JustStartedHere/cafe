@@ -186,12 +186,13 @@ Dua tempat yang **tidak** ikut berubah otomatis dan harus disunting manual di re
 - `manifest.webmanifest` — nama yang muncul saat menu dipasang ke layar utama HP.
 - `menu/index.html` — `<meta name="description">` halaman pelanggan.
 
-## Etalase 5 desain (sementara)
+## Etalase desain (sementara)
 
-Selama masa memilih, root situs (<https://juststartedhere.github.io/cafe/>) menampilkan **galeri 5 gaya
-tampilan**. Empat di antaranya ada di `/showcase/1..4/`, masing-masing punya admin sendiri di
-`/showcase/N/admin/` dengan cara login yang **sama** (token GitHub yang sama). Setelah client memilih satu
-desain, sisanya boleh dihapus — QR menunjuk `/menu/`, jadi tidak terpengaruh.
+Selama masa memilih, root situs (<https://juststartedhere.github.io/cafe/>) menampilkan **galeri 7 kartu**:
+situs cafe yang siap pakai (`/menu/`) plus **enam gaya tampilan** di `/showcase/1..6/`, masing-masing punya
+admin sendiri di `/showcase/N/admin/` dengan cara login yang **sama** (token GitHub yang sama). Tema 5 & 6
+adalah poster yang setia ke referensi 3 & 4. Setelah client memilih satu desain, sisanya boleh dihapus —
+QR menunjuk `/menu/`, jadi tidak terpengaruh.
 
 ---
 
