@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 0** — skeleton + Pages aktif |
-| Fase berikutnya | **Phase 1** — data + render publik |
+| Fase terakhir selesai | **Phase 1** — data + render publik |
+| Fase berikutnya | **Phase 2** — design system, i18n + toggle, chip kategori & scroll-spy |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -110,6 +110,14 @@ Ini bukan preferensi gaya; masing-masing menutup satu kelas bug atau kerentanan 
 - Rate limit REST authenticated: 5.000 request/jam — jauh di atas kebutuhan.
 - GitHub Pages free: repo publik, cap 1 GB situs, 100 GB/bulan bandwidth, 10 build/jam. Semuanya *soft limit*.
 - Semua path di HTML/JS harus **relatif**, agar situs jalan baik di `user.github.io/cafe/` maupun di root.
+
+## Deviasi dari `PLAN.md` (disengaja)
+
+- **`assets/img/placeholder.svg`, bukan `.webp`.** Placeholder adalah grafis datar: SVG lebih kecil, tajam di semua
+  DPI, tanpa blob biner di repo. (Mesin dev juga tidak punya encoder WebP.) Foto item tetap WebP lewat pipeline admin.
+- **String statis "Signature"/"Habis" masih inline di `render.js`.** Pindah ke `i18n.js` saat Phase 2, bersama toggle
+  bahasa. Teks empty/error di `index.html` juga masih Indonesia saja — Phase 2 yang membilingualkannya.
+- **`data/menu.json` belum punya foto asli** (`image: ""` → placeholder). Foto masuk lewat admin di Phase 6.
 
 ## Gaya kerja di project ini
 
