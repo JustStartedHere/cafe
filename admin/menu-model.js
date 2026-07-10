@@ -141,6 +141,48 @@ export function normalizeCategory(draft, menu, { existingId = null } = {}) {
   return { id, name, order: Number.isFinite(draft.order) ? draft.order : 0 };
 }
 
+/**
+ * Meta usaha: brand + kontak sosial. Dipakai halaman tema untuk tautan IG/TikTok/Maps/WA
+ * dan judul. Nama wajib; URL sosial wajib https (repo publik — jangan biarkan `javascript:`
+ * atau `//host` menyelinap ke atribut href). Nomor WA disaring jadi digit saja.
+ */
+export function normalizeCafe(draft, prev = {}) {
+  const issues = [];
+  const name = typeof draft.name === 'string' ? draft.name.trim() : (prev.name ?? '');
+  if (name === '') issues.push('Nama usaha wajib diisi.');
+
+  const tagline = normalizeBilingual(draft.tagline ?? prev.tagline, 'Tagline', issues, { required: false });
+  const whatsapp = String(draft.whatsapp ?? prev.whatsapp ?? '').replace(/[^0-9]/g, '');
+
+  const httpsUrl = (value, fallback, label) => {
+    const raw = value === undefined ? fallback : value;
+    const s = typeof raw === 'string' ? raw.trim() : '';
+    if (s === '') return '';
+    if (!/^https:\/\/[^\s]+$/i.test(s)) {
+      issues.push(`${label} harus berupa tautan yang diawali https://`);
+      return '';
+    }
+    return s;
+  };
+  const instagram = httpsUrl(draft.instagram, prev.instagram, 'Instagram');
+  const tiktok = httpsUrl(draft.tiktok, prev.tiktok, 'TikTok');
+  const maps = httpsUrl(draft.maps, prev.maps, 'Google Maps');
+
+  if (issues.length) throw new InvalidMenuError(issues);
+
+  return {
+    ...prev,
+    name,
+    tagline,
+    currency: prev.currency || 'IDR',
+    logo: typeof prev.logo === 'string' ? prev.logo : '',
+    whatsapp,
+    instagram,
+    tiktok,
+    maps,
+  };
+}
+
 /** Pemeriksaan bentuk seluruh menu sebelum ditulis. Jaring pengaman terakhir. */
 export function assertValidMenu(menu) {
   const issues = [];
@@ -256,6 +298,13 @@ export const mutators = {
     const item = next.items.find((i) => i.id === id);
     if (!item) throw new InvalidMenuError(['Item sudah dihapus di tempat lain.']);
     item[key] = value;
+    return finish(next);
+  },
+
+  /** Perbarui brand + kontak sosial (meta `cafe`). Divalidasi di normalizeCafe. */
+  updateCafe: (fields) => (menu) => {
+    const next = clone(menu);
+    next.cafe = normalizeCafe(fields, next.cafe ?? {});
     return finish(next);
   },
 

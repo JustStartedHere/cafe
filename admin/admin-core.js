@@ -1,14 +1,30 @@
-// Orkestrasi admin: auth, sesi, idle timeout. CRUD menyusul di Phase 5.
+// Orkestrasi admin bersama: auth, sesi, idle timeout, QR. Satu mesin untuk cafe +
+// semua tema showcase; tiap halaman admin men-set `window.__ADMIN_CONFIG` sebelum
+// modul ini dimuat.
 //
-// Tidak ada `console.*` di file ini, dan tidak akan pernah ada. Satu `console.log(err)`
-// yang kebetulan men-serialize objek request sudah cukup untuk menaruh token di log browser.
+// Tidak ada `console.*` di file ini, dan tidak akan pernah ada. Satu console.log yang
+// men-serialize objek request sudah cukup untuk menaruh token di log browser.
 
-import { OWNER, REPO, BRANCH, IDLE_MINUTES, TOKEN_URL, SITE_URL } from './config.js';
 import { createGitHubClient, AuthError, RateLimitError, NotFoundError, NetworkError } from './github-api.js';
 import * as tokenStore from './token-store.js';
 import { createMenuStore } from './menu-store.js';
-import { createEditor } from './editor.js';
+import { createTableEditor } from './table-editor.js';
+import { configureModel } from './menu-model.js';
 import { toSvg, toSvgBlob, toPngBlob, download, QrError } from './qr.js';
+
+const CONFIG = window.__ADMIN_CONFIG ?? {};
+const OWNER = CONFIG.owner;
+const REPO = CONFIG.repo;
+const BRANCH = CONFIG.branch ?? 'main';
+const IDLE_MINUTES = CONFIG.idleMinutes ?? 20;
+const TOKEN_URL = CONFIG.tokenUrl ?? '';
+const SITE_URL = CONFIG.siteUrl ?? '';
+const DATA_PATH = CONFIG.dataPath ?? 'data/menu.json';
+const IMAGE_DIR = CONFIG.imageDir ?? 'images';
+const IMAGE_PREVIEW_BASE = CONFIG.imagePreviewBase ?? '../';
+
+// Batasi folder gambar yang boleh ditulis/divalidasi model untuk desain ini.
+configureModel({ imageBases: CONFIG.imageBases ?? [IMAGE_DIR] });
 
 const el = (id) => document.getElementById(id);
 const view = { auth: el('auth'), app: el('app') };
@@ -21,7 +37,6 @@ const errorBox = el('auth-error');
 const submitButton = el('submit');
 const logoutButton = el('logout');
 
-/** Klien aktif. Hanya hidup di memori — tidak pernah ditulis ke storage. */
 let client = null;
 let editor = null;
 let idleTimer = null;
@@ -42,7 +57,7 @@ function showApp(access) {
   view.app.hidden = false;
   logoutButton.hidden = false;
   setError('');
-  tokenInput.value = ''; // token sudah dipegang klien; jangan tinggalkan di DOM
+  tokenInput.value = '';
   el('repo-label').textContent = `${access.fullName} · ${BRANCH}`;
 }
 
@@ -56,10 +71,6 @@ function setBusy(busy) {
   submitButton.textContent = busy ? 'Memeriksa…' : 'Masuk';
 }
 
-/**
- * Terjemahkan error wrapper jadi kalimat yang bisa ditindaklanjuti owner.
- * `AuthError` juga menyapu storage: token itu sudah terbukti tidak berguna.
- */
 function explain(error) {
   if (error instanceof AuthError) {
     tokenStore.clear();
@@ -83,10 +94,6 @@ function explain(error) {
 
 /* ------------------------------------------------------------------- idle */
 
-/**
- * Sesi ditutup sendiri setelah diam. Timer di-reset oleh aktivitas nyata saja —
- * `mousemove` sengaja tidak dipakai agar kursor yang tersenggol tidak memperpanjang sesi.
- */
 const ACTIVITY = ['pointerdown', 'keydown', 'scroll', 'focus'];
 
 function resetIdleTimer() {
@@ -107,12 +114,6 @@ function stopIdleWatch() {
 
 /* ------------------------------------------------------------------- auth */
 
-/**
- * Muat menu.json lewat API — bukan dari salinan publik, yang bisa basi hingga 10 menit.
- * Kegagalan di sini TIDAK membatalkan login: token sudah terbukti sah. Owner cukup
- * menekan "Muat ulang". Kalau ini digabung ke signIn, `data/menu.json` yang hilang
- * akan mengunci admin sepenuhnya.
- */
 async function loadMenu(store) {
   editor.setStatus('Memuat menu…');
   try {
@@ -120,27 +121,24 @@ async function loadMenu(store) {
     editor.setStatus('');
     editor.render();
   } catch (error) {
-    if (error instanceof AuthError) {
-      logout(explain(error));
-      return;
-    }
+    if (error instanceof AuthError) { logout(explain(error)); return; }
     editor.showLoadError(error, () => loadMenu(store));
   }
 }
 
-/** Satu-satunya jalan masuk ke state "terautentikasi". */
 async function signIn(token, { remember = false, persist = true } = {}) {
   const candidate = createGitHubClient({ owner: OWNER, repo: REPO, token, branch: BRANCH });
-  const access = await candidate.verifyAccess(); // melempar kalau token tidak sah
+  const access = await candidate.verifyAccess();
 
   client = candidate;
   if (persist) tokenStore.save(token, remember);
 
-  const store = createMenuStore(candidate);
-  editor = createEditor({
+  const store = createMenuStore(candidate, { path: DATA_PATH });
+  editor = createTableEditor({
     store,
-    client: candidate, // editor menulis gambar langsung; store hanya mengurus menu.json
-    // Token dicabut di tengah sesi → keluarkan owner, jangan biarkan tombol mati diam-diam.
+    client: candidate,
+    imageDir: IMAGE_DIR,
+    imagePreviewBase: IMAGE_PREVIEW_BASE,
     onAuthError: (error) => logout(explain(error)),
   });
 
@@ -165,14 +163,9 @@ const qrUrl = el('qr-url');
 const qrPreview = el('qr-preview');
 const qrStatus = el('qr-status');
 
-/** Nama file yang ramah: kopi-senja-qr.svg */
 const qrFilename = (extension) => {
   const host = (() => {
-    try {
-      return new URL(qrUrl.value).hostname.split('.')[0];
-    } catch {
-      return 'menu';
-    }
+    try { return new URL(qrUrl.value).hostname.split('.')[0]; } catch { return 'menu'; }
   })();
   return `${host}-qr.${extension}`;
 };
@@ -215,11 +208,7 @@ rememberBox.addEventListener('change', () => {
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const token = tokenInput.value.trim();
-  if (token === '') {
-    setError('Tempelkan token terlebih dahulu.');
-    return;
-  }
-
+  if (token === '') { setError('Tempelkan token terlebih dahulu.'); return; }
   setBusy(true);
   setError('');
   try {
@@ -239,13 +228,11 @@ el('token-link').href = TOKEN_URL;
 el('idle-minutes').textContent = String(IDLE_MINUTES);
 el('repo-label').textContent = '';
 
-// Token tersimpan harus divalidasi ulang: bisa saja sudah dicabut sejak terakhir dipakai.
 const stored = tokenStore.load();
 if (stored) {
   rememberBox.checked = tokenStore.isRemembered();
   rememberWarning.hidden = !rememberBox.checked;
   try {
-    // `persist: false` — token sudah tersimpan; jangan tulis ulang dan jangan pindah storage.
     await signIn(stored, { persist: false });
   } catch (error) {
     showAuth(explain(error));

@@ -106,6 +106,43 @@ export function renderHeader(cafe, lang) {
   if (name) document.title = name;
 }
 
+const httpsOk = (v) => (typeof v === 'string' && /^https:\/\//i.test(v.trim()) ? v.trim() : '');
+
+/**
+ * Footer sosial. href diisi dari meta `cafe` yang bisa divandal (repo publik), jadi
+ * hanya URL https yang diterima — bukan `javascript:` atau `//host`. Tautan tanpa URL
+ * disembunyikan; footer disembunyikan bila tak ada satu pun kontak.
+ */
+export function renderFooter(cafe = {}, lang) {
+  const footer = document.getElementById('site-footer');
+  if (!footer) return;
+
+  let any = false;
+  const setLink = (id, url) => {
+    const a = document.getElementById(id);
+    if (!a) return;
+    if (url) { a.href = url; a.hidden = false; any = true; }
+    else { a.hidden = true; a.removeAttribute('href'); }
+  };
+  setLink('foot-instagram', httpsOk(cafe.instagram));
+  setLink('foot-tiktok', httpsOk(cafe.tiktok));
+  setLink('foot-maps', httpsOk(cafe.maps));
+
+  const whatsapp = String(cafe.whatsapp ?? '').replace(/[^0-9]/g, '');
+  const wa = document.getElementById('foot-wa');
+  if (wa) {
+    if (whatsapp) {
+      const msg = (lang === 'en' ? 'Hello, I would like to ask about ' : 'Halo, saya ingin bertanya tentang ') + (cafe.name ?? '');
+      wa.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(msg.trim())}`;
+      wa.hidden = false;
+      any = true;
+    } else {
+      wa.hidden = true;
+    }
+  }
+  footer.hidden = !any;
+}
+
 /** Chip kategori. Anchor sungguhan, jadi tetap bisa dipakai tanpa JS scroll-spy. */
 function renderChips(root, groups, lang) {
   clear(root); // membuang chip skeleton dari shell HTML

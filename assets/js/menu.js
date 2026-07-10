@@ -1,7 +1,7 @@
 // Entry point halaman publik: fetch menu.json, kelola state UI, bahasa, scroll-spy.
 
 import { getLang, setLang, applyStatic, LANGS } from './i18n.js';
-import { renderMenu, renderHeader } from './render.js';
+import { renderMenu, renderHeader, renderFooter } from './render.js';
 
 // Relatif terhadap modul ini (`assets/js/`), bukan terhadap halaman pemanggil — halaman
 // pelanggan ada di `/menu/`, sementara datanya tetap di akar situs.
@@ -167,6 +167,7 @@ function paint() {
   if (!menuData) return;
 
   renderHeader(menuData.cafe, lang);
+  renderFooter(menuData.cafe, lang);
   const { count, sectionIds } = renderMenu(view.menu, chipsRoot, menuData, lang);
   show(count > 0 ? 'menu' : 'empty');
 

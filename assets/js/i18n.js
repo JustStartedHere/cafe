@@ -17,6 +17,11 @@ const STRINGS = {
     langId: 'Bahasa Indonesia',
     langEn: 'Bahasa Inggris',
     categories: 'Kategori',
+    follow: 'Ikuti & kunjungi kami',
+    waContact: 'Chat WhatsApp',
+    socialInstagram: 'Instagram kami',
+    socialMaps: 'Lokasi di Google Maps',
+    socialTiktok: 'TikTok kami',
   },
   en: {
     signature: 'Signature',
@@ -30,6 +35,11 @@ const STRINGS = {
     langId: 'Indonesian',
     langEn: 'English',
     categories: 'Categories',
+    follow: 'Follow & visit us',
+    waContact: 'Chat on WhatsApp',
+    socialInstagram: 'Our Instagram',
+    socialMaps: 'Location on Google Maps',
+    socialTiktok: 'Our TikTok',
   },
 };
 

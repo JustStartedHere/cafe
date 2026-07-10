@@ -2,7 +2,7 @@
    menanggung byte-nya (budget publik 30 KB gzip). Token warna diwarisi dari styles.css. */
 
 .admin__main {
-  max-width: 40rem;
+  max-width: 48rem;
 }
 
 .header__inner--admin .header__top {
@@ -423,7 +423,125 @@
   color: var(--bg);
 }
 
+.tag--new {
+  background: #1e6b52;
+  color: #fff;
+}
+
 .issues {
   margin: 0;
   padding-left: 1.125rem;
+}
+
+/* ------------------------------------------------------------ tabel item */
+
+/* Tabel bisa lebih lebar dari panel di layar sempit → gulung mendatar,
+   jangan memaksa halaman melebar. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.menu-table th,
+.menu-table td {
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  vertical-align: middle;
+}
+
+.menu-table thead th {
+  font-size: 0.875rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+
+.trow {
+  border-top: 1px solid var(--border);
+}
+
+.trow--sold .trow__name-id {
+  color: var(--muted);
+}
+
+.trow-group th {
+  padding-top: 1.125rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.trow__photo {
+  width: 60px;
+}
+
+.thumb {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--skeleton);
+}
+
+.thumb--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.trow__name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.trow__name-id {
+  font-weight: 600;
+}
+
+.trow__sub {
+  margin-top: 0.125rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.trow__price {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pill--on {
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  color: var(--muted);
+}
+
+.pill--sold {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.trow__actions {
+  white-space: nowrap;
 }

@@ -1,7 +1,16 @@
-// UI editor menu. Semua teks masuk lewat `textContent`; tidak ada `innerHTML`.
+// Editor menu berbasis TABEL — dipakai bersama cafe + semua tema showcase.
+// Semua teks lewat `textContent`; tidak ada `innerHTML`.
 //
-// Aturan penting soal form: saat penyimpanan gagal karena jaringan, isi form TIDAK
-// dikosongkan. Ketikan owner tidak boleh hilang gara-gara sinyal putus.
+// Menyimpan seluruh invarian yang sudah teruji dari editor lama:
+//   - URUTAN WAJIB: unggah gambar dulu, tulis menu.json kemudian.
+//   - Nama file gambar unik per upload → PUT selalu create, tak pernah 409.
+//   - Mutator `(menu)=>menu`; store yang retry saat 409 (re-apply di isi terbaru).
+//   - Gagal tulis JSON setelah gambar naik → foto yatim (murah), retry ulangi langkah JSON.
+//   - Isi form TIDAK dikosongkan saat gagal jaringan.
+//
+// Konfigurasi per desain lewat opsi: folder upload gambar, prefiks pratinjau, dan
+// folder yang disapu saat membersihkan foto yatim (hanya folder upload sendiri —
+// foto seed bersama tidak pernah ikut terhapus).
 
 import { mutators, InvalidMenuError, newItemId } from './menu-model.js';
 import { StaleMenuError } from './menu-store.js';
@@ -34,46 +43,44 @@ const clear = (n) => {
   while (n.firstChild) n.removeChild(n.firstChild);
 };
 
-export function createEditor({ store, client, onAuthError }) {
+/**
+ * @param {object} opts
+ * @param {object} opts.store        menu-store
+ * @param {object} opts.client       github client (menulis gambar langsung)
+ * @param {Function} opts.onAuthError dipanggil saat token dicabut di tengah sesi
+ * @param {string} [opts.imageDir]        folder upload foto (mis. 'images' | 'showcase/2/img')
+ * @param {string} [opts.imagePreviewBase] prefiks agar path root-relative bisa dipratinjau
+ *                                          dari halaman admin ini (mis. '../' | '../../../')
+ */
+export function createTableEditor({ store, client, onAuthError, imageDir = 'images', imagePreviewBase = '../' }) {
   const statusBox = el('status');
   const errorBox = el('editor-error');
-  const itemList = el('item-list');
+  const tableBody = el('item-rows');
   const categoryList = el('category-list');
   const itemForm = el('item-form');
   const categoryForm = el('category-form');
+  const cafeForm = el('cafe-form');
+  const cafeStatus = el('cafe-status');
   const photoInput = el('f-photo');
   const photoPreview = el('f-preview');
   const photoNote = el('f-photo-note');
   const photoClear = el('f-photo-clear');
 
-  /** Item yang sedang diedit; null berarti form dalam mode "tambah". */
   let editingId = null;
   let busy = false;
 
-  /**
-   * State foto untuk form yang sedang terbuka.
-   * - `formItemId` dikunci saat form dibuka: nama file gambar memuat itemId, jadi id
-   *   harus pasti sebelum gambar diunggah. Juga membuat retry idempoten.
-   * - `uploadedPath` diisi setelah gambar BERHASIL diunggah. Kalau penulisan menu.json
-   *   lalu gagal, retry hanya mengulang langkah JSON — gambar tidak diunggah dua kali.
-   */
+  // State foto form terbuka (lihat editor lama untuk rasional lengkap).
   let formItemId = null;
-  let pendingImage = null; // hasil compressImage, belum diunggah
-  let uploadedPath = null; // sudah di GitHub, menunggu menu.json
+  let pendingImage = null;
+  let uploadedPath = null;
   let removePhoto = false;
 
   /* ---------------------------------------------------------------- status */
 
-  const setStatus = (text) => {
-    statusBox.textContent = text;
-  };
+  const setStatus = (text) => { statusBox.textContent = text; };
 
   function setError(error) {
-    if (!error) {
-      errorBox.hidden = true;
-      clear(errorBox);
-      return;
-    }
+    if (!error) { errorBox.hidden = true; clear(errorBox); return; }
     clear(errorBox);
     const issues = error instanceof InvalidMenuError ? error.issues : [describe(error)];
     if (issues.length === 1) {
@@ -88,7 +95,7 @@ export function createEditor({ store, client, onAuthError }) {
 
   function describe(error) {
     if (error instanceof ImageError) return error.message;
-    if (error instanceof NotFoundError) return 'File data/menu.json tidak ditemukan di repositori.';
+    if (error instanceof NotFoundError) return 'File data menu tidak ditemukan di repositori.';
     if (error instanceof RateLimitError) {
       if (error.retryAfter) return `Terlalu banyak permintaan. Coba lagi dalam ${error.retryAfter} detik.`;
       const at = error.resetAt?.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -102,55 +109,35 @@ export function createEditor({ store, client, onAuthError }) {
 
   /* ------------------------------------------------------------------ save */
 
-  /** Satu operasi tulis pada satu waktu. Unggah foto + commit JSON berbagi kunci ini. */
   async function exclusive(fn) {
     if (busy) return false;
     busy = true;
-    try {
-      return await fn();
-    } finally {
-      busy = false;
-    }
+    try { return await fn(); } finally { busy = false; }
   }
 
-  /**
-   * Menulis menu.json. `mutate` adalah fungsi `(menu) => menu` — store yang mengurus
-   * retry saat 409, dengan menerapkan ulang fungsi ini di atas isi terbaru.
-   */
-  async function writeMenu(mutate, message, { onSuccess } = {}) {
+  async function writeMenu(mutate, message, { onSuccess, statusEl = statusBox } = {}) {
     setError(null);
-    setStatus('Menyimpan…');
-
+    statusEl.textContent = 'Menyimpan…';
     try {
       const { commit: sha, recovered } = await store.save(mutate, message);
-      setStatus(
-        recovered
-          ? `Tersimpan (menu sempat berubah di tempat lain, perubahan Anda digabungkan) · ${sha.slice(0, 7)}`
-          : `Tersimpan · ${sha.slice(0, 7)}`,
-      );
+      statusEl.textContent = recovered
+        ? `Tersimpan (digabung dengan perubahan lain) · ${sha.slice(0, 7)}`
+        : `Tersimpan · ${sha.slice(0, 7)}`;
       onSuccess?.();
       render();
       return true;
     } catch (error) {
-      setStatus('');
-      if (error instanceof AuthError) {
-        onAuthError(error);
-        return false;
-      }
-      if (error instanceof StaleMenuError) {
-        setError(error);
-        render(); // store sudah memuat isi terbaru
-        return false;
-      }
-      setError(error); // NetworkError: form sengaja tidak disentuh
+      statusEl.textContent = '';
+      if (error instanceof AuthError) { onAuthError(error); return false; }
+      if (error instanceof StaleMenuError) { setError(error); render(); return false; }
+      setError(error);
       return false;
     }
   }
 
-  /** Untuk aksi baris (toggle, urutkan, hapus) yang tidak menyentuh foto. */
   const commit = (mutate, message, options) => exclusive(() => writeMenu(mutate, message, options));
 
-  /* ------------------------------------------------------------------ form */
+  /* ------------------------------------------------------------ form item */
 
   const formFields = () => ({
     categoryId: el('f-category').value,
@@ -159,11 +146,11 @@ export function createEditor({ store, client, onAuthError }) {
     price: el('f-price').value === '' ? Number.NaN : Number(el('f-price').value),
     available: el('f-available').checked,
     featured: el('f-featured').checked,
+    badge: el('f-new').checked ? 'new' : '',
   });
 
   /* ----------------------------------------------------------------- foto */
 
-  /** URL blob preview harus dicabut, kalau tidak bocor selama sesi admin. */
   function releasePreview() {
     if (pendingImage?.previewUrl) URL.revokeObjectURL(pendingImage.previewUrl);
   }
@@ -182,8 +169,7 @@ export function createEditor({ store, client, onAuthError }) {
 
   function showExistingPhoto(item) {
     if (!item?.image) return;
-    // Path di menu.json relatif terhadap root situs; halaman ini ada di /admin/.
-    photoPreview.src = `../${item.image}`;
+    photoPreview.src = imagePreviewBase + item.image;
     photoPreview.alt = `Foto ${item.name.id}`;
     photoPreview.hidden = false;
     photoClear.hidden = false;
@@ -193,14 +179,13 @@ export function createEditor({ store, client, onAuthError }) {
   photoInput.addEventListener('change', async () => {
     const file = photoInput.files?.[0];
     if (!file) return;
-
     setError(null);
     photoNote.textContent = 'Memproses foto…';
     try {
       releasePreview();
       const result = await compressImage(file);
       pendingImage = result;
-      uploadedPath = null; // foto berganti → unggahan lama (kalau ada) tidak relevan
+      uploadedPath = null;
       removePhoto = false;
       photoPreview.src = result.previewUrl;
       photoPreview.alt = 'Pratinjau foto';
@@ -227,20 +212,13 @@ export function createEditor({ store, client, onAuthError }) {
     photoNote.textContent = 'Foto akan dihapus dari item ini saat disimpan.';
   });
 
-  /**
-   * Tentukan nilai `image` untuk menu.json, mengunggah foto lebih dulu bila perlu.
-   *
-   * URUTAN WAJIB: gambar dulu, menu.json kemudian. Kebalikannya membuat menu.json
-   * menunjuk file yang belum ada, dan halaman pelanggan menampilkan gambar rusak.
-   */
+  /** URUTAN WAJIB: gambar dulu, menu.json kemudian. */
   async function resolveImagePath(existing, label) {
-    if (uploadedPath) return uploadedPath; // sudah terunggah di percobaan sebelumnya
+    if (uploadedPath) return uploadedPath;
     if (removePhoto) return '';
     if (!pendingImage) return existing ?? '';
-
     setStatus('Mengunggah foto…');
-    const path = imagePath(formItemId);
-    // Nama unik → ini selalu operasi *create*: tanpa sha, tak pernah 409.
+    const path = imagePath(formItemId, imageDir);
     await client.putFile({ path, content: pendingImage.bytes, message: `Unggah foto ${label}` });
     uploadedPath = path;
     return path;
@@ -255,6 +233,7 @@ export function createEditor({ store, client, onAuthError }) {
     el('f-price').value = item ? String(item.price) : '';
     el('f-available').checked = item ? item.available !== false : true;
     el('f-featured').checked = item ? item.featured === true : false;
+    el('f-new').checked = item ? item.badge === 'new' : false;
   }
 
   function openForm(item = null) {
@@ -263,7 +242,6 @@ export function createEditor({ store, client, onAuthError }) {
       return;
     }
     editingId = item?.id ?? null;
-    // Id dikunci sekarang, bukan saat menyimpan: nama file foto memuatnya.
     formItemId = item?.id ?? newItemId(new Set(store.menu.items.map((i) => i.id)));
     el('item-form-title').textContent = item ? `Edit: ${item.name.id}` : 'Item baru';
     renderCategoryOptions();
@@ -272,6 +250,7 @@ export function createEditor({ store, client, onAuthError }) {
     showExistingPhoto(item);
     itemForm.hidden = false;
     el('f-name-id').focus();
+    itemForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function closeForm() {
@@ -280,6 +259,19 @@ export function createEditor({ store, client, onAuthError }) {
     formItemId = null;
     resetPhotoState();
     itemForm.reset();
+  }
+
+  /* -------------------------------------------------------------- branding */
+
+  function fillCafeForm() {
+    const cafe = store.menu.cafe ?? {};
+    el('cf-name').value = cafe.name ?? '';
+    el('cf-tag-id').value = cafe.tagline?.id ?? '';
+    el('cf-tag-en').value = cafe.tagline?.en ?? '';
+    el('cf-whatsapp').value = cafe.whatsapp ?? '';
+    el('cf-instagram').value = cafe.instagram ?? '';
+    el('cf-tiktok').value = cafe.tiktok ?? '';
+    el('cf-maps').value = cafe.maps ?? '';
   }
 
   /* ---------------------------------------------------------------- render */
@@ -297,51 +289,78 @@ export function createEditor({ store, client, onAuthError }) {
   }
 
   function renderItemRow(item, index, total) {
-    const row = node('li', 'row');
+    const tr = node('tr', 'trow');
+    if (item.available === false) tr.classList.add('trow--sold');
 
-    const main = node('div', 'row__main');
-    const title = node('div', 'row__title');
-    title.append(node('span', 'row__name', item.name.id));
-    if (item.featured) title.append(node('span', 'tag tag--featured', 'Signature'));
-    if (item.available === false) title.append(node('span', 'tag tag--sold', 'Habis'));
-    main.append(title);
+    // Foto
+    const cPhoto = node('td', 'trow__photo');
+    if (item.image) {
+      const img = node('img', 'thumb');
+      img.src = imagePreviewBase + item.image;
+      img.alt = '';
+      img.width = 48;
+      img.height = 48;
+      img.loading = 'lazy';
+      cPhoto.append(img);
+    } else {
+      cPhoto.append(node('span', 'thumb thumb--empty', '—'));
+    }
+    tr.append(cPhoto);
 
-    const meta = [rupiah.format(item.price)];
-    if (item.name.en) meta.push(item.name.en);
-    main.append(node('div', 'row__meta', meta.join(' · ')));
-    row.append(main);
+    // Produk (nama id + en)
+    const cName = node('td');
+    const nameWrap = node('div', 'trow__name');
+    nameWrap.append(node('span', 'trow__name-id', item.name.id));
+    if (item.featured) nameWrap.append(node('span', 'tag tag--featured', 'Signature'));
+    if (item.badge === 'new') nameWrap.append(node('span', 'tag tag--new', 'Baru'));
+    cName.append(nameWrap);
+    if (item.name.en) cName.append(node('div', 'trow__sub', item.name.en));
+    tr.append(cName);
 
-    const actions = node('div', 'row__actions');
+    // Harga
+    const cPrice = node('td', 'trow__price', rupiah.format(item.price));
+    tr.append(cPrice);
+
+    // Status
+    const cStatus = node('td');
+    cStatus.append(
+      node('span', item.available === false ? 'pill pill--sold' : 'pill pill--on',
+        item.available === false ? 'Habis' : 'Tersedia'),
+    );
+    tr.append(cStatus);
+
+    // Aksi
+    const cActions = node('td', 'trow__actions');
     const up = button('↑', { action: 'item-up', id: item.id, title: 'Naikkan urutan' });
     const down = button('↓', { action: 'item-down', id: item.id, title: 'Turunkan urutan' });
     up.disabled = index === 0;
     down.disabled = index === total - 1;
-    actions.append(up, down);
-    actions.append(
-      button(item.available === false ? 'Adakan' : 'Habiskan', {
-        action: 'item-available', id: item.id, className: 'btn-text',
-        title: item.available === false ? 'Tandai tersedia' : 'Tandai habis',
-      }),
-    );
-    actions.append(
-      button(item.featured ? 'Batal Signature' : 'Signature', {
-        action: 'item-featured', id: item.id, className: 'btn-text',
-        title: item.featured ? 'Hapus badge Signature' : 'Tandai sebagai Signature',
-      }),
-    );
-    actions.append(button('Edit', { action: 'item-edit', id: item.id, className: 'btn-text' }));
-    actions.append(button('Hapus', { action: 'item-delete', id: item.id, className: 'btn-text btn-text--danger' }));
-    row.append(actions);
+    cActions.append(up, down);
+    cActions.append(button(item.available === false ? 'Adakan' : 'Habiskan', {
+      action: 'item-available', id: item.id, className: 'btn-text',
+      title: item.available === false ? 'Tandai tersedia' : 'Tandai habis',
+    }));
+    cActions.append(button(item.featured ? 'Batal Signature' : 'Signature', {
+      action: 'item-featured', id: item.id, className: 'btn-text',
+      title: item.featured ? 'Hapus badge Signature' : 'Tandai sebagai Signature',
+    }));
+    cActions.append(button('Edit', { action: 'item-edit', id: item.id, className: 'btn-text' }));
+    cActions.append(button('Hapus', { action: 'item-delete', id: item.id, className: 'btn-text btn-text--danger' }));
+    tr.append(cActions);
 
-    return row;
+    return tr;
   }
 
   function renderItems() {
-    clear(itemList);
+    clear(tableBody);
     const { categories, items } = store.menu;
 
     if (items.length === 0) {
-      itemList.append(node('p', 'panel__hint', 'Belum ada item. Klik “Tambah item”.'));
+      const tr = node('tr');
+      const td = node('td', 'panel__hint', 'Belum ada item. Klik “Tambah item”.');
+      td.colSpan = 5;
+      tr.append(td);
+      tableBody.append(tr);
       return;
     }
 
@@ -349,31 +368,31 @@ export function createEditor({ store, client, onAuthError }) {
       const group = items.filter((i) => i.categoryId === category.id).sort((a, b) => a.order - b.order);
       if (group.length === 0) continue;
 
-      itemList.append(node('h3', 'group__title', category.name.id));
-      const ul = node('ul', 'rows');
-      group.forEach((item, index) => ul.append(renderItemRow(item, index, group.length)));
-      itemList.append(ul);
+      const head = node('tr', 'trow-group');
+      const th = node('th', null, `${category.name.id} · ${group.length}`);
+      th.colSpan = 5;
+      th.scope = 'colgroup';
+      head.append(th);
+      tableBody.append(head);
+
+      group.forEach((item, index) => tableBody.append(renderItemRow(item, index, group.length)));
     }
   }
 
   function renderCategories() {
     clear(categoryList);
     const sorted = [...store.menu.categories].sort((a, b) => a.order - b.order);
-
     if (sorted.length === 0) {
       categoryList.append(node('p', 'panel__hint', 'Belum ada kategori.'));
       return;
     }
-
     sorted.forEach((category, index) => {
       const row = node('li', 'row');
       const used = store.menu.items.filter((i) => i.categoryId === category.id).length;
 
       const main = node('div', 'row__main');
       main.append(node('div', 'row__name', category.name.id));
-      main.append(
-        node('div', 'row__meta', `${category.name.en || '— tanpa nama English —'} · ${used} item`),
-      );
+      main.append(node('div', 'row__meta', `${category.name.en || '— tanpa nama English —'} · ${used} item`));
       row.append(main);
 
       const actions = node('div', 'row__actions');
@@ -383,19 +402,17 @@ export function createEditor({ store, client, onAuthError }) {
       down.disabled = index === sorted.length - 1;
       actions.append(up, down);
       actions.append(button('Ganti nama', { action: 'cat-rename', id: category.id, className: 'btn-text' }));
-
       const remove = button('Hapus', { action: 'cat-delete', id: category.id, className: 'btn-text btn-text--danger' });
-      // Kategori yang masih dipakai tidak bisa dihapus — jangan pura-pura bisa diklik.
       remove.disabled = used > 0;
       if (used > 0) remove.title = `Masih dipakai ${used} item`;
       actions.append(remove);
-
       row.append(actions);
       categoryList.append(row);
     });
   }
 
   function render() {
+    fillCafeForm();
     renderCategories();
     renderCategoryOptions();
     renderItems();
@@ -403,10 +420,6 @@ export function createEditor({ store, client, onAuthError }) {
 
   /* ---------------------------------------------------- pemeliharaan foto */
 
-  /**
-   * Hapus satu file gambar. Sengaja menelan kegagalan: menu.json sudah benar, dan
-   * file yatim tidak merugikan siapa pun. AuthError tetap diteruskan.
-   */
   async function deletePhotoQuietly(path, label) {
     try {
       const meta = await client.getMetadata(path);
@@ -424,35 +437,22 @@ export function createEditor({ store, client, onAuthError }) {
     return exclusive(async () => {
       setError(null);
       orphanStatus.textContent = 'Memeriksa folder foto…';
-
       let files;
       try {
-        files = await client.listDir('images');
+        files = await client.listDir(imageDir);
       } catch (error) {
-        if (error instanceof AuthError) {
-          onAuthError(error);
-          return false;
-        }
-        // Folder images/ kosong tidak ada di Git — bukan kondisi error.
-        if (error instanceof NotFoundError) {
-          orphanStatus.textContent = 'Tidak ada foto tersimpan.';
-          return true;
-        }
+        if (error instanceof AuthError) { onAuthError(error); return false; }
+        if (error instanceof NotFoundError) { orphanStatus.textContent = 'Tidak ada foto tersimpan.'; return true; }
         orphanStatus.textContent = '';
         setError(error);
         return false;
       }
-
       const orphans = findOrphans(files, store.menu);
-      if (orphans.length === 0) {
-        orphanStatus.textContent = 'Tidak ada foto tak terpakai.';
-        return true;
-      }
+      if (orphans.length === 0) { orphanStatus.textContent = 'Tidak ada foto tak terpakai.'; return true; }
       if (!confirm(`Hapus ${orphans.length} foto yang tidak dipakai item mana pun?`)) {
         orphanStatus.textContent = `${orphans.length} foto tak terpakai ditemukan.`;
         return false;
       }
-
       let deleted = 0;
       for (const file of orphans) {
         orphanStatus.textContent = `Menghapus ${deleted + 1} dari ${orphans.length}…`;
@@ -460,18 +460,13 @@ export function createEditor({ store, client, onAuthError }) {
           await client.deleteFile({ path: file.path, sha: file.sha, message: `Hapus foto tak terpakai ${file.name}` });
           deleted++;
         } catch (error) {
-          if (error instanceof AuthError) {
-            onAuthError(error);
-            return false;
-          }
-          break; // berhenti di kegagalan pertama; sisanya bisa disapu lain kali
+          if (error instanceof AuthError) { onAuthError(error); return false; }
+          break;
         }
       }
-
-      orphanStatus.textContent =
-        deleted === orphans.length
-          ? `${deleted} foto tak terpakai dihapus.`
-          : `${deleted} dari ${orphans.length} foto dihapus. Coba lagi untuk sisanya.`;
+      orphanStatus.textContent = deleted === orphans.length
+        ? `${deleted} foto tak terpakai dihapus.`
+        : `${deleted} dari ${orphans.length} foto dihapus. Coba lagi untuk sisanya.`;
       return true;
     });
   }
@@ -480,7 +475,7 @@ export function createEditor({ store, client, onAuthError }) {
 
   /* ----------------------------------------------------------------- event */
 
-  itemList.addEventListener('click', async (event) => {
+  tableBody.addEventListener('click', async (event) => {
     const target = event.target.closest('[data-action]');
     if (!target || target.disabled) return;
     const { action, id } = target.dataset;
@@ -488,39 +483,26 @@ export function createEditor({ store, client, onAuthError }) {
     if (!item) return;
 
     switch (action) {
-      case 'item-edit':
-        openForm(item);
-        break;
-      case 'item-up':
-        await commit(mutators.moveItem(id, -1), `Naikkan urutan ${item.name.id}`);
-        break;
-      case 'item-down':
-        await commit(mutators.moveItem(id, +1), `Turunkan urutan ${item.name.id}`);
-        break;
+      case 'item-edit': openForm(item); break;
+      case 'item-up': await commit(mutators.moveItem(id, -1), `Naikkan urutan ${item.name.id}`); break;
+      case 'item-down': await commit(mutators.moveItem(id, +1), `Turunkan urutan ${item.name.id}`); break;
       case 'item-available':
-        await commit(
-          mutators.setItemFlag(id, 'available', item.available === false),
-          `${item.available === false ? 'Adakan' : 'Habiskan'} ${item.name.id}`,
-        );
+        await commit(mutators.setItemFlag(id, 'available', item.available === false),
+          `${item.available === false ? 'Adakan' : 'Habiskan'} ${item.name.id}`);
         break;
       case 'item-featured':
-        await commit(
-          mutators.setItemFlag(id, 'featured', !item.featured),
-          `${item.featured ? 'Batalkan' : 'Tandai'} Signature ${item.name.id}`,
-        );
+        await commit(mutators.setItemFlag(id, 'featured', !item.featured),
+          `${item.featured ? 'Batalkan' : 'Tandai'} Signature ${item.name.id}`);
         break;
       case 'item-delete': {
         if (!confirm(`Hapus "${item.name.id}" dari menu?`)) return;
         if (editingId === id) closeForm();
         const image = item.image;
         const removed = await commit(mutators.removeItem(id), `Hapus item ${item.name.id}`);
-        // Foto dihapus SETELAH menu.json, dan kegagalannya diabaikan: menu sudah benar,
-        // dan yang tertinggal cuma file yatim yang bisa disapu lewat Pemeliharaan.
         if (removed && image) await deletePhotoQuietly(image, item.name.id);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   });
 
@@ -532,35 +514,27 @@ export function createEditor({ store, client, onAuthError }) {
     if (!category) return;
 
     switch (action) {
-      case 'cat-up':
-        await commit(mutators.moveCategory(id, -1), `Naikkan kategori ${category.name.id}`);
-        break;
-      case 'cat-down':
-        await commit(mutators.moveCategory(id, +1), `Turunkan kategori ${category.name.id}`);
-        break;
+      case 'cat-up': await commit(mutators.moveCategory(id, -1), `Naikkan kategori ${category.name.id}`); break;
+      case 'cat-down': await commit(mutators.moveCategory(id, +1), `Turunkan kategori ${category.name.id}`); break;
       case 'cat-rename': {
         const nameId = prompt('Nama kategori (Indonesia)', category.name.id);
         if (nameId === null) return;
         const nameEn = prompt('Nama kategori (English, boleh kosong)', category.name.en ?? '');
         if (nameEn === null) return;
-        await commit(
-          mutators.updateCategory(id, { name: { id: nameId, en: nameEn } }),
-          `Ganti nama kategori ${category.name.id}`,
-        );
+        await commit(mutators.updateCategory(id, { name: { id: nameId, en: nameEn } }),
+          `Ganti nama kategori ${category.name.id}`);
         break;
       }
       case 'cat-delete':
         if (!confirm(`Hapus kategori "${category.name.id}"?`)) return;
         await commit(mutators.removeCategory(id), `Hapus kategori ${category.name.id}`);
         break;
-      default:
-        break;
+      default: break;
     }
   });
 
   itemForm.addEventListener('submit', (event) => {
     event.preventDefault();
-
     return exclusive(async () => {
       const draft = formFields();
       const id = editingId;
@@ -572,37 +546,23 @@ export function createEditor({ store, client, onAuthError }) {
         image = await resolveImagePath(existing, label);
       } catch (error) {
         setStatus('');
-        if (error instanceof AuthError) {
-          onAuthError(error);
-          return false;
-        }
-        // Gagal SEBELUM menyentuh menu.json: tidak ada yang perlu dibersihkan.
+        if (error instanceof AuthError) { onAuthError(error); return false; }
         setError(error);
         return false;
       }
 
       const withImage = { ...draft, image, id: id ?? formItemId };
       const mutate = id ? mutators.updateItem(id, withImage) : mutators.addItem(withImage);
-      const saved = await writeMenu(mutate, id ? `Ubah item ${label}` : `Tambah item ${label}`, {
-        onSuccess: closeForm,
-      });
+      const saved = await writeMenu(mutate, id ? `Ubah item ${label}` : `Tambah item ${label}`, { onSuccess: closeForm });
 
-      // Partial failure: foto sudah naik, menu.json gagal ditulis. Fotonya yatim —
-      // tidak berbahaya dan murah. Retry cukup mengulang langkah JSON saja, karena
-      // `uploadedPath` sudah stabil.
       if (!saved && uploadedPath) {
-        errorBox.append(
-          node('p', 'panel__hint', 'Foto sudah tersimpan. Klik Simpan lagi — foto tidak akan diunggah ulang.'),
-        );
+        errorBox.append(node('p', 'panel__hint', 'Foto sudah tersimpan. Klik Simpan lagi — foto tidak akan diunggah ulang.'));
       }
       return saved;
     });
   });
 
-  el('f-cancel').addEventListener('click', () => {
-    closeForm();
-    setError(null);
-  });
+  el('f-cancel').addEventListener('click', () => { closeForm(); setError(null); });
   el('item-new').addEventListener('click', () => openForm());
 
   categoryForm.addEventListener('submit', async (event) => {
@@ -617,14 +577,24 @@ export function createEditor({ store, client, onAuthError }) {
     }
   });
 
+  cafeForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    return exclusive(async () => {
+      const fields = {
+        name: el('cf-name').value,
+        tagline: { id: el('cf-tag-id').value, en: el('cf-tag-en').value },
+        whatsapp: el('cf-whatsapp').value,
+        instagram: el('cf-instagram').value,
+        tiktok: el('cf-tiktok').value,
+        maps: el('cf-maps').value,
+      };
+      return writeMenu(mutators.updateCafe(fields), 'Perbarui identitas & sosial', { statusEl: cafeStatus });
+    });
+  });
+
   return {
     render,
     setStatus,
-
-    /**
-     * Memuat menu gagal. Auth tetap sah — jangan usir owner; beri jalan mencoba lagi.
-     * Kalau ini memblokir login, `data/menu.json` yang hilang akan mengunci admin sepenuhnya.
-     */
     showLoadError(error, onRetry) {
       setStatus('');
       setError(error);
@@ -634,12 +604,11 @@ export function createEditor({ store, client, onAuthError }) {
       errorBox.append(retry);
       errorBox.hidden = false;
     },
-
     reset() {
       closeForm();
       setError(null);
       setStatus('');
-      clear(itemList);
+      clear(tableBody);
       clear(categoryList);
     },
   };

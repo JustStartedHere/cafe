@@ -100,6 +100,54 @@
       <p class="status" id="status" role="status" aria-live="polite"></p>
       <p class="panel__error" id="editor-error" role="alert" hidden></p>
 
+      <section class="panel" aria-labelledby="cafe-title">
+        <h2 class="panel__title" id="cafe-title">Identitas &amp; sosial</h2>
+        <p class="panel__text">
+          Nama usaha, tagline, dan tautan yang muncul di halaman pelanggan (WhatsApp,
+          Instagram, TikTok, Google Maps).
+        </p>
+        <form id="cafe-form" class="form" novalidate>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Nama usaha <span aria-hidden="true">*</span></span>
+              <input type="text" id="cf-name" class="field__input" required maxlength="60">
+            </label>
+            <label class="field">
+              <span class="field__label">Nomor WhatsApp (mis. 62812…)</span>
+              <input type="text" id="cf-whatsapp" class="field__input" inputmode="numeric" maxlength="20" placeholder="62812xxxxxxx">
+            </label>
+          </div>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Tagline (Indonesia)</span>
+              <input type="text" id="cf-tag-id" class="field__input" maxlength="80">
+            </label>
+            <label class="field">
+              <span class="field__label">Tagline (English)</span>
+              <input type="text" id="cf-tag-en" class="field__input" maxlength="80">
+            </label>
+          </div>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Instagram (https://…)</span>
+              <input type="url" id="cf-instagram" class="field__input" spellcheck="false" placeholder="https://instagram.com/…">
+            </label>
+            <label class="field">
+              <span class="field__label">TikTok (https://…)</span>
+              <input type="url" id="cf-tiktok" class="field__input" spellcheck="false" placeholder="https://tiktok.com/@…">
+            </label>
+          </div>
+          <label class="field">
+            <span class="field__label">Google Maps (https://…)</span>
+            <input type="url" id="cf-maps" class="field__input" spellcheck="false" placeholder="https://maps.google.com/…">
+          </label>
+          <div class="form__actions">
+            <button type="submit" class="button button--small">Simpan identitas</button>
+            <p class="panel__hint" id="cafe-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
       <section class="panel" aria-labelledby="items-title">
         <div class="panel__head">
           <h2 class="panel__title" id="items-title">Item menu</h2>
@@ -166,7 +214,11 @@
           </label>
           <label class="check">
             <input type="checkbox" id="f-featured" class="check__box">
-            <span>Signature (tampil dengan badge)</span>
+            <span>Signature (badge unggulan)</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="f-new" class="check__box">
+            <span>Baru (badge “Baru”)</span>
           </label>
 
           <div class="form__actions">
@@ -175,7 +227,20 @@
           </div>
         </form>
 
-        <div id="item-list"></div>
+        <div class="table-scroll">
+          <table class="menu-table">
+            <thead>
+              <tr>
+                <th scope="col">Foto</th>
+                <th scope="col">Produk</th>
+                <th scope="col">Harga</th>
+                <th scope="col">Status</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="item-rows"></tbody>
+          </table>
+        </div>
       </section>
 
       <section class="panel" aria-labelledby="cats-title">
@@ -239,6 +304,8 @@
 
   <!-- Di-vendor & di-commit, bukan dari CDN. Lihat header file itu. -->
   <script src="vendor/qrcode-generator.js"></script>
-  <script type="module" src="admin.js"></script>
+  <!-- boot.js: modul same-origin (CSP script-src 'self' melarang <script> inline),
+       men-set window.__ADMIN_CONFIG lalu memuat mesin admin bersama. -->
+  <script type="module" src="boot.js"></script>
 </body>
 </html>
