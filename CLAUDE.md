@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 5** — CRUD teks + pemulihan 409 |
-| Fase berikutnya | **Phase 6** — pipeline gambar (kompresi, nama unik, partial failure) |
+| Fase terakhir selesai | **Phase 6** — pipeline gambar |
+| Fase berikutnya | **Phase 7** — QR, PWA, dokumentasi (`manifest`, `robots.txt`, `404.html`) |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -167,6 +167,27 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
   keluar. Sekarang login sukses lebih dulu, lalu error pemuatan tampil di editor dengan tombol "Muat ulang".
 - **Nama kategori duplikat harus ditolak, bukan cuma id duplikat.** Id kategori berasal dari slug, jadi kategori
   lama ber-id `coffee` bernama "Kopi" tidak bentrok dengan slug `kopi` — tapi pelanggan melihat dua "Kopi".
+- **Scroll-spy dihitung dari geometri, bukan `IntersectionObserver`.** IO dengan `rootMargin` negatif gagal di dua
+  kasus nyata: seksi terakhir yang pendek tak pernah mencapai pita, dan di layar lebar seluruh menu muat tanpa
+  scroll sehingga klik chip tidak menyalakan apa pun. Uji scroll-spy **lintas viewport** (390, 900, 1440, 1920) —
+  bug ini tak terlihat di viewport HP saja.
+- **Umpan tes kompresi harus menyerupai foto, bukan noise RGB acak.** Noise murni tak bisa dikompresi dan membuat
+  hasil menembus 300 KB, seolah pipeline-nya rusak. Pakai gradien + bentuk + grain halus.
+- **`Runtime.evaluate` bukan modul**: top-level `await` di dalamnya adalah SyntaxError. Pakai `import().then()`.
+- **Jangan `git add -A` di repo ini.** User menaruh file kerjanya sendiri (mis. `docs/references/`); sapuan buta
+  akan menyeretnya ke dalam commit fase. Tambahkan file per nama.
+
+## Kontrak pipeline gambar (Phase 6)
+
+- Nama file **selalu unik**: `images/{itemId}-{random4}.webp`. Karena itu PUT gambar **selalu create** — tanpa `sha`,
+  tak pernah 409, dan pelanggan tak pernah melihat foto lama dari cache Fastly. **File lama tidak pernah ditimpa.**
+- Urutan **gambar dulu, `menu.json` kemudian**, tanpa kecuali. Kebalikannya membuat JSON menunjuk file yang belum ada.
+- `id` item dikunci saat form dibuka, bukan saat menyimpan — nama file memuatnya, dan itu membuat retry idempoten.
+  `mutators.addItem` menerima `draft.id`; jangan hapus kemampuan itu.
+- Gagal menulis JSON setelah gambar naik → foto **yatim**, bukan bencana. `uploadedPath` disimpan sehingga retry
+  hanya mengulang langkah JSON. Menu tak pernah setengah jadi.
+- Ganti foto meninggalkan yatim (disengaja). Hapus item menyapu fotonya *best-effort*, **setelah** `menu.json` benar.
+- "Bersihkan foto tak terpakai" = `listDir('images')` diff terhadap `item.image`. `.gitkeep` tidak pernah dihapus.
 
 ## Kontrak mutator (Phase 5) — jangan dilanggar di Phase 6
 
