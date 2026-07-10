@@ -55,7 +55,7 @@ const clear = (n) => {
 export function createTableEditor({ store, client, onAuthError, imageDir = 'images', imagePreviewBase = '../' }) {
   const statusBox = el('status');
   const errorBox = el('editor-error');
-  const tableBody = el('item-rows');
+  const tablesRoot = el('menu-tables');
   const categoryList = el('category-list');
   const itemForm = el('item-form');
   const categoryForm = el('category-form');
@@ -351,31 +351,49 @@ export function createTableEditor({ store, client, onAuthError, imageDir = 'imag
     return tr;
   }
 
+  /** Satu tabel per kategori — pemisahan yang jelas untuk owner. */
   function renderItems() {
-    clear(tableBody);
+    clear(tablesRoot);
     const { categories, items } = store.menu;
 
-    if (items.length === 0) {
-      const tr = node('tr');
-      const td = node('td', 'panel__hint', 'Belum ada item. Klik “Tambah item”.');
-      td.colSpan = 5;
-      tr.append(td);
-      tableBody.append(tr);
+    if (categories.length === 0) {
+      tablesRoot.append(node('p', 'panel__hint', 'Belum ada kategori. Tambahkan kategori di bawah dulu.'));
       return;
     }
 
     for (const category of [...categories].sort((a, b) => a.order - b.order)) {
       const group = items.filter((i) => i.categoryId === category.id).sort((a, b) => a.order - b.order);
-      if (group.length === 0) continue;
 
-      const head = node('tr', 'trow-group');
-      const th = node('th', null, `${category.name.id} · ${group.length}`);
-      th.colSpan = 5;
-      th.scope = 'colgroup';
-      head.append(th);
-      tableBody.append(head);
+      const block = node('section', 'cat-block');
+      const head = node('div', 'cat-block__head');
+      head.append(node('h3', 'cat-block__title', category.name.id));
+      head.append(node('span', 'cat-block__count', `${group.length} item`));
+      block.append(head);
 
-      group.forEach((item, index) => tableBody.append(renderItemRow(item, index, group.length)));
+      if (group.length === 0) {
+        block.append(node('p', 'cat-block__empty', 'Belum ada item di kategori ini.'));
+        tablesRoot.append(block);
+        continue;
+      }
+
+      const scroll = node('div', 'table-scroll');
+      const table = node('table', 'menu-table');
+      const thead = node('thead');
+      const trh = node('tr');
+      for (const label of ['Foto', 'Produk', 'Harga', 'Status', 'Aksi']) {
+        const th = node('th', null, label);
+        th.scope = 'col';
+        trh.append(th);
+      }
+      thead.append(trh);
+      table.append(thead);
+
+      const tbody = node('tbody');
+      group.forEach((item, index) => tbody.append(renderItemRow(item, index, group.length)));
+      table.append(tbody);
+      scroll.append(table);
+      block.append(scroll);
+      tablesRoot.append(block);
     }
   }
 
@@ -475,7 +493,7 @@ export function createTableEditor({ store, client, onAuthError, imageDir = 'imag
 
   /* ----------------------------------------------------------------- event */
 
-  tableBody.addEventListener('click', async (event) => {
+  tablesRoot.addEventListener('click', async (event) => {
     const target = event.target.closest('[data-action]');
     if (!target || target.disabled) return;
     const { action, id } = target.dataset;
@@ -608,7 +626,7 @@ export function createTableEditor({ store, client, onAuthError, imageDir = 'imag
       closeForm();
       setError(null);
       setStatus('');
-      clear(tableBody);
+      clear(tablesRoot);
       clear(categoryList);
     },
   };

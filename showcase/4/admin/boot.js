@@ -12,7 +12,6 @@ window.__ADMIN_CONFIG = {
   siteUrl: siteUrl.startsWith('http') ? siteUrl : 'https://juststartedhere.github.io/cafe/showcase/4/',
   dataPath: 'showcase/4/data.json',
   imageDir: 'showcase/4/img',
-  // Folder upload sendiri + folder seed bersama (foto contoh boleh dipakai lintas tema).
   imageBases: ['showcase/4/img/', 'showcase/menu-img/'],
   imagePreviewBase: '../../../',
 };

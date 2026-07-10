@@ -1,0 +1,19 @@
+/* Palet admin — senada dengan warna showcase-nya. Dimuat setelah styles.css +
+   admin.css, jadi token di sini menang di light maupun dark OS. */
+:root {
+  color-scheme: light;
+  --bg: #FFF8F0;
+  --surface: #FFFFFF;
+  --text: #2A2018;
+  --muted: #6A5849;
+  --accent: #B23A1E;
+  --on-accent: #FFFFFF;
+  --border: #ECDBC9;
+  --border-strong: #9A7C62;
+  --skeleton: #ece4da;
+  --danger-bg: #FCEBEA;
+  --danger-border: #E4A79F;
+  --danger-text: #A0281C;
+  --shadow: 0 6px 18px rgba(40, 30, 20, 0.08);
+}
+body.admin { background: var(--bg); color: var(--text); }
