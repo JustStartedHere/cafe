@@ -6,6 +6,8 @@
 import { OWNER, REPO, BRANCH, IDLE_MINUTES, TOKEN_URL } from './config.js';
 import { createGitHubClient, AuthError, RateLimitError, NotFoundError, NetworkError } from './github-api.js';
 import * as tokenStore from './token-store.js';
+import { createMenuStore } from './menu-store.js';
+import { createEditor } from './editor.js';
 
 const el = (id) => document.getElementById(id);
 const view = { auth: el('auth'), app: el('app') };
@@ -20,6 +22,7 @@ const logoutButton = el('logout');
 
 /** Klien aktif. Hanya hidup di memori — tidak pernah ditulis ke storage. */
 let client = null;
+let editor = null;
 let idleTimer = null;
 
 /* --------------------------------------------------------------- tampilan */
@@ -40,7 +43,6 @@ function showApp(access) {
   setError('');
   tokenInput.value = ''; // token sudah dipegang klien; jangan tinggalkan di DOM
   el('repo-label').textContent = `${access.fullName} · ${BRANCH}`;
-  el('app-status').textContent = `Terhubung sebagai pengelola ${access.fullName}.`;
 }
 
 function setError(message) {
@@ -104,6 +106,27 @@ function stopIdleWatch() {
 
 /* ------------------------------------------------------------------- auth */
 
+/**
+ * Muat menu.json lewat API — bukan dari salinan publik, yang bisa basi hingga 10 menit.
+ * Kegagalan di sini TIDAK membatalkan login: token sudah terbukti sah. Owner cukup
+ * menekan "Muat ulang". Kalau ini digabung ke signIn, `data/menu.json` yang hilang
+ * akan mengunci admin sepenuhnya.
+ */
+async function loadMenu(store) {
+  editor.setStatus('Memuat menu…');
+  try {
+    await store.load();
+    editor.setStatus('');
+    editor.render();
+  } catch (error) {
+    if (error instanceof AuthError) {
+      logout(explain(error));
+      return;
+    }
+    editor.showLoadError(error, () => loadMenu(store));
+  }
+}
+
 /** Satu-satunya jalan masuk ke state "terautentikasi". */
 async function signIn(token, { remember = false, persist = true } = {}) {
   const candidate = createGitHubClient({ owner: OWNER, repo: REPO, token, branch: BRANCH });
@@ -111,14 +134,25 @@ async function signIn(token, { remember = false, persist = true } = {}) {
 
   client = candidate;
   if (persist) tokenStore.save(token, remember);
+
+  const store = createMenuStore(candidate);
+  editor = createEditor({
+    store,
+    // Token dicabut di tengah sesi → keluarkan owner, jangan biarkan tombol mati diam-diam.
+    onAuthError: (error) => logout(explain(error)),
+  });
+
   showApp(access);
   startIdleWatch();
+  await loadMenu(store);
   return access;
 }
 
 function logout(message = '') {
   tokenStore.clear();
   stopIdleWatch();
+  editor?.reset();
+  editor = null;
   client = null;
   showAuth(message);
 }
