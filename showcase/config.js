@@ -9,6 +9,13 @@ export const WHATSAPP = '6281234567890';
 export const PHONE_DISPLAY = '+62 812-3456-7890';
 export const EMAIL = 'halo@yourrestaurant.id';
 
+/** Tautan media sosial. PLACEHOLDER — ganti sebelum demo ke client. */
+export const SOCIAL = {
+  instagram: 'https://instagram.com/yourrestaurant',
+  maps: 'https://maps.google.com/?q=Your+Restaurant',
+  tiktok: 'https://tiktok.com/@yourrestaurant',
+};
+
 /**
  * Tautan WhatsApp dengan pesan yang sudah terisi.
  * `encodeURIComponent` wajib: pesan berisi spasi dan tanda baca.

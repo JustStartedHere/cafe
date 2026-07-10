@@ -25,10 +25,28 @@
         <a id="tb-phone" href="#"><span aria-hidden="true">☎</span> <span id="tb-phone-text"></span></a>
         <a id="tb-email" href="#"><span aria-hidden="true">✉</span> <span id="tb-email-text"></span></a>
       </p>
-      <p class="topbar__promo" data-t="freeDelivery">Gratis antar untuk pesanan di atas Rp 100.000</p>
-      <div class="lang" role="group" data-t-aria-label="langGroup">
-        <button type="button" class="lang__btn" data-lang="id" data-t-aria-label="langId" aria-pressed="true">ID</button>
-        <button type="button" class="lang__btn" data-lang="en" data-t-aria-label="langEn" aria-pressed="false">EN</button>
+      <div class="topbar__right">
+        <ul class="social" data-t-aria-label="social">
+          <li>
+            <a id="social-instagram" class="social__link" href="#" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialInstagram">
+              <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.6.2-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.6-.4-1.3-.5-2.3C2.4 15 2.4 14.7 2.4 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.6-.2 1.3-.4 2.3-.5C9 2.4 9.3 2.4 12 2.4Zm0 3.2A6.4 6.4 0 1 0 12 18 6.4 6.4 0 0 0 12 5.2Zm0 2.3a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2Zm5.1-.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a id="social-maps" class="social__link" href="#" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialMaps">
+              <svg class="social__icon" viewBox="0 0 24 24" fill-rule="evenodd" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a id="social-tiktok" class="social__link" href="#" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialTiktok">
+              <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c.4 2.4 1.8 3.9 4.1 4.1v3c-1.5.1-2.9-.4-4.1-1.2v5.6a6 6 0 1 1-6-6c.4 0 .7 0 1 .1v3.1a2.9 2.9 0 1 0 2 2.8V3h3Z"/></svg>
+            </a>
+          </li>
+        </ul>
+        <div class="lang" role="group" data-t-aria-label="langGroup">
+          <button type="button" class="lang__btn" data-lang="id" data-t-aria-label="langId" aria-pressed="true">ID</button>
+          <button type="button" class="lang__btn" data-lang="en" data-t-aria-label="langEn" aria-pressed="false">EN</button>
+        </div>
       </div>
     </div>
   </div>
@@ -72,6 +90,12 @@
         </div>
         <figure class="hero__media">
           <img id="hero-img" src="img/hero-1.webp" alt="" width="1200" height="900" fetchpriority="high" decoding="async">
+          <button type="button" class="hero__arrow hero__arrow--prev" id="hero-prev" data-t-aria-label="heroPrev">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <button type="button" class="hero__arrow hero__arrow--next" id="hero-next" data-t-aria-label="heroNext">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
         </figure>
       </div>
     </section>
@@ -124,10 +148,6 @@
           <svg class="feature__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
           <div><p class="feature__title" data-t="feat3">Suasana Hangat</p><p class="feature__sub" data-t="feat3sub">Nyaman untuk semua</p></div>
         </li>
-        <li class="feature">
-          <svg class="feature__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16V7h11v9"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
-          <div><p class="feature__title" data-t="feat4">Antar Cepat</p><p class="feature__sub" data-t="feat4sub">Tepat waktu, setiap saat</p></div>
-        </li>
       </ul>
     </section>
   </main>
@@ -146,6 +166,23 @@
         <p class="footer__head" data-t="footContact">Kontak</p>
         <p><a id="foot-phone" href="#"></a></p>
         <p><a id="foot-reserve" href="#" target="_blank" rel="noopener noreferrer" data-t="footReserve">Reservasi lewat WhatsApp</a></p>
+        <ul class="social social--footer" data-t-aria-label="social">
+          <li>
+            <a id="foot-instagram" class="social__link" href="#" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialInstagram">
+              <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.6.2-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.6-.4-1.3-.5-2.3C2.4 15 2.4 14.7 2.4 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.6-.2 1.3-.4 2.3-.5C9 2.4 9.3 2.4 12 2.4Zm0 3.2A6.4 6.4 0 1 0 12 18 6.4 6.4 0 0 0 12 5.2Zm0 2.3a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2Zm5.1-.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a id="foot-maps" class="social__link" href="#" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialMaps">
+              <svg class="social__icon" viewBox="0 0 24 24" fill-rule="evenodd" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a id="foot-tiktok" class="social__link" href="#" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialTiktok">
+              <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c.4 2.4 1.8 3.9 4.1 4.1v3c-1.5.1-2.9-.4-4.1-1.2v5.6a6 6 0 1 1-6-6c.4 0 .7 0 1 .1v3.1a2.9 2.9 0 1 0 2 2.8V3h3Z"/></svg>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
     <p class="footer__back wrap"><a href="../../" data-t="backToGallery">← Kembali ke galeri desain</a></p>

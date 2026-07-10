@@ -6,7 +6,7 @@
 
 import { pickLang, formatPrice } from '../../assets/js/util.js';
 import { getLang, setLang, LANGS } from '../../assets/js/i18n.js';
-import { RESTAURANT_NAME, PHONE_DISPLAY, EMAIL, WHATSAPP, waLink } from '../config.js';
+import { RESTAURANT_NAME, PHONE_DISPLAY, EMAIL, WHATSAPP, SOCIAL, waLink } from '../config.js';
 import { STRINGS, RESERVE_MESSAGE, HERO, CATEGORIES, ITEMS } from './data.js';
 
 const SLIDE_MS = 6000;
@@ -59,6 +59,13 @@ function applyStatic() {
   const footPhone = el('foot-phone');
   footPhone.href = `tel:+${WHATSAPP}`;
   footPhone.textContent = PHONE_DISPLAY;
+
+  // Tautan sosial (topbar + footer memakai id kembar dengan prefix).
+  for (const prefix of ['social', 'foot']) {
+    el(`${prefix}-instagram`).href = SOCIAL.instagram;
+    el(`${prefix}-maps`).href = SOCIAL.maps;
+    el(`${prefix}-tiktok`).href = SOCIAL.tiktok;
+  }
 
   el('about-img').alt = t('aboutAlt');
   document.title = `${RESTAURANT_NAME} — ${t('tagline')}`;
@@ -255,6 +262,9 @@ paintDishes();
 for (const button of document.querySelectorAll('[data-lang]')) {
   button.addEventListener('click', () => switchLang(button.dataset.lang));
 }
+
+el('hero-prev').addEventListener('click', () => { goTo(slide - 1); restartTimer(); });
+el('hero-next').addEventListener('click', () => { goTo(slide + 1); restartTimer(); });
 
 const hero = document.querySelector('.hero');
 hero.addEventListener('mouseenter', stopTimer);

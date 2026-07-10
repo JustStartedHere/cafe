@@ -7,10 +7,13 @@ export const STRINGS = {
   skip: { id: 'Langsung ke menu', en: 'Skip to the menu' },
 
   // topbar
-  freeDelivery: { id: 'Gratis antar untuk pesanan di atas Rp 100.000', en: 'Free delivery on orders above Rp 100,000' },
   langGroup: { id: 'Pilih bahasa', en: 'Select language' },
   langId: { id: 'Bahasa Indonesia', en: 'Indonesian' },
   langEn: { id: 'Bahasa Inggris', en: 'English' },
+  social: { id: 'Media sosial', en: 'Social media' },
+  socialInstagram: { id: 'Instagram kami', en: 'Our Instagram' },
+  socialMaps: { id: 'Lokasi di Google Maps', en: 'Location on Google Maps' },
+  socialTiktok: { id: 'TikTok kami', en: 'Our TikTok' },
 
   // nav
   navHome: { id: 'Beranda', en: 'Home' },
@@ -24,6 +27,8 @@ export const STRINGS = {
   heroExplore: { id: 'Lihat Menu', en: 'Explore Menu' },
   heroSlides: { id: 'Pilih slide', en: 'Choose slide' },
   heroSlide: { id: 'Slide', en: 'Slide' },
+  heroPrev: { id: 'Slide sebelumnya', en: 'Previous slide' },
+  heroNext: { id: 'Slide berikutnya', en: 'Next slide' },
 
   // kategori
   catsTitle: { id: 'Kategori Menu Kami', en: 'Our Menu Categories' },
@@ -56,8 +61,6 @@ export const STRINGS = {
   feat2sub: { id: 'Penuh dedikasi', en: 'Passionate & experienced' },
   feat3: { id: 'Suasana Hangat', en: 'Cozy Ambience' },
   feat3sub: { id: 'Nyaman untuk semua', en: 'Perfect for everyone' },
-  feat4: { id: 'Antar Cepat', en: 'Fast Delivery' },
-  feat4sub: { id: 'Tepat waktu, setiap saat', en: 'On time, every time' },
 
   // footer
   footHours: { id: 'Jam Buka', en: 'Opening Hours' },

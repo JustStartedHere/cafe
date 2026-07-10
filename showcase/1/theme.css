@@ -138,14 +138,40 @@ h3 {
   color: var(--gold);
 }
 
-.topbar__promo {
-  margin: 0;
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-@media (max-width: 62rem) {
-  .topbar__promo {
-    display: none; /* di layar sempit, kontak + bahasa yang lebih berguna */
-  }
+/* Ikon media sosial */
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--muted);
+}
+
+.social__link:hover {
+  color: var(--gold);
+}
+
+.social__icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 /* Toggle bahasa */
@@ -176,10 +202,9 @@ h3 {
 
 /* --------------------------------------------------------------------- nav */
 
+/* Sengaja TIDAK sticky: header ikut menggulung keluar saat pengguna scroll ke bawah.
+   Yang menempel saat menjelajah menu adalah baris tab (lihat `.tabs`). */
 .nav {
-  position: sticky;
-  top: 0;
-  z-index: 5;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
@@ -383,6 +408,7 @@ h3 {
 }
 
 .hero__media {
+  position: relative;
   margin: 0;
 }
 
@@ -393,6 +419,57 @@ h3 {
   object-fit: cover;
   border-radius: 50% 50% 46% 54% / 48% 44% 56% 52%;
   box-shadow: var(--shadow);
+}
+
+/* Panah kiri/kanan foto utama. Diinset dari tepi karena media berbentuk blob. */
+.hero__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--ink);
+  background: rgb(255 255 255 / 88%);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.hero__arrow:hover {
+  background: #fff;
+  color: var(--gold);
+}
+
+.hero__arrow--prev {
+  left: 0.25rem;
+}
+
+.hero__arrow--next {
+  right: 0.25rem;
+}
+
+.hero__arrow svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (min-width: 40rem) {
+  .hero__arrow--prev {
+    left: -0.5rem;
+  }
+
+  .hero__arrow--next {
+    right: -0.5rem;
+  }
 }
 
 @media (max-width: 60rem) {
@@ -500,12 +577,22 @@ h3 {
 
 /* ------------------------------------------------------------------- tabs */
 
+/* Menempel di puncak viewport selagi pengguna menggulung daftar hidangan, sehingga
+   ia bisa berpindah kategori tanpa scroll balik ke atas. Sticky hanya berlaku dalam
+   kotak `.section--menu`, jadi terlepas sendiri saat menu berakhir. Latar krem menutup
+   kartu yang lewat di bawahnya; garis bawah memisahkannya saat menempel. */
 .tabs {
+  position: sticky;
+  top: 0;
+  z-index: 4;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  padding: 0.875rem 0;
   margin-bottom: 0.5rem;
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
 }
 
 .tab {
@@ -683,7 +770,7 @@ h3 {
 
 .features__list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   list-style: none;
   margin: 0 auto;
@@ -717,15 +804,10 @@ h3 {
   color: var(--muted);
 }
 
-@media (max-width: 60rem) {
-  .features__list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 34rem) {
+@media (max-width: 48rem) {
   .features__list {
     grid-template-columns: 1fr;
+    max-width: 22rem;
   }
 }
 
@@ -771,6 +853,18 @@ h3 {
 
 .footer__note {
   color: #b9ac9c;
+}
+
+.social--footer {
+  margin-top: 0.5rem;
+}
+
+.social--footer .social__link {
+  color: #cdbfad;
+}
+
+.social--footer .social__link:hover {
+  color: #e3ab5f;
 }
 
 .footer__back {
