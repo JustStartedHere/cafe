@@ -67,11 +67,13 @@ Sesi menutup dirinya sendiri setelah 20 menit tanpa aktivitas.
 |---|---|
 | Tambah item | **Tambah item** → isi form → **Simpan** |
 | Ubah harga / nama / deskripsi | **Edit** pada baris item |
+| Ganti atau hapus foto | **Edit** → bagian **Foto** |
 | Tandai habis | **Habiskan** (klik **Adakan** untuk mengembalikan) |
 | Tandai unggulan | **Signature** — item akan berbadge di halaman pelanggan |
 | Ubah urutan | Tombol **↑** dan **↓** |
 | Hapus item | **Hapus** pada baris item |
 | Tambah / hapus kategori | Bagian **Kategori** di bawah |
+| Cetak QR meja | Bagian **QR untuk meja** |
 
 Beberapa hal yang perlu diketahui:
 
@@ -120,10 +122,61 @@ seluruh menu Anda ada di satu file itu.
 
 ---
 
-## 5. Belum tersedia
+## 5. Foto item
 
-- **Upload foto item** — sedang dikerjakan (Phase 6). Untuk sekarang setiap item memakai gambar placeholder.
-- **Unduh QR code untuk dicetak** — menyusul (Phase 7), bersama panduan memotret makanan.
+Buka **Edit** pada item (atau **Tambah item**), lalu pilih **Foto**. Dari HP, tombol itu langsung membuka kamera.
+
+Foto Anda diperkecil dan dikompresi **di dalam peramban** sebelum dikirim — foto 10 MB dari kamera HP biasanya
+menjadi sekitar 100–200 KB. Anda akan melihat pratinjau dan ukuran akhirnya sebelum menyimpan.
+
+**Foto yang bekerja paling keras:**
+
+- Ambil di dekat jendela pada siang hari. Matikan lampu blitz.
+- Latar polos: meja kayu, kertas nasi, nampan. Hindari latar ramai.
+- Ambil dari atas (flat-lay) atau 45°. Konsisten untuk semua item — kartu menu akan terlihat rapi.
+- Isi bingkai dengan makanannya. Kartu memotong foto menjadi 4:3.
+
+**Yang perlu diketahui:**
+
+- Mengganti foto **tidak menghapus foto lama.** Itu disengaja: kalau penyimpanan gagal di tengah jalan, foto lama
+  masih utuh dan menu Anda tidak pernah menunjuk gambar yang hilang. Foto lama menjadi "tak terpakai".
+- Bersihkan foto tak terpakai lewat tombol di bagian **Pemeliharaan** kapan pun Anda mau. Tidak mendesak.
+- Kalau koneksi putus setelah foto terunggah tapi sebelum menu tersimpan, Anda akan melihat pesan
+  *"Foto sudah tersimpan. Klik Simpan lagi"* — dan foto **tidak** akan diunggah dua kali.
+
+---
+
+## 6. QR untuk meja
+
+Di bagian **QR untuk meja**, tersedia dua unduhan:
+
+- **SVG** — pakai ini untuk mencetak. Ia vektor, jadi tetap tajam pada ukuran berapa pun, dari stiker meja
+  sampai poster.
+- **PNG** — untuk ditempel di chat, dokumen, atau media sosial.
+
+QR-nya dibuat di perangkat Anda, bukan lewat layanan QR online. Tidak ada yang tahu alamat menu Anda kecuali
+orang yang memindainya.
+
+> **Jangan cetak QR sebelum repositori dipindahkan ke akun tetap.** Memindahkan repositori mengubah alamat
+> situs, dan QR yang sudah dicetak akan mati. Kalau Anda berencana memindahkannya, lakukan itu dulu.
+
+## 7. Memasang menu di layar utama HP
+
+Situs ini adalah PWA sederhana. Buka menu di HP, lalu pilih **"Tambahkan ke layar utama"** dari menu peramban.
+Ia akan muncul seperti aplikasi, lengkap dengan ikon.
+
+Sengaja **tidak** ada mode offline. Satu-satunya hal yang bisa dilakukan mode offline di sini adalah menyajikan
+menu yang sudah basi — harga lama, item yang sudah habis. Lebih baik gagal jujur daripada berbohong.
+
+---
+
+## Mengganti nama cafe
+
+Nama dan tagline diambil dari `data/menu.json` (`cafe.name`, `cafe.tagline`) — halaman pelanggan memakainya
+secara otomatis. Dua tempat yang **tidak** ikut berubah dan harus disunting manual:
+
+- `manifest.webmanifest` — nama yang muncul saat menu dipasang ke layar utama HP.
+- `index.html` — `<meta name="description">`.
 
 ---
 

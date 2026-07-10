@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
+  <meta name="robots" content="noindex">
+  <title>Halaman tidak ditemukan</title>
+  <!--
+    CSS di-inline, bukan ditautkan. GitHub Pages menyajikan berkas ini untuk URL di
+    kedalaman mana pun (`/cafe/a/b/c`), sehingga path relatif ke assets akan meleset —
+    sementara path absolut akan patah kalau situs dipindah ke root domain.
+  -->
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: grid;
+      place-content: center;
+      gap: .5rem;
+      padding: 1rem;
+      text-align: center;
+      font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #FBF7F2;
+      color: #2B1D14;
+    }
+    h1 { margin: 0; font-size: 1.25rem; }
+    p { margin: 0; color: #6B5648; }
+    a {
+      display: inline-block;
+      margin-top: 1rem;
+      min-height: 44px;
+      padding: .625rem 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      background: #B4531F;
+      border-radius: 999px;
+      text-decoration: none;
+    }
+    a:focus-visible { outline: 3px solid #B4531F; outline-offset: 2px; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #17120E; color: #F2E9E1; }
+      p { color: #B6A493; }
+      a { background: #E08A4F; color: #17120E; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Halaman tidak ditemukan</h1>
+  <p>Page not found</p>
+  <a id="home" href="../">Kembali ke menu · Back to the menu</a>
+
+  <script>
+    // Di `user.github.io/cafe/...` akar situs adalah segmen path pertama.
+    // Di domain sendiri, akarnya `/`. Hitung, jangan tebak.
+    (function () {
+      var path = location.pathname;
+      var onGithubPages = /\.github\.io$/i.test(location.hostname);
+      var first = path.split('/')[1];
+      document.getElementById('home').href = onGithubPages && first ? '/' + first + '/' : '/';
+    })();
+  </script>
+</body>
+</html>

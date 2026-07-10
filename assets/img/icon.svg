@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Menu cafe">
+  <rect width="512" height="512" rx="96" fill="#B4531F"/>
+  <g fill="none" stroke="#FBF7F2" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 190h180v96a72 72 0 0 1-72 72h-36a72 72 0 0 1-72-72Z"/>
+    <path d="M330 214h30a44 44 0 0 1 0 88h-30"/>
+    <path d="M140 390h200"/>
+    <path d="M196 130c0-14 14-20 14-34M256 130c0-14 14-20 14-34"/>
+  </g>
+</svg>

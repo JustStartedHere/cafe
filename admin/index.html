@@ -192,6 +192,28 @@
         </form>
       </section>
 
+      <section class="panel" aria-labelledby="qr-title">
+        <h2 class="panel__title" id="qr-title">QR untuk meja</h2>
+        <p class="panel__text">
+          Cetak dan tempel di meja. URL-nya tidak akan berubah, jadi cukup sekali cetak.
+          Untuk mencetak, pakai <strong>SVG</strong> — ia tetap tajam di ukuran berapa pun.
+        </p>
+
+        <label class="field">
+          <span class="field__label">Alamat yang di-encode</span>
+          <input type="url" id="qr-url" class="field__input" spellcheck="false">
+        </label>
+
+        <div class="qr">
+          <div class="qr__preview" id="qr-preview"></div>
+          <div class="qr__actions">
+            <button type="button" class="button button--small" id="qr-svg">Unduh SVG (cetak)</button>
+            <button type="button" class="button button--quiet button--small" id="qr-png">Unduh PNG</button>
+            <p class="panel__hint" id="qr-status"></p>
+          </div>
+        </div>
+      </section>
+
       <section class="panel" aria-labelledby="maint-title">
         <h2 class="panel__title" id="maint-title">Pemeliharaan</h2>
         <p class="panel__text">
@@ -212,6 +234,8 @@
     </div>
   </main>
 
+  <!-- Di-vendor & di-commit, bukan dari CDN. Lihat header file itu. -->
+  <script src="vendor/qrcode-generator.js"></script>
   <script type="module" src="admin.js"></script>
 </body>
 </html>

@@ -3,11 +3,12 @@
 // Tidak ada `console.*` di file ini, dan tidak akan pernah ada. Satu `console.log(err)`
 // yang kebetulan men-serialize objek request sudah cukup untuk menaruh token di log browser.
 
-import { OWNER, REPO, BRANCH, IDLE_MINUTES, TOKEN_URL } from './config.js';
+import { OWNER, REPO, BRANCH, IDLE_MINUTES, TOKEN_URL, SITE_URL } from './config.js';
 import { createGitHubClient, AuthError, RateLimitError, NotFoundError, NetworkError } from './github-api.js';
 import * as tokenStore from './token-store.js';
 import { createMenuStore } from './menu-store.js';
 import { createEditor } from './editor.js';
+import { toSvg, toSvgBlob, toPngBlob, download, QrError } from './qr.js';
 
 const el = (id) => document.getElementById(id);
 const view = { auth: el('auth'), app: el('app') };
@@ -157,6 +158,53 @@ function logout(message = '') {
   client = null;
   showAuth(message);
 }
+
+/* --------------------------------------------------------------------- QR */
+
+const qrUrl = el('qr-url');
+const qrPreview = el('qr-preview');
+const qrStatus = el('qr-status');
+
+/** Nama file yang ramah: kopi-senja-qr.svg */
+const qrFilename = (extension) => {
+  const host = (() => {
+    try {
+      return new URL(qrUrl.value).hostname.split('.')[0];
+    } catch {
+      return 'menu';
+    }
+  })();
+  return `${host}-qr.${extension}`;
+};
+
+function renderQrPreview() {
+  qrPreview.replaceChildren();
+  qrStatus.textContent = '';
+  try {
+    qrPreview.append(toSvg(qrUrl.value, { moduleSize: 4 }));
+  } catch (error) {
+    qrStatus.textContent = error instanceof QrError ? error.message : 'Gagal membuat QR.';
+  }
+}
+
+async function downloadQr(kind) {
+  try {
+    if (kind === 'svg') {
+      download(toSvgBlob(qrUrl.value, { moduleSize: 8 }), qrFilename('svg'));
+    } else {
+      download(await toPngBlob(qrUrl.value, { size: 1024 }), qrFilename('png'));
+    }
+    qrStatus.textContent = 'Berkas diunduh.';
+  } catch (error) {
+    qrStatus.textContent = error instanceof QrError ? error.message : 'Gagal membuat berkas.';
+  }
+}
+
+qrUrl.value = SITE_URL;
+qrUrl.addEventListener('input', renderQrPreview);
+el('qr-svg').addEventListener('click', () => downloadQr('svg'));
+el('qr-png').addEventListener('click', () => downloadQr('png'));
+renderQrPreview();
 
 /* ------------------------------------------------------------------ event */
 
