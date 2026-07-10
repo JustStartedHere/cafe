@@ -16,8 +16,8 @@ const header = document.querySelector('.header');
 
 let lang = getLang();
 let menuData = null; // cache: toggle bahasa tidak boleh memicu fetch ulang
-let spy = null;
 let onScroll = null;
+let onChipClick = null;
 
 /** Tampilkan tepat satu state; sisanya disembunyikan. Tidak pernah layar kosong. */
 function show(state) {
@@ -64,11 +64,14 @@ function syncHeaderHeight() {
 /**
  * Scroll-spy: tandai chip kategori yang seksinya sedang dibaca.
  *
- * IntersectionObserver menangani kasus umum tanpa kerja saat halaman diam, tapi ia
- * tidak cukup sendirian: seksi terakhir yang pendek tak pernah bisa mencapai pita
- * observasi karena halaman kehabisan ruang scroll. Karena itu ada listener scroll
- * pasif yang hanya bertugas mendeteksi "sudah di dasar" — di situ pemenangnya adalah
- * seksi terlihat *terakhir*, bukan yang pertama.
+ * Dihitung dari geometri, bukan IntersectionObserver. IO dengan pita sempit
+ * (`rootMargin` negatif) rapuh untuk dua kasus nyata:
+ *   - Seksi terakhir yang pendek tidak pernah bisa mencapai pita, karena halaman
+ *     kehabisan ruang scroll. Chip akan tetap menyorot kategori pertama padahal
+ *     pelanggan sudah melihat kategori terakhir.
+ *   - Di layar lebar seluruh menu muat tanpa scroll sama sekali.
+ * Membaca `getBoundingClientRect()` untuk beberapa seksi, di-throttle rAF dan hanya
+ * saat scroll, jauh lebih murah daripada kerumitan menambal kedua kasus itu.
  */
 function initScrollSpy(sectionIds, headerH) {
   teardownSpy();
@@ -77,7 +80,6 @@ function initScrollSpy(sectionIds, headerH) {
   const chips = new Map(
     [...chipsRoot.querySelectorAll('.chip')].map((chip) => [chip.dataset.target, chip]),
   );
-  const visible = new Set();
   let active = null;
 
   const setActive = (id, { reveal = true } = {}) => {
@@ -94,30 +96,31 @@ function initScrollSpy(sectionIds, headerH) {
     }
   };
 
+  const scrollable = () => document.documentElement.scrollHeight > window.innerHeight + 2;
   const atBottom = () =>
     Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 2;
 
-  const update = () => {
-    const ordered = sectionIds.filter((id) => visible.has(id));
-    if (ordered.length === 0) return; // seksi lebih tinggi dari pita: pertahankan yang aktif
-    setActive(atBottom() ? ordered[ordered.length - 1] : ordered[0]);
+  /** Seksi terakhir yang judulnya sudah melewati garis bawah header. */
+  const pick = () => {
+    if (atBottom()) return sectionIds[sectionIds.length - 1];
+
+    const line = headerH + 8;
+    let current = sectionIds[0];
+    for (const id of sectionIds) {
+      const section = document.getElementById(id);
+      if (!section) continue;
+      if (section.getBoundingClientRect().top > line) break;
+      current = id;
+    }
+    return current;
   };
 
-  spy = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) visible.add(entry.target.id);
-        else visible.delete(entry.target.id);
-      }
-      update();
-    },
-    { rootMargin: `-${headerH + 1}px 0px -55% 0px` },
-  );
-
-  for (const id of sectionIds) {
-    const section = document.getElementById(id);
-    if (section) spy.observe(section);
-  }
+  const update = () => {
+    // Menu muat seluruhnya tanpa scroll: tidak ada yang "sedang dibaca", jadi jangan
+    // menimpa chip yang barusan diklik pelanggan.
+    if (!scrollable()) return;
+    setActive(pick());
+  };
 
   let ticking = false;
   onScroll = () => {
@@ -130,14 +133,22 @@ function initScrollSpy(sectionIds, headerH) {
   };
   addEventListener('scroll', onScroll, { passive: true });
 
+  // Mengklik chip adalah pernyataan niat: sorot langsung. Tanpa ini, di layar yang
+  // cukup lebar sehingga menu tak perlu di-scroll, klik chip tidak menyalakan apa pun.
+  onChipClick = (event) => {
+    const chip = event.target.closest('.chip');
+    if (chip?.dataset.target) setActive(chip.dataset.target);
+  };
+  chipsRoot.addEventListener('click', onChipClick);
+
   setActive(sectionIds[0], { reveal: false });
 }
 
 function teardownSpy() {
-  spy?.disconnect();
-  spy = null;
   if (onScroll) removeEventListener('scroll', onScroll);
   onScroll = null;
+  if (onChipClick) chipsRoot?.removeEventListener('click', onChipClick);
+  onChipClick = null;
 }
 
 /**

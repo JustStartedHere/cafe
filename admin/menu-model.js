@@ -174,9 +174,19 @@ function touch(menu) {
 const finish = (menu) => assertValidMenu(touch(renumber(menu)));
 
 export const mutators = {
+  /**
+   * `draft.id` boleh ditentukan pemanggil. Itu wajib saat item punya foto: nama file
+   * gambar memuat itemId, jadi id harus sudah pasti SEBELUM gambar diunggah. Id yang
+   * tetap juga membuat penerapan ulang setelah 409 bersifat idempoten — tidak ada
+   * item kembar meski mutator dijalankan dua kali.
+   */
   addItem: (draft) => (menu) => {
     const next = clone(menu);
-    const id = newItemId(new Set(next.items.map((i) => i.id)));
+    const existing = new Set(next.items.map((i) => i.id));
+    if (draft.id && existing.has(draft.id)) {
+      throw new InvalidMenuError(['Item dengan id itu sudah ada.']);
+    }
+    const id = draft.id || newItemId(existing);
     const siblings = next.items.filter((i) => i.categoryId === draft.categoryId);
     const item = normalizeItem({ ...draft, id, order: siblings.length + 1 }, next);
     next.items.push(item);

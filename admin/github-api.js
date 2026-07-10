@@ -245,6 +245,19 @@ export function createGitHubClient({ owner, repo, token, branch = 'main', fetchI
       return { text: decodeBase64ToText(data.content), sha: data.sha };
     },
 
+    /**
+     * `sha` + ukuran sebuah file, tanpa mendekode isinya.
+     * Dipakai untuk menghapus gambar: `getFile` akan mencoba mendekodenya sebagai teks.
+     */
+    async getMetadata(path) {
+      const url = `${contentsUrl(path)}?ref=${encodeURIComponent(branch)}`;
+      const data = await request(url, { cache: 'no-store' });
+      if (Array.isArray(data)) {
+        throw new GitHubError(`${path} adalah direktori, bukan file`, { code: 'is-directory' });
+      }
+      return { sha: data.sha, size: data.size, path: data.path };
+    },
+
     /** Baca + parse JSON. `sha` dikembalikan untuk dipakai saat menulis balik. */
     async getJson(path) {
       const { text, sha } = await this.getFile(path);

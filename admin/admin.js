@@ -138,6 +138,7 @@ async function signIn(token, { remember = false, persist = true } = {}) {
   const store = createMenuStore(candidate);
   editor = createEditor({
     store,
+    client: candidate, // editor menulis gambar langsung; store hanya mengurus menu.json
     // Token dicabut di tengah sesi → keluarkan owner, jangan biarkan tombol mati diam-diam.
     onAuthError: (error) => logout(explain(error)),
   });

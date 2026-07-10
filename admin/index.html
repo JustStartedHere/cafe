@@ -144,6 +144,19 @@
             <input type="number" id="f-price" class="field__input" required min="0" step="1" inputmode="numeric">
           </label>
 
+          <div class="photo">
+            <span class="field__label">Foto</span>
+            <div class="photo__body">
+              <img id="f-preview" class="photo__preview" alt="" width="120" height="90" hidden>
+              <div class="photo__controls">
+                <!-- `capture` membuat HP langsung membuka kamera, bukan galeri. -->
+                <input type="file" id="f-photo" class="photo__input" accept="image/*" capture>
+                <p class="photo__note" id="f-photo-note">Foto dikecilkan otomatis dan disimpan sebagai WebP.</p>
+                <button type="button" class="button button--quiet button--small" id="f-photo-clear" hidden>Hapus foto</button>
+              </div>
+            </div>
+          </div>
+
           <label class="check">
             <input type="checkbox" id="f-available" class="check__box" checked>
             <span>Tersedia</span>
@@ -177,6 +190,19 @@
           </label>
           <button type="submit" class="button button--small">Tambah kategori</button>
         </form>
+      </section>
+
+      <section class="panel" aria-labelledby="maint-title">
+        <h2 class="panel__title" id="maint-title">Pemeliharaan</h2>
+        <p class="panel__text">
+          Setiap kali foto item diganti, foto lama tetap tersimpan di repositori. Itu disengaja —
+          foto lama menjadi cadangan bila penyimpanan gagal di tengah jalan. Tombol ini menyapu
+          foto yang sudah tidak dipakai item mana pun.
+        </p>
+        <button type="button" class="button button--quiet button--small" id="clean-orphans">
+          Bersihkan foto tak terpakai
+        </button>
+        <p class="panel__hint" id="orphan-status"></p>
       </section>
 
       <p class="panel__hint">
