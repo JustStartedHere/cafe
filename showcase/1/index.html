@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tema showcase: nol request pihak ketiga. Font di-self-host, tidak ada CDN. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#FBF3E8">
+  <title>Your Restaurant — Fine Dining</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/playfair-display-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+  <a class="skip" href="#menu" data-t="skip">Langsung ke menu</a>
+
+  <!-- Teks statis di bawah ini adalah bahasa Indonesia dari STRINGS di data.js.
+       `data-t` menautkannya; theme.js yang menggantinya saat bahasa diubah. -->
+  <div class="topbar">
+    <div class="topbar__inner wrap">
+      <p class="topbar__contact">
+        <a id="tb-phone" href="#"><span aria-hidden="true">☎</span> <span id="tb-phone-text"></span></a>
+        <a id="tb-email" href="#"><span aria-hidden="true">✉</span> <span id="tb-email-text"></span></a>
+      </p>
+      <p class="topbar__promo" data-t="freeDelivery">Gratis antar untuk pesanan di atas Rp 100.000</p>
+      <div class="lang" role="group" data-t-aria-label="langGroup">
+        <button type="button" class="lang__btn" data-lang="id" data-t-aria-label="langId" aria-pressed="true">ID</button>
+        <button type="button" class="lang__btn" data-lang="en" data-t-aria-label="langEn" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner wrap">
+      <nav class="nav__links nav__links--left" aria-label="Menu utama">
+        <a href="#home" class="nav__link" data-t="navHome">Beranda</a>
+        <a href="#menu" class="nav__link" data-t="navMenu">Menu</a>
+        <a href="#about" class="nav__link" data-t="navAbout">Tentang</a>
+      </nav>
+
+      <a href="#home" class="brand">
+        <span class="brand__crown" aria-hidden="true">♛</span>
+        <span class="brand__name">Your Restaurant</span>
+        <span class="brand__tag" data-t="tagline">Fine Dining</span>
+      </a>
+
+      <div class="nav__links nav__links--right">
+        <a class="button button--gold" id="nav-reserve" href="#" target="_blank" rel="noopener noreferrer" data-t="navReserve">Reservasi</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero: 3 slide. Tinggi di-reserve lewat CSS supaya tidak ada layout shift. -->
+    <section class="hero" id="home" aria-roledescription="carousel" aria-label="Sorotan">
+      <div class="hero__inner wrap">
+        <div class="hero__copy">
+          <p class="hero__eyebrow" id="hero-eyebrow"></p>
+          <h1 class="hero__title">
+            <span id="hero-title"></span><br>
+            <span id="hero-title-rest"></span> <span class="hero__accent" id="hero-accent"></span>
+          </h1>
+          <p class="hero__text" id="hero-text"></p>
+          <div class="hero__actions">
+            <a class="button button--gold" id="hero-book" href="#" target="_blank" rel="noopener noreferrer" data-t="heroBook">Pesan Meja</a>
+            <a class="button button--ghost" href="#menu" data-t="heroExplore">Lihat Menu</a>
+          </div>
+          <div class="hero__dots" id="hero-dots" role="group" data-t-aria-label="heroSlides"></div>
+        </div>
+        <figure class="hero__media">
+          <img id="hero-img" src="img/hero-1.webp" alt="" width="1200" height="900" fetchpriority="high" decoding="async">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="cats-title">
+      <div class="wrap">
+        <h2 class="section__title" id="cats-title" data-t="catsTitle">Kategori Menu Kami</h2>
+        <div class="ornament" aria-hidden="true"><span></span>♛<span></span></div>
+        <ul class="cats" id="cats"></ul>
+      </div>
+    </section>
+
+    <section class="section section--menu" id="menu" aria-labelledby="menu-title">
+      <div class="wrap">
+        <h2 class="section__title" id="menu-title" data-t="menuTitle">Rekomendasi Chef</h2>
+        <div class="ornament" aria-hidden="true"><span></span>♛<span></span></div>
+        <div class="tabs" id="tabs" role="group" aria-labelledby="menu-title"></div>
+        <p class="tabs__status" id="menu-status" role="status" aria-live="polite"></p>
+        <ul class="dishes" id="dishes"></ul>
+        <p class="dishes__empty" id="dishes-empty" data-t="emptyFilter" hidden>Belum ada hidangan di kategori ini.</p>
+      </div>
+    </section>
+
+    <section class="section section--about" id="about" aria-labelledby="about-title">
+      <div class="wrap about">
+        <figure class="about__media">
+          <img id="about-img" src="img/about.webp" alt="" width="900" height="675" loading="lazy" decoding="async">
+        </figure>
+        <div class="about__copy">
+          <p class="about__eyebrow" data-t="aboutEyebrow">Tentang Kami</p>
+          <h2 class="about__title" id="about-title" data-t="aboutTitle">Masakan yang Dibuat dengan Sepenuh Hati</h2>
+          <p data-t="aboutText1">Kami memasak dengan bahan yang dipilih setiap pagi dari pasar dan petani lokal. Tidak ada yang disimpan semalam.</p>
+          <p data-t="aboutText2">Dapur kami terbuka — Anda bisa melihat sendiri setiap hidangan disiapkan.</p>
+          <a class="button button--gold" id="about-reserve" href="#" target="_blank" rel="noopener noreferrer" data-t="navReserve">Reservasi</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" aria-label="Keunggulan">
+      <ul class="features__list wrap">
+        <li class="feature">
+          <svg class="feature__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c5-2 8-6 8-11V5l-8-2-8 2v5c0 5 3 9 8 11Z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div><p class="feature__title" data-t="feat1">Bahan Segar</p><p class="feature__sub" data-t="feat1sub">Dari kebun ke meja</p></div>
+        </li>
+        <li class="feature">
+          <svg class="feature__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+          <div><p class="feature__title" data-t="feat2">Chef Berpengalaman</p><p class="feature__sub" data-t="feat2sub">Penuh dedikasi</p></div>
+        </li>
+        <li class="feature">
+          <svg class="feature__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+          <div><p class="feature__title" data-t="feat3">Suasana Hangat</p><p class="feature__sub" data-t="feat3sub">Nyaman untuk semua</p></div>
+        </li>
+        <li class="feature">
+          <svg class="feature__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16V7h11v9"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+          <div><p class="feature__title" data-t="feat4">Antar Cepat</p><p class="feature__sub" data-t="feat4sub">Tepat waktu, setiap saat</p></div>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <p class="brand__name brand__name--footer">Your Restaurant</p>
+        <p class="footer__note" data-t="footNote">Contoh desain — bukan restoran sungguhan.</p>
+      </div>
+      <div>
+        <p class="footer__head" data-t="footHours">Jam Buka</p>
+        <p data-t="footHoursValue">Setiap hari, 10.00 – 22.00</p>
+      </div>
+      <div>
+        <p class="footer__head" data-t="footContact">Kontak</p>
+        <p><a id="foot-phone" href="#"></a></p>
+        <p><a id="foot-reserve" href="#" target="_blank" rel="noopener noreferrer" data-t="footReserve">Reservasi lewat WhatsApp</a></p>
+      </div>
+    </div>
+    <p class="footer__back wrap"><a href="../../" data-t="backToGallery">← Kembali ke galeri desain</a></p>
+  </footer>
+
+  <script type="module" src="theme.js"></script>
+</body>
+</html>
