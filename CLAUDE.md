@@ -10,20 +10,16 @@ Requirement asli ada di `Product Discovery.md`. Rencana implementasi lengkap (su
 
 ## Status saat ini
 
-Phase 0 hampir selesai — file sudah ada, tinggal repo dijadikan publik dan Pages diaktifkan.
+Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | — (Phase 0 sedang berjalan) |
-| Fase berikutnya | Selesaikan Phase 0, lalu **Phase 1** — data + render publik |
+| Fase terakhir selesai | **Phase 0** — skeleton + Pages aktif |
+| Fase berikutnya | **Phase 1** — data + render publik |
 | Direktori kerja | `D:\Project\cafe` |
-| Git | `main` → `https://github.com/JustStartedHere/cafe` |
-| **Blocker** | Repo masih **PRIVATE**. Pages gratis butuh repo publik. User akan mengubahnya sendiri lewat Settings. |
-
-Sisa Phase 0 setelah repo jadi publik:
-1. Commit & push `index.html`, `.nojekyll`, `.gitignore`, `CLAUDE.md`, `PLAN.md`, dan penghapusan `.history/` dari tracking.
-2. Aktifkan Pages: Settings → Pages → Source `Deploy from a branch`, branch `main`, folder `/ (root)`.
-3. Verifikasi `https://juststartedhere.github.io/cafe/` merender halaman "Menu segera hadir".
+| Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
+| Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
+| Blocker | — |
 
 Update tabel ini setiap kali sebuah fase selesai.
 
