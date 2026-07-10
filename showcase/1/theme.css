@@ -527,7 +527,9 @@ h3 {
 
 .cats {
   display: flex;
-  justify-content: center;
+  /* `safe center`: pusatkan bila muat, tapi jatuh ke kiri saat meluap — tanpa `safe`,
+     `center` mendorong item pertama ke luar area scroll sehingga hilang & tak terjangkau. */
+  justify-content: safe center;
   gap: 1.75rem;
   list-style: none;
   margin: 0;
@@ -586,7 +588,9 @@ h3 {
   top: 0;
   z-index: 4;
   display: flex;
-  justify-content: center;
+  /* `safe center`: pusatkan saat muat, jatuh ke kiri saat meluap. Tanpa `safe`, tab pertama
+     ("Semua") terdorong ke luar area gulung di HP — hilang dan tak bisa dijangkau. */
+  justify-content: safe center;
   gap: 0.5rem;
   /* Satu baris yang bisa digulung mendatar. Membungkus (wrap) menjadi 2–3 baris di HP
      membuat bilah sticky memakan tinggi layar yang berharga. */
