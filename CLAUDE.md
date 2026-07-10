@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 3** — wrapper GitHub Contents API |
-| Fase berikutnya | **Phase 4** — auth admin (layar token, storage, idle timeout, meta CSP) |
+| Fase terakhir selesai | **Phase 4** — auth admin |
+| Fase berikutnya | **Phase 5** — CRUD teks (tanpa foto), mutator + pemulihan 409 |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -116,6 +116,11 @@ Ini bukan preferensi gaya; masing-masing menutup satu kelas bug atau kerentanan 
 - **`assets/img/placeholder.svg`, bukan `.webp`.** Placeholder adalah grafis datar: SVG lebih kecil, tajam di semua
   DPI, tanpa blob biner di repo. (Mesin dev juga tidak punya encoder WebP.) Foto item tetap WebP lewat pipeline admin.
 - **`data/menu.json` belum punya foto asli** (`image: ""` → placeholder). Foto masuk lewat admin di Phase 6.
+- **Tiga file admin di luar daftar `PLAN.md`**, masing-masing punya alasan:
+  `admin/config.js` (OWNER/REPO/BRANCH di satu tempat — ini yang diubah saat transfer ke akun client),
+  `admin/token-store.js` (aturan storage token dipisah agar mudah diaudit),
+  `admin/admin.css` (kalau digabung ke `styles.css`, halaman pelanggan ikut menanggung byte-nya).
+- **UI admin berbahasa Indonesia saja.** Bilingual hanya wajib untuk halaman pelanggan; owner-nya satu orang.
 - **Lighthouse tidak dijalankan.** Ia butuh `npx lighthouse`, yaitu paket npm — bertentangan dengan keputusan
   "tanpa build step / tanpa toolchain npm". Sebagai gantinya metrik yang mendasari skornya diukur langsung lewat
   Chrome DevTools Protocol dengan throttling yang sama (CPU 4×, Slow 4G): FCP, LCP, TBT, CLS, plus pemeriksaan
@@ -149,6 +154,11 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
   tapi tak terlihat, tak bisa di-grep, dan bisa dimakan editor/encoding. Tulis `/[\x00-\x1f\x7f]/`.
 - **Uji `getFile`, `putFile`, `deleteFile` di branch scratch, bukan `main`.** Menulis ke `main` memicu rebuild Pages
   dan mengotori history yang dilihat owner. Branch scratch membuktikan hal yang sama tanpa efek samping.
+- **`frame-ancestors` diabaikan kalau dipasang lewat `<meta>` CSP.** Ia butuh header HTTP, dan GitHub Pages tidak
+  bisa menyetel header. Jangan menambahkannya ke meta lalu mengira clickjacking sudah tertutup.
+- **Uji `/admin/` tanpa token GitHub asli**: intercept `api.github.com` lewat CDP `Fetch.enable` dan palsukan
+  responsnya (jangan lupa header CORS + membalas preflight `OPTIONS`). Ini sekaligus membuktikan halaman memang
+  tidak menghubungi host lain.
 
 ## Kontrak `admin/github-api.js` (Phase 3)
 
