@@ -8,7 +8,7 @@
     },
     "currency": "IDR",
     "logo": "",
-    "updatedAt": "2026-07-10T13:34:21.902Z"
+    "updatedAt": "2026-07-10T14:39:57.351Z"
   },
   "categories": [
     {
@@ -41,7 +41,7 @@
         "en": "Espresso, fresh milk, palm sugar."
       },
       "price": 22000,
-      "image": "",
+      "image": "images/itm_ax9f2-2h5p.webp",
       "available": true,
       "featured": true,
       "order": 1
