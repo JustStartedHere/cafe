@@ -15,6 +15,10 @@
   --border: #e7ddd2;
   /* Batas kontrol interaktif (chip, toggle bahasa). Wajib ≥ 3:1 — WCAG 1.4.11. */
   --border-strong: #96806d;
+  /* Dipakai halaman admin. Warna solid, bukan color-mix, agar kontrasnya bisa diaudit eksak. */
+  --danger-bg: #fdecea;
+  --danger-border: #c5221f;
+  --danger-text: #8c1d18;
   --skeleton: #ece3d9;
   --skeleton-sheen: #f6f0e9;
 
@@ -34,6 +38,9 @@
     --on-accent: #17120e;
     --border: #33271f;
     --border-strong: #8a7565;
+    --danger-bg: #2c1614;
+    --danger-border: #e5837d;
+    --danger-text: #f2b8b5;
     --skeleton: #2a211a;
     --skeleton-sheen: #362b22;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 14px rgb(0 0 0 / 25%);

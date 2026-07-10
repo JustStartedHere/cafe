@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    CSP ketat. `connect-src` hanya mengizinkan api.github.com dan same-origin, jadi token
+    tidak punya ke mana pun untuk dikirim. `script-src 'self'` melarang script inline dan
+    CDN — satu script pihak ketiga yang disusupi cukup untuk mengeksfiltrasi token.
+    Catatan: `frame-ancestors` diabaikan kalau dipasang lewat <meta>; ia butuh header HTTP,
+    yang tidak bisa disetel di GitHub Pages. Halaman ini tidak menampilkan data sensitif
+    sampai token dimasukkan, jadi risiko clickjacking-nya kecil.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.github.com; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
+  <title>Admin Menu</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin">
+  <header class="header">
+    <div class="header__inner header__inner--admin">
+      <div class="header__top">
+        <div class="header__id">
+          <h1 class="header__name">Admin Menu</h1>
+          <p class="header__tagline" id="repo-label"></p>
+        </div>
+        <button type="button" class="button button--quiet" id="logout" hidden>Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap admin__main">
+    <!-- Layar token -->
+    <section id="auth" class="panel" aria-labelledby="auth-title">
+      <h2 class="panel__title" id="auth-title">Masuk dengan token GitHub</h2>
+      <p class="panel__text">
+        Menu disimpan sebagai file di repositori GitHub. Untuk mengubahnya, tempelkan
+        <em>fine-grained personal access token</em> yang punya izin <strong>Contents: Read and write</strong>
+        pada repositori ini saja.
+      </p>
+      <p class="panel__text">
+        <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">
+          Buka halaman pembuatan token di GitHub
+        </a>
+        — panduan langkah demi langkah ada di README.
+      </p>
+
+      <form id="token-form" novalidate>
+        <label class="field">
+          <span class="field__label">Token</span>
+          <input
+            type="password"
+            id="token"
+            class="field__input"
+            required
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="github_pat_..."
+          >
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="remember" class="check__box">
+          <span>Ingat di perangkat ini</span>
+        </label>
+        <p class="panel__hint" id="remember-warning" hidden>
+          Perangkat ini akan menyimpan kunci untuk mengubah menu. Jangan centang di komputer bersama.
+        </p>
+
+        <p class="panel__error" id="auth-error" role="alert" hidden></p>
+
+        <button type="submit" class="button" id="submit">Masuk</button>
+      </form>
+    </section>
+
+    <!-- Editor (diisi Phase 5) -->
+    <section id="app" class="panel" aria-labelledby="app-title" hidden>
+      <h2 class="panel__title" id="app-title">Editor menu</h2>
+      <p class="panel__text" id="app-status"></p>
+      <p class="panel__hint">
+        Sesi ditutup otomatis setelah <span id="idle-minutes"></span> menit tanpa aktivitas.
+      </p>
+      <p class="panel__text"><em>CRUD item dan kategori menyusul di Phase 5.</em></p>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
