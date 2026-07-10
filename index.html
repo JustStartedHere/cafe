@@ -3,28 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Menu Kopi Senja — kopi & camilan.">
   <title>Menu Cafe</title>
-  <style>
-    :root { color-scheme: light dark; }
-    body {
-      margin: 0;
-      min-height: 100dvh;
-      display: grid;
-      place-content: center;
-      gap: .5rem;
-      text-align: center;
-      font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: #FBF7F2;
-      color: #2B1D14;
-    }
-    @media (prefers-color-scheme: dark) {
-      body { background: #17120E; color: #F2E9E1; }
-    }
-    p { margin: 0; opacity: .7; }
-  </style>
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-  <h1>Menu segera hadir</h1>
-  <p>Coming soon</p>
+  <header class="header">
+    <div class="header__inner">
+      <h1 class="header__name" id="cafe-name">Kopi Senja</h1>
+      <p class="header__tagline" id="cafe-tagline"></p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Skeleton hidup di shell HTML: first paint instan, tinggi kartu sudah ter-reserve. -->
+    <div id="skeleton" aria-hidden="true">
+      <ul class="grid">
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+      </ul>
+    </div>
+
+    <div id="menu" hidden></div>
+
+    <div id="empty" class="state" hidden>
+      <h2 class="state__title">Menu segera hadir</h2>
+      <p class="state__text">Coming soon</p>
+    </div>
+
+    <div id="error" class="state" hidden>
+      <h2 class="state__title">Menu gagal dimuat</h2>
+      <p class="state__text">Periksa koneksi Anda, lalu coba lagi.</p>
+      <button type="button" class="button" id="retry">Coba lagi</button>
+    </div>
+  </main>
+
+  <script type="module" src="assets/js/menu.js"></script>
 </body>
 </html>

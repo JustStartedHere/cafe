@@ -23,6 +23,18 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 Update tabel ini setiap kali sebuah fase selesai.
 
+### Pemegang token `/admin` (diputuskan 2026-07-10)
+
+Selama development: **`JustStartedHere`** — pemilik repo, jadi sudah admin. Fine-grained PAT single-repo tanpa
+expiry bekerja apa adanya; Phase 3–4 ditulis sesuai rencana tanpa kompromi.
+
+Saat handover: user akan membuat akun GitHub baru untuk owner/client, lalu repo **ditransfer** ke akun itu (syarat
+agar fine-grained PAT milik owner bisa menjangkau repo — lihat "Catatan yang mudah terlupa"). Transfer mengubah URL
+situs menjadi `{owner}.github.io/cafe/`, karena itu:
+
+- **Jangan cetak QR (Phase 7) sebelum transfer selesai.** QR lama akan mati.
+- `itdevcba` tetap cukup sebagai kolaborator write sepanjang Phase 1–8.
+
 ## Keputusan yang sudah dikunci
 
 Jangan buka ulang keputusan ini tanpa diminta user — semuanya sudah dipertimbangkan dan dipilih secara sadar.
@@ -87,6 +99,14 @@ Ini bukan preferensi gaya; masing-masing menutup satu kelas bug atau kerentanan 
   token classic). Jadi README owner harus berisi walkthrough bergambar, bukan janji deep-link yang mengisi otomatis.
 - Fine-grained PAT untuk repo **personal** (non-org) bisa dibuat **tanpa expiry**. Repo milik org dibatasi 366 hari.
   Ini yang membuat klaim "tanpa biaya maintenance" benar-benar terpenuhi.
+- **Fine-grained PAT hanya menjangkau resource milik satu *resource owner*: akun pembuat token sendiri, atau org tempat
+  ia jadi member.** Repo milik akun personal *lain* — di mana pembuat token cuma kolaborator — **tidak bisa diakses**;
+  GitHub mengakui ini sebagai gap. Outside collaborator hanya punya opsi PAT *classic*, yang tidak bisa di-scope ke satu
+  repo sehingga meruntuhkan argumen blast-radius di Phase 4.
+  **Konsekuensi: pemegang token `/admin` harus akun pemilik repo.** (Terverifikasi 2026-07-10 lewat GitHub Docs.)
+- Repo milik akun **personal** tidak punya level peran untuk kolaborator — semua kolaborator dapat *write*, titik.
+  Peran Admin/Maintain/Triage hanya ada di repo **organisasi**. Saat ini `itdevcba` adalah kolaborator write di
+  `JustStartedHere/cafe`; itu sudah maksimal dan **cukup** untuk Phase 1–8 (semuanya cuma butuh commit + push).
 - Rate limit REST authenticated: 5.000 request/jam — jauh di atas kebutuhan.
 - GitHub Pages free: repo publik, cap 1 GB situs, 100 GB/bulan bandwidth, 10 build/jam. Semuanya *soft limit*.
 - Semua path di HTML/JS harus **relatif**, agar situs jalan baik di `user.github.io/cafe/` maupun di root.
