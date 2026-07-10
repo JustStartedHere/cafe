@@ -1,0 +1,627 @@
+{
+  "schemaVersion": 1,
+  "cafe": {
+    "name": "Dolce Dessert",
+    "tagline": {
+      "id": "Dessert dengan jiwa",
+      "en": "Desserts with soul"
+    },
+    "currency": "IDR",
+    "logo": "",
+    "whatsapp": "6281234567890",
+    "instagram": "https://instagram.com/yourrestaurant",
+    "tiktok": "https://tiktok.com/@yourrestaurant",
+    "maps": "https://maps.google.com/?q=Your+Restaurant",
+    "updatedAt": "2026-07-11T00:00:00.000Z"
+  },
+  "categories": [
+    {
+      "id": "pembuka",
+      "name": {
+        "id": "Pembuka",
+        "en": "Starters"
+      },
+      "order": 1
+    },
+    {
+      "id": "utama",
+      "name": {
+        "id": "Hidangan Utama",
+        "en": "Main Course"
+      },
+      "order": 2
+    },
+    {
+      "id": "nusantara",
+      "name": {
+        "id": "Nusantara",
+        "en": "Indonesian"
+      },
+      "order": 3
+    },
+    {
+      "id": "oriental",
+      "name": {
+        "id": "Oriental",
+        "en": "Oriental"
+      },
+      "order": 4
+    },
+    {
+      "id": "manis",
+      "name": {
+        "id": "Pencuci Mulut",
+        "en": "Desserts"
+      },
+      "order": 5
+    },
+    {
+      "id": "minuman",
+      "name": {
+        "id": "Minuman",
+        "en": "Drinks"
+      },
+      "order": 6
+    }
+  ],
+  "items": [
+    {
+      "id": "itm_bruschetta",
+      "categoryId": "pembuka",
+      "name": {
+        "id": "Bruschetta Tomat",
+        "en": "Tomato Bruschetta"
+      },
+      "description": {
+        "id": "Roti panggang, tomat segar, minyak zaitun, balsamic",
+        "en": "Toasted bread, fresh tomato, olive oil, balsamic"
+      },
+      "price": 55000,
+      "image": "showcase/menu-img/bruschetta.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 1
+    },
+    {
+      "id": "itm_caesar-salad",
+      "categoryId": "pembuka",
+      "name": {
+        "id": "Salad Caesar Udang",
+        "en": "Prawn Caesar Salad"
+      },
+      "description": {
+        "id": "Romaine, udang panggang, parmesan, crouton",
+        "en": "Romaine, grilled prawns, parmesan, croutons"
+      },
+      "price": 78000,
+      "image": "showcase/menu-img/caesar-salad.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 2
+    },
+    {
+      "id": "itm_dim-sum",
+      "categoryId": "pembuka",
+      "name": {
+        "id": "Dim Sum Udang",
+        "en": "Shrimp Dim Sum"
+      },
+      "description": {
+        "id": "Hakau kukus isi udang utuh, empat butir",
+        "en": "Steamed har gow with whole shrimp, four pieces"
+      },
+      "price": 48000,
+      "image": "showcase/menu-img/dim-sum.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 3
+    },
+    {
+      "id": "itm_gado-gado",
+      "categoryId": "pembuka",
+      "name": {
+        "id": "Gado-Gado",
+        "en": "Gado-Gado"
+      },
+      "description": {
+        "id": "Sayuran rebus, telur, tahu, siram bumbu kacang",
+        "en": "Blanched vegetables, egg, tofu, peanut sauce"
+      },
+      "price": 45000,
+      "image": "showcase/menu-img/gado-gado.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 4
+    },
+    {
+      "id": "itm_bakpao",
+      "categoryId": "pembuka",
+      "name": {
+        "id": "Bakpao Ayam",
+        "en": "Steamed Chicken Bun"
+      },
+      "description": {
+        "id": "Bakpao lembut isi ayam cincang berbumbu",
+        "en": "Soft steamed bun with seasoned minced chicken"
+      },
+      "price": 42000,
+      "image": "showcase/menu-img/bakpao.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 5
+    },
+    {
+      "id": "itm_grilled-salmon",
+      "categoryId": "utama",
+      "name": {
+        "id": "Salmon Panggang",
+        "en": "Grilled Salmon"
+      },
+      "description": {
+        "id": "Fillet salmon dengan saus mentega lemon",
+        "en": "Salmon fillet with lemon butter sauce"
+      },
+      "price": 145000,
+      "image": "showcase/menu-img/grilled-salmon.webp",
+      "available": true,
+      "featured": true,
+      "badge": "",
+      "order": 1
+    },
+    {
+      "id": "itm_ribeye-steak",
+      "categoryId": "utama",
+      "name": {
+        "id": "Steik Ribeye",
+        "en": "Ribeye Steak"
+      },
+      "description": {
+        "id": "Dipanggang sesuai tingkat kematangan Anda",
+        "en": "Grilled to your preferred doneness"
+      },
+      "price": 285000,
+      "image": "showcase/menu-img/ribeye-steak.webp",
+      "available": true,
+      "featured": true,
+      "badge": "",
+      "order": 2
+    },
+    {
+      "id": "itm_prawn-pasta",
+      "categoryId": "utama",
+      "name": {
+        "id": "Pasta Seafood Krim",
+        "en": "Creamy Seafood Pasta"
+      },
+      "description": {
+        "id": "Linguine, udang, cumi, saus krim bawang putih",
+        "en": "Linguine, prawns, squid, garlic cream sauce"
+      },
+      "price": 128000,
+      "image": "showcase/menu-img/prawn-pasta.webp",
+      "available": true,
+      "featured": false,
+      "badge": "new",
+      "order": 3
+    },
+    {
+      "id": "itm_seafood-risotto",
+      "categoryId": "utama",
+      "name": {
+        "id": "Risoto Seafood",
+        "en": "Seafood Risotto"
+      },
+      "description": {
+        "id": "Beras arborio, kaldu udang, sedikit pedas",
+        "en": "Arborio rice, prawn stock, mild chilli"
+      },
+      "price": 135000,
+      "image": "showcase/menu-img/seafood-risotto.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 4
+    },
+    {
+      "id": "itm_margherita-pizza",
+      "categoryId": "utama",
+      "name": {
+        "id": "Pizza Margherita",
+        "en": "Margherita Pizza"
+      },
+      "description": {
+        "id": "Basil segar & mozzarella, panggang tungku kayu",
+        "en": "Fresh basil & mozzarella, wood-fired"
+      },
+      "price": 98000,
+      "image": "showcase/menu-img/margherita-pizza.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 5
+    },
+    {
+      "id": "itm_chef-plate",
+      "categoryId": "utama",
+      "name": {
+        "id": "Sajian Chef",
+        "en": "Chef's Tasting Plate"
+      },
+      "description": {
+        "id": "Berubah tiap minggu, tanya pelayan kami",
+        "en": "Changes weekly, ask our server"
+      },
+      "price": 175000,
+      "image": "showcase/menu-img/chef-plate.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 6
+    },
+    {
+      "id": "itm_nasi-goreng",
+      "categoryId": "nusantara",
+      "name": {
+        "id": "Nasi Goreng Spesial",
+        "en": "Special Fried Rice"
+      },
+      "description": {
+        "id": "Nasi goreng udang, telur, acar, kerupuk",
+        "en": "Prawn fried rice, egg, pickles, crackers"
+      },
+      "price": 52000,
+      "image": "showcase/menu-img/nasi-goreng.webp",
+      "available": true,
+      "featured": true,
+      "badge": "",
+      "order": 1
+    },
+    {
+      "id": "itm_rendang",
+      "categoryId": "nusantara",
+      "name": {
+        "id": "Rendang Sapi",
+        "en": "Beef Rendang"
+      },
+      "description": {
+        "id": "Daging sapi dimasak lama dengan santan & rempah",
+        "en": "Slow-cooked beef in coconut milk & spices"
+      },
+      "price": 68000,
+      "image": "showcase/menu-img/rendang.webp",
+      "available": true,
+      "featured": true,
+      "badge": "",
+      "order": 2
+    },
+    {
+      "id": "itm_sate-ayam",
+      "categoryId": "nusantara",
+      "name": {
+        "id": "Sate Ayam",
+        "en": "Chicken Satay"
+      },
+      "description": {
+        "id": "Sepuluh tusuk, bumbu kacang, lontong",
+        "en": "Ten skewers, peanut sauce, rice cake"
+      },
+      "price": 48000,
+      "image": "showcase/menu-img/sate-ayam.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 3
+    },
+    {
+      "id": "itm_soto-ayam",
+      "categoryId": "nusantara",
+      "name": {
+        "id": "Soto Ayam",
+        "en": "Chicken Soto"
+      },
+      "description": {
+        "id": "Kuah kunyit, suwiran ayam, telur, seledri",
+        "en": "Turmeric broth, shredded chicken, egg, celery"
+      },
+      "price": 42000,
+      "image": "showcase/menu-img/soto-ayam.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 4
+    },
+    {
+      "id": "itm_mie-goreng",
+      "categoryId": "nusantara",
+      "name": {
+        "id": "Mie Goreng",
+        "en": "Fried Noodles"
+      },
+      "description": {
+        "id": "Mie goreng sayur, ayam, telur mata sapi",
+        "en": "Fried noodles, vegetables, chicken, fried egg"
+      },
+      "price": 46000,
+      "image": "showcase/menu-img/mie-goreng.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 5
+    },
+    {
+      "id": "itm_ayam-bakar",
+      "categoryId": "nusantara",
+      "name": {
+        "id": "Ayam Bakar",
+        "en": "Grilled Chicken"
+      },
+      "description": {
+        "id": "Ayam bakar bumbu kecap, sambal, lalapan",
+        "en": "Grilled chicken in sweet soy, sambal, greens"
+      },
+      "price": 55000,
+      "image": "showcase/menu-img/ayam-bakar.webp",
+      "available": true,
+      "featured": false,
+      "badge": "new",
+      "order": 6
+    },
+    {
+      "id": "itm_ayam-asam-manis",
+      "categoryId": "oriental",
+      "name": {
+        "id": "Ayam Asam Manis",
+        "en": "Sweet & Sour Chicken"
+      },
+      "description": {
+        "id": "Ayam goreng renyah, saus asam manis, nanas",
+        "en": "Crispy chicken, sweet-sour sauce, pineapple"
+      },
+      "price": 58000,
+      "image": "showcase/menu-img/ayam-asam-manis.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 1
+    },
+    {
+      "id": "itm_kung-pao",
+      "categoryId": "oriental",
+      "name": {
+        "id": "Ayam Kung Pao",
+        "en": "Kung Pao Chicken"
+      },
+      "description": {
+        "id": "Ayam tumis pedas, kacang mede, cabai kering",
+        "en": "Spicy stir-fried chicken, cashews, dried chilli"
+      },
+      "price": 62000,
+      "image": "showcase/menu-img/kung-pao.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 2
+    },
+    {
+      "id": "itm_bakmi-goreng",
+      "categoryId": "oriental",
+      "name": {
+        "id": "Bakmi Goreng",
+        "en": "Fried Egg Noodles"
+      },
+      "description": {
+        "id": "Bakmi telur goreng, char siu, sawi, bakso",
+        "en": "Fried egg noodles, char siu, greens, meatballs"
+      },
+      "price": 54000,
+      "image": "showcase/menu-img/bakmi-goreng.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 3
+    },
+    {
+      "id": "itm_mapo-tofu",
+      "categoryId": "oriental",
+      "name": {
+        "id": "Mapo Tahu",
+        "en": "Mapo Tofu"
+      },
+      "description": {
+        "id": "Tahu lembut, saus pedas Sichuan, daun bawang",
+        "en": "Silken tofu, spicy Sichuan sauce, scallion"
+      },
+      "price": 50000,
+      "image": "showcase/menu-img/mapo-tofu.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 4
+    },
+    {
+      "id": "itm_pangsit-kuah",
+      "categoryId": "oriental",
+      "name": {
+        "id": "Pangsit Kuah",
+        "en": "Wonton Soup"
+      },
+      "description": {
+        "id": "Pangsit isi udang-ayam, kuah kaldu bening",
+        "en": "Shrimp-chicken wontons, clear broth"
+      },
+      "price": 44000,
+      "image": "showcase/menu-img/pangsit-kuah.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 5
+    },
+    {
+      "id": "itm_creme-brulee",
+      "categoryId": "manis",
+      "name": {
+        "id": "Crème Brûlée",
+        "en": "Crème Brûlée"
+      },
+      "description": {
+        "id": "Vanila, gula karamel, raspberry",
+        "en": "Vanilla, caramelised sugar, raspberry"
+      },
+      "price": 62000,
+      "image": "showcase/menu-img/creme-brulee.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 1
+    },
+    {
+      "id": "itm_berry-cheesecake",
+      "categoryId": "manis",
+      "name": {
+        "id": "Cheesecake Beri",
+        "en": "Berry Cheesecake"
+      },
+      "description": {
+        "id": "Lembut, saus beri asam manis",
+        "en": "Silky, sweet-tart berry coulis"
+      },
+      "price": 68000,
+      "image": "showcase/menu-img/berry-cheesecake.webp",
+      "available": true,
+      "featured": true,
+      "badge": "",
+      "order": 2
+    },
+    {
+      "id": "itm_chocolate-cake",
+      "categoryId": "manis",
+      "name": {
+        "id": "Kue Cokelat",
+        "en": "Chocolate Cake"
+      },
+      "description": {
+        "id": "Tiga lapis, cokelat hitam 70%",
+        "en": "Three layers, 70% dark chocolate"
+      },
+      "price": 58000,
+      "image": "showcase/menu-img/chocolate-cake.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 3
+    },
+    {
+      "id": "itm_tiramisu",
+      "categoryId": "manis",
+      "name": {
+        "id": "Tiramisu",
+        "en": "Tiramisu"
+      },
+      "description": {
+        "id": "Mascarpone, kopi espresso, bubuk kakao",
+        "en": "Mascarpone, espresso, cocoa dust"
+      },
+      "price": 60000,
+      "image": "showcase/menu-img/tiramisu.webp",
+      "available": true,
+      "featured": false,
+      "badge": "new",
+      "order": 4
+    },
+    {
+      "id": "itm_panna-cotta",
+      "categoryId": "manis",
+      "name": {
+        "id": "Panna Cotta",
+        "en": "Panna Cotta"
+      },
+      "description": {
+        "id": "Krim vanila lembut, kompot beri segar",
+        "en": "Silky vanilla cream, fresh berry compote"
+      },
+      "price": 54000,
+      "image": "showcase/menu-img/panna-cotta.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 5
+    },
+    {
+      "id": "itm_macaron",
+      "categoryId": "manis",
+      "name": {
+        "id": "Macaron",
+        "en": "Macarons"
+      },
+      "description": {
+        "id": "Lima butir, aneka rasa harian",
+        "en": "Five pieces, assorted daily flavours"
+      },
+      "price": 45000,
+      "image": "showcase/menu-img/macaron.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 6
+    },
+    {
+      "id": "itm_gelato",
+      "categoryId": "manis",
+      "name": {
+        "id": "Gelato",
+        "en": "Gelato"
+      },
+      "description": {
+        "id": "Dua scoop, pilih rasa favorit Anda",
+        "en": "Two scoops, choose your favourite"
+      },
+      "price": 40000,
+      "image": "showcase/menu-img/gelato.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 7
+    },
+    {
+      "id": "itm_watermelon-cooler",
+      "categoryId": "minuman",
+      "name": {
+        "id": "Semangka Basil",
+        "en": "Watermelon Basil Cooler"
+      },
+      "description": {
+        "id": "Semangka segar, basil, tanpa alkohol",
+        "en": "Fresh watermelon, basil, alcohol free"
+      },
+      "price": 45000,
+      "image": "showcase/menu-img/watermelon-cooler.webp",
+      "available": true,
+      "featured": false,
+      "badge": "new",
+      "order": 1
+    },
+    {
+      "id": "itm_cold-brew",
+      "categoryId": "minuman",
+      "name": {
+        "id": "Cold Brew",
+        "en": "Cold Brew"
+      },
+      "description": {
+        "id": "Kopi diseduh dingin 18 jam",
+        "en": "Coffee steeped cold for 18 hours"
+      },
+      "price": 38000,
+      "image": "showcase/menu-img/cold-brew.webp",
+      "available": true,
+      "featured": false,
+      "badge": "",
+      "order": 2
+    }
+  ]
+}
