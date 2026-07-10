@@ -3,7 +3,9 @@
 import { getLang, setLang, applyStatic, LANGS } from './i18n.js';
 import { renderMenu, renderHeader } from './render.js';
 
-const DATA_URL = 'data/menu.json';
+// Relatif terhadap modul ini (`assets/js/`), bukan terhadap halaman pemanggil — halaman
+// pelanggan ada di `/menu/`, sementara datanya tetap di akar situs.
+const DATA_URL = new URL('../../data/menu.json', import.meta.url).href;
 
 const view = {
   skeleton: document.getElementById('skeleton'),

@@ -10,12 +10,16 @@ export const BRANCH = 'main';
 
 /**
  * URL halaman pelanggan — yang di-encode ke QR.
- * Dihitung dari lokasi halaman admin (`/admin/` → satu tingkat naik), sehingga otomatis
+ *
+ * Dihitung dari lokasi halaman admin (`/admin/` → naik satu tingkat → `/menu/`), sehingga otomatis
  * benar setelah repo ditransfer. Nilai di bawah hanya cadangan saat dibuka dari file lokal.
+ *
+ * Menunjuk `/menu/`, BUKAN akar situs: akar ditempati galeri showcase yang sifatnya sementara
+ * (lihat `SHOWCASE_PLAN.md`). Dengan begitu galeri boleh dihapus tanpa mematikan QR yang tercetak.
  */
-export const SITE_URL = new URL('..', location.href).href.startsWith('http')
-  ? new URL('..', location.href).href
-  : 'https://juststartedhere.github.io/cafe/';
+export const SITE_URL = new URL('../menu/', location.href).href.startsWith('http')
+  ? new URL('../menu/', location.href).href
+  : 'https://juststartedhere.github.io/cafe/menu/';
 
 /** Menit tanpa aktivitas sebelum sesi admin ditutup sendiri. */
 export const IDLE_MINUTES = 20;

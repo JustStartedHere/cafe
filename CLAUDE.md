@@ -8,18 +8,23 @@ Website statis untuk menampilkan menu cafe. Pelanggan scan QR di meja → langsu
 Requirement asli ada di `Product Discovery.md`. Rencana implementasi lengkap (sudah disetujui) ada di
 **`PLAN.md`** — baca itu sebelum mulai bekerja.
 
+Di atasnya kini ada pekerjaan kedua: **etalase 5 opsi desain untuk client**, rencananya di
+**`SHOWCASE_PLAN.md`**. Baca itu sebelum menyentuh `/` atau `showcase/`.
+
 ## Status saat ini
 
-Semua fase implementasi selesai. Situs live, admin berfungsi, QR siap dicetak
-*setelah* repo dipindah ke akun client.
+Situs pelanggan selesai (Phase 1–8). Sekarang membangun showcase: galeri di root + 4 tema tiruan
+`docs/references/`. Tema 1 sedang dikerjakan.
 
 | | |
 |---|---|
 | Fase terakhir selesai | **Phase 8** — hardening & polish |
-| Fase berikutnya | **Serah terima**: transfer repo ke akun client, lalu cetak QR |
+| Sedang dikerjakan | **Showcase tema 1** (`showcase/1/`) — lihat `SHOWCASE_PLAN.md` |
+| Berikutnya | Tema 2–4, lalu **serah terima**: transfer repo ke akun client, cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
-| Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
+| Situs pelanggan | `https://juststartedhere.github.io/cafe/menu/` ← **yang di-encode QR** |
+| Galeri showcase | `https://juststartedhere.github.io/cafe/` — sementara, boleh dihapus nanti |
 | Blocker | — |
 
 Update tabel ini setiap kali sebuah fase selesai.
@@ -219,8 +224,11 @@ Aturan **teks ≥ 16px** sempat dilanggar diam-diam di tujuh tempat. Sekarang:
   perbarui sha256.
 - `createSvgTag()`/`createImgTag()` milik library **tidak dipakai** — keduanya merakit HTML sebagai string.
   `admin/qr.js` membaca `isDark()` dan membangun DOM lewat `createElementNS`.
-- URL yang di-encode dihitung dari `location` halaman admin (`config.js` → `SITE_URL`), jadi otomatis benar setelah
-  repo ditransfer. **QR jangan dicetak sebelum transfer selesai.**
+- URL yang di-encode dihitung dari `location` halaman admin (`config.js` → `SITE_URL` = `../menu/`), jadi otomatis
+  benar setelah repo ditransfer. **QR jangan dicetak sebelum transfer selesai.**
+- **Situs pelanggan hidup di `/menu/`, bukan di root.** Root ditempati galeri showcase yang sifatnya sementara.
+  Itulah sebabnya QR menunjuk `/menu/`: galeri boleh dihapus kapan pun tanpa mematikan QR yang sudah tercetak.
+  Setelah QR dicetak, **`/menu/` tidak boleh dipindah lagi**.
 - Quiet zone 4 modul wajib menurut spesifikasi QR — jangan dikurangi demi estetika.
 - Tetap **tanpa service worker**. `pwa-test` menegakkan ini: nol registrasi, `sw.js` harus 404.
 

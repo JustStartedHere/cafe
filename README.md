@@ -4,7 +4,7 @@ Website menu untuk pelanggan yang scan QR di meja. Tidak ada pemesanan — murni
 
 | | |
 |---|---|
-| Halaman pelanggan | <https://juststartedhere.github.io/cafe/> |
+| Halaman pelanggan | <https://juststartedhere.github.io/cafe/menu/> |
 | Halaman pengelola | <https://juststartedhere.github.io/cafe/admin/> |
 | Tempat data disimpan | `data/menu.json` di repositori ini |
 

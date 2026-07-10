@@ -50,16 +50,18 @@
 <body>
   <h1>Halaman tidak ditemukan</h1>
   <p>Page not found</p>
-  <a id="home" href="../">Kembali ke menu · Back to the menu</a>
+  <a id="home" href="../menu/">Kembali ke menu · Back to the menu</a>
 
   <script>
     // Di `user.github.io/cafe/...` akar situs adalah segmen path pertama.
     // Di domain sendiri, akarnya `/`. Hitung, jangan tebak.
+    // Menu pelanggan ada di `{akar}menu/`, bukan di akar — akar dipakai galeri showcase.
     (function () {
       var path = location.pathname;
       var onGithubPages = /\.github\.io$/i.test(location.hostname);
       var first = path.split('/')[1];
-      document.getElementById('home').href = onGithubPages && first ? '/' + first + '/' : '/';
+      var root = onGithubPages && first ? '/' + first + '/' : '/';
+      document.getElementById('home').href = root + 'menu/';
     })();
   </script>
 </body>

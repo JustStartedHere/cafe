@@ -1,5 +1,7 @@
 # Halaman menu boleh diindeks. Halaman pengelola tidak — ia dilindungi token,
 # bukan oleh ketidaktahuan, tapi tak ada gunanya muncul di hasil pencarian.
+# Galeri showcase adalah etalase internal untuk client, bukan halaman publik.
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /showcase/

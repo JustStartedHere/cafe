@@ -1,6 +1,11 @@
 // Helper murni: tanpa DOM, tanpa fetch. Dipakai render.js dan menu.js.
 
-export const PLACEHOLDER_IMAGE = 'assets/img/placeholder.svg';
+// Path gambar di `menu.json` (mis. `images/foo.webp`) relatif terhadap AKAR SITUS, bukan
+// terhadap halaman yang memuatnya. Halaman pelanggan tinggal di `/menu/`, jadi resolusi
+// bawaan browser akan meleset. Akar dihitung dari lokasi modul ini (`assets/js/`).
+const SITE_ROOT = new URL('../../', import.meta.url);
+
+export const PLACEHOLDER_IMAGE = new URL('assets/img/placeholder.svg', SITE_ROOT).href;
 
 const LOCALES = { id: 'id-ID', en: 'en-US' };
 
@@ -41,7 +46,7 @@ const SAFE_IMAGE = /^(images|assets)\/[A-Za-z0-9._/-]+$/;
 export function imageSrc(item) {
   const src = typeof item.image === 'string' ? item.image.trim() : '';
   if (src === '' || src.includes('..') || !SAFE_IMAGE.test(src)) return PLACEHOLDER_IMAGE;
-  return src;
+  return new URL(src, SITE_ROOT).href;
 }
 
 /**
