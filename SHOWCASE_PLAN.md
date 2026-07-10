@@ -62,15 +62,35 @@ sebelum dipakai, dikompres WebP lewat canvas headless Chrome. Sitasi di `*/img/C
 Sticky tab bisa scroll horizontal (safe center) · hero swipe + panah + auto-advance yang
 hormat `prefers-reduced-motion` · snap-scroll saat filter dari bawah · transisi halus.
 
-## Status
+## Status — SELESAI (2026-07-11)
 
-| Desain | Situs | data.json | Admin | Commit |
+| Desain | Situs | data.json | Admin | Tes |
 |---|---|---|---|---|
-| Cafe | ✅ (perlu revamp admin + perkaya menu) | ✅ | ⏳ tabel | |
-| Tema 1 | ✅ | ⏳ konversi | ⏳ | |
-| Tema 2 | ⏳ | ⏳ | ⏳ | |
-| Tema 3 | ⏳ | ⏳ | ⏳ | |
-| Tema 4 | ⏳ | ⏳ | ⏳ | |
+| Cafe | ✅ `/menu/` (+footer sosial) | ✅ | ✅ tabel | editor 45 · admin 25 · qr 20 · model 63 · a11y 11 · xss 13 · pwa 25 |
+| Tema 1 | ✅ | ✅ (fetch runtime) | ✅ | theme1 77 · ext 4 |
+| Tema 2 | ✅ Savoria (terracotta) | ✅ | ✅ | view 27 · a11y 10 · ext 4 · admin-wire 6 · kontras AA |
+| Tema 3 | ✅ Verde (poster hijau) | ✅ | ✅ | view 27 · a11y 10 · ext 4 · admin-wire 6 · kontras AA |
+| Tema 4 | ✅ Dolce (blush dessert) | ✅ | ✅ | view 27 · a11y 10 · ext 4 · admin-wire 6 · kontras AA |
+| Galeri | ✅ 5 kartu live + pratinjau | — | — | gallery 14 · a11y 11 |
+
+### Modul bersama yang lahir dari fase ini
+
+- **`showcase/lib.js`** — `loadMenu` (cache-busted, loading/error), `resolveImg` (allowlist
+  `images|assets|showcase`), `waLink`, `socialLinks`, helper DOM. Dipakai tema 1 & engine.
+- **`showcase/menu-view.js`** — engine tampilan menu untuk tema 2–4 (filter, tab sticky
+  safe-center, bahasa, sosial, loading/error). Tema cukup shell HTML + CSS; kontrak id di header file.
+- **`admin/admin-core.js`** — orkestrasi login/idle/QR generik via `window.__ADMIN_CONFIG`
+  (di-set `boot.js` per desain; dynamic-import karena CSP melarang inline).
+- **`admin/table-editor.js`** — editor menu berbasis tabel + panel identitas/sosial; semua
+  invarian lama dipertahankan (gambar-dulu, retry 409, orphan cleanup per folder desain).
+- **`admin/menu-model.js`** — tambah `badge:'new'` + `normalizeCafe`/`mutators.updateCafe`.
+
+### Sisa untuk owner (bukan blocker teknis)
+
+- Ganti placeholder WhatsApp/IG/TikTok/Maps: lewat **admin tiap desain** (panel "Identitas &
+  sosial") atau langsung di `data.json`/`data/menu.json`. Tak perlu sentuh kode lagi.
+- QR tiap desain otomatis benar setelah transfer repo (dihitung dari `location`); **jangan cetak
+  sebelum transfer** (URL berubah).
 
 ## Cara menambah tema (pola)
 

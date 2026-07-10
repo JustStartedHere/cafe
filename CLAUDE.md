@@ -13,20 +13,35 @@ Di atasnya kini ada pekerjaan kedua: **etalase 5 opsi desain untuk client**, ren
 
 ## Status saat ini
 
-Situs pelanggan selesai (Phase 1–8). Showcase berjalan: galeri di root + tema 1 selesai.
-Tema 2–4 (`docs/references/2–4.jpg`) menyusul.
+Situs pelanggan selesai (Phase 1–8). **Showcase SELESAI (2026-07-11):** galeri di root + tema 1–4,
+masing-masing dengan `data.json` + admin tabel sendiri lewat satu mesin admin bersama.
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Showcase tema 1** + galeri root — lihat `SHOWCASE_PLAN.md` |
-| Berikutnya | Tema 2, 3, 4, lalu **serah terima**: transfer repo ke akun client, cetak QR |
+| Fase terakhir selesai | **Showcase 5 desain lengkap** (galeri + tema 1–4 + admin tabel) — `SHOWCASE_PLAN.md` |
+| Berikutnya | **Serah terima**: transfer repo ke akun client, ganti placeholder sosial, cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
-| Situs pelanggan | `https://juststartedhere.github.io/cafe/menu/` ← **yang di-encode QR** |
+| Situs pelanggan | `https://juststartedhere.github.io/cafe/menu/` ← **yang di-encode QR cafe** |
 | Galeri showcase | `https://juststartedhere.github.io/cafe/` — sementara, boleh dihapus nanti |
+| Tema showcase | `…/cafe/showcase/1..4/` (+ `…/showcase/N/admin/`) |
 | Blocker | — |
 
 Update tabel ini setiap kali sebuah fase selesai.
+
+### Arsitektur showcase & admin bersama (fase 2026-07-11) — detail di `SHOWCASE_PLAN.md`
+
+- **Tiap desain `data.json` + admin sendiri, satu mesin admin bersama.** `admin/admin-core.js`
+  (login/idle/QR generik, dikonfigurasi `window.__ADMIN_CONFIG` dari `boot.js` tiap desain) +
+  `admin/table-editor.js` (editor **tabel** + panel identitas/sosial). Modul keamanan lama dipakai apa adanya.
+- **`boot.js` per admin** — CSP `script-src 'self'` melarang `<script>` inline, jadi config di modul
+  same-origin yang **dynamic-import** admin-core (static import di-hoist → jalan sebelum config di-set).
+- **Halaman tema** membaca `data.json` runtime: tema 1 pakai `showcase/lib.js`; tema 2–4 pakai engine
+  bersama `showcase/menu-view.js`. Foto seed 31 hidangan di `showcase/menu-img/`. **CSP tema
+  `connect-src 'self'`** (perlu fetch data sendiri).
+- **Meta `cafe`** kini memuat `whatsapp/instagram/tiktok/maps` (divalidasi `normalizeCafe`: URL wajib
+  `https`, WA disaring digit). Item punya `badge:'new'` selain `featured`. Halaman `/menu/` cafe kini
+  punya footer sosial (`renderFooter`, href https-only).
 
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
