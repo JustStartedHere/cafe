@@ -63,13 +63,17 @@ Sesi menutup dirinya sendiri setelah 20 menit tanpa aktivitas.
 
 ## 3. Mengubah menu
 
+Item menu tampil sebagai **tabel** (foto · produk · harga · status · aksi), dikelompokkan per kategori.
+
 | Yang ingin dilakukan | Caranya |
 |---|---|
+| Ubah nama usaha, tagline, & kontak sosial | Panel **Identitas & sosial** di atas (WhatsApp, Instagram, TikTok, Google Maps) → **Simpan identitas** |
 | Tambah item | **Tambah item** → isi form → **Simpan** |
 | Ubah harga / nama / deskripsi | **Edit** pada baris item |
 | Ganti atau hapus foto | **Edit** → bagian **Foto** |
 | Tandai habis | **Habiskan** (klik **Adakan** untuk mengembalikan) |
-| Tandai unggulan | **Signature** — item akan berbadge di halaman pelanggan |
+| Tandai unggulan | **Signature** — item berbadge unggulan di halaman pelanggan |
+| Tandai baru | Centang **Baru** saat Edit — item berbadge "Baru" |
 | Ubah urutan | Tombol **↑** dan **↓** |
 | Hapus item | **Hapus** pada baris item |
 | Tambah / hapus kategori | Bagian **Kategori** di bawah |
@@ -106,7 +110,7 @@ Isian form Anda **tidak akan hilang**. Perbaiki koneksi lalu klik **Simpan** lag
 | *Repositori … tidak terjangkau token ini* | Saat membuat token, repositori `cafe` tidak terpilih di **Only select repositories**. |
 | *Kuota GitHub habis* | Terlalu banyak permintaan. Tunggu sampai jam yang disebutkan. Praktis mustahil terjadi. |
 | *Gagal menghubungi GitHub* | Koneksi internet putus. Isian Anda aman; coba lagi. |
-| *File data/menu.json tidak ditemukan* | File menu terhapus. Klik **Muat ulang**; kalau tetap gagal, lihat "Mengembalikan menu" di bawah. |
+| *File data menu tidak ditemukan di repositori* | File menu terhapus. Klik **Muat ulang**; kalau tetap gagal, lihat "Mengembalikan menu" di bawah. |
 
 ### Mengembalikan menu yang rusak
 
@@ -170,13 +174,24 @@ menu yang sudah basi — harga lama, item yang sudah habis. Lebih baik gagal juj
 
 ---
 
-## Mengganti nama cafe
+## Mengganti nama, tagline, & kontak sosial
 
-Nama dan tagline diambil dari `data/menu.json` (`cafe.name`, `cafe.tagline`) — halaman pelanggan memakainya
-secara otomatis. Dua tempat yang **tidak** ikut berubah dan harus disunting manual:
+Cara termudah: buka **admin → panel Identitas & sosial**, ubah, lalu **Simpan identitas**. Nama, tagline,
+WhatsApp, Instagram, TikTok, dan Google Maps semuanya tersimpan di `data/menu.json` (`cafe.*`) dan langsung
+dipakai halaman pelanggan — termasuk footer sosial dan tombol WhatsApp. (Tautan sosial wajib diawali
+`https://`; nomor WhatsApp cukup angka, mis. `628123456789`.)
+
+Dua tempat yang **tidak** ikut berubah otomatis dan harus disunting manual di repositori:
 
 - `manifest.webmanifest` — nama yang muncul saat menu dipasang ke layar utama HP.
-- `index.html` — `<meta name="description">`.
+- `menu/index.html` — `<meta name="description">` halaman pelanggan.
+
+## Etalase 5 desain (sementara)
+
+Selama masa memilih, root situs (<https://juststartedhere.github.io/cafe/>) menampilkan **galeri 5 gaya
+tampilan**. Empat di antaranya ada di `/showcase/1..4/`, masing-masing punya admin sendiri di
+`/showcase/N/admin/` dengan cara login yang **sama** (token GitHub yang sama). Setelah client memilih satu
+desain, sisanya boleh dihapus — QR menunjuk `/menu/`, jadi tidak terpengaruh.
 
 ---
 
