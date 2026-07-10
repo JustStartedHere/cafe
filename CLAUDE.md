@@ -13,14 +13,13 @@ Di atasnya kini ada pekerjaan kedua: **etalase 5 opsi desain untuk client**, ren
 
 ## Status saat ini
 
-Situs pelanggan selesai (Phase 1–8). Sekarang membangun showcase: galeri di root + 4 tema tiruan
-`docs/references/`. Tema 1 sedang dikerjakan.
+Situs pelanggan selesai (Phase 1–8). Showcase berjalan: galeri di root + tema 1 selesai.
+Tema 2–4 (`docs/references/2–4.jpg`) menyusul.
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 8** — hardening & polish |
-| Sedang dikerjakan | **Showcase tema 1** (`showcase/1/`) — lihat `SHOWCASE_PLAN.md` |
-| Berikutnya | Tema 2–4, lalu **serah terima**: transfer repo ke akun client, cetak QR |
+| Fase terakhir selesai | **Showcase tema 1** + galeri root — lihat `SHOWCASE_PLAN.md` |
+| Berikutnya | Tema 2, 3, 4, lalu **serah terima**: transfer repo ke akun client, cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs pelanggan | `https://juststartedhere.github.io/cafe/menu/` ← **yang di-encode QR** |

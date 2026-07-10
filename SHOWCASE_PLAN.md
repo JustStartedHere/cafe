@@ -19,11 +19,26 @@ mematikan QR yang sudah tercetak. Jangan pernah memindahkan `/menu/` lagi setela
 
 | # | Nama | Referensi | Status |
 |---|---|---|---|
-| 1 | Klasik Fine Dining | `docs/references/1.jpg` | **selesai** |
+| 1 | Klasik Fine Dining | `docs/references/1.jpg` | **selesai** — `showcase/1/` |
 | 2 | Savoria Kitchen | `docs/references/2.jpg` | belum |
 | 3 | Menu Poster Hijau | `docs/references/3.jpg` | belum |
 | 4 | Dolce Dessert | `docs/references/4.jpg` | belum |
 | 5 | Desain sekarang | — | live di `/menu/` |
+
+Galeri root (`index.html`) sudah menautkan tema 1 + situs `/menu/` sebagai "Bisa dicoba",
+dan menyediakan tiga kartu "Segera" untuk tema 2–4.
+
+## Cara menambah tema berikutnya (2–4)
+
+1. Siapkan foto: `node ov.mjs "<kueri>" <slug> 3` (CC0/PD dari Openverse) → `sheet.mjs` untuk
+   tinjau → pilih → `prep-img.mjs` untuk crop+WebP. Lihat sitasi di `img/CREDITS.md`.
+2. Bangun `showcase/{n}/` dengan pola tema 1: `index.html` + `theme.css` + `theme.js` + `data.js`.
+   Impor `pickLang`/`formatPrice` dari `assets/js/util.js`, `getLang`/`setLang` dari `i18n.js`,
+   dan `showcase/config.js`.
+3. Ganti kartu "Segera" ke-n di `index.html` root menjadi `<a class="card card--live">`, dan
+   ambil pratinjau (`shot.mjs` → `topng2webp.mjs`) ke `showcase/preview/preview-{n}.webp`.
+4. Salin `theme1-test.mjs` → `theme{n}-test.mjs`, sesuaikan; jalankan a11y + ext + kontras.
+   Semua harness ada di scratchpad; jalankan Chrome dengan `--lang=id-ID`.
 
 ## Kontrak yang berlaku untuk SEMUA halaman tema
 
