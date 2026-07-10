@@ -2,21 +2,44 @@
   "schemaVersion": 1,
   "cafe": {
     "name": "Kopi Senja",
-    "tagline": { "id": "Kopi & camilan, tiap hari", "en": "Coffee & bites, every day" },
+    "tagline": {
+      "id": "Kopi & camilan, tiap hari",
+      "en": "Coffee & bites, every day"
+    },
     "currency": "IDR",
     "logo": "",
-    "updatedAt": "2026-07-10T00:00:00Z"
+    "updatedAt": "2026-07-10T13:32:42.056Z"
   },
   "categories": [
-    { "id": "coffee", "name": { "id": "Kopi", "en": "Coffee" }, "order": 1 },
-    { "id": "food", "name": { "id": "Makanan", "en": "Food" }, "order": 2 }
+    {
+      "id": "coffee",
+      "name": {
+        "id": "Kopi",
+        "en": "Coffee"
+      },
+      "order": 1
+    },
+    {
+      "id": "food",
+      "name": {
+        "id": "Makanan",
+        "en": "Food"
+      },
+      "order": 2
+    }
   ],
   "items": [
     {
       "id": "itm_ax9f2",
       "categoryId": "coffee",
-      "name": { "id": "Es Kopi Susu", "en": "Iced Milk Coffee" },
-      "description": { "id": "Espresso, susu segar, gula aren.", "en": "Espresso, fresh milk, palm sugar." },
+      "name": {
+        "id": "Es Kopi Susu",
+        "en": "Iced Milk Coffee"
+      },
+      "description": {
+        "id": "Espresso, susu segar, gula aren.",
+        "en": "Espresso, fresh milk, palm sugar."
+      },
       "price": 22000,
       "image": "",
       "available": true,
@@ -26,8 +49,14 @@
     {
       "id": "itm_b7k31",
       "categoryId": "coffee",
-      "name": { "id": "Kopi Tubruk", "en": "" },
-      "description": { "id": "Kopi robusta diseduh tubruk, disajikan panas.", "en": "" },
+      "name": {
+        "id": "Kopi Tubruk",
+        "en": ""
+      },
+      "description": {
+        "id": "Kopi robusta diseduh tubruk, disajikan panas.",
+        "en": ""
+      },
       "price": 15000,
       "image": "",
       "available": true,
@@ -37,8 +66,14 @@
     {
       "id": "itm_c2m84",
       "categoryId": "coffee",
-      "name": { "id": "Cold Brew", "en": "Cold Brew" },
-      "description": { "id": "Diseduh dingin 16 jam, tanpa gula.", "en": "Steeped cold for 16 hours, unsweetened." },
+      "name": {
+        "id": "Cold Brew",
+        "en": "Cold Brew"
+      },
+      "description": {
+        "id": "Diseduh dingin 16 jam, tanpa gula.",
+        "en": "Steeped cold for 16 hours, unsweetened."
+      },
       "price": 28000,
       "image": "",
       "available": false,
@@ -48,13 +83,36 @@
     {
       "id": "itm_d5p60",
       "categoryId": "food",
-      "name": { "id": "Pisang Goreng", "en": "Fried Banana" },
-      "description": { "id": "Pisang kepok, keju parut, susu kental manis.", "en": "Plantain, grated cheese, condensed milk." },
+      "name": {
+        "id": "Pisang Goreng",
+        "en": "Fried Banana"
+      },
+      "description": {
+        "id": "Pisang kepok, keju parut, susu kental manis.",
+        "en": "Plantain, grated cheese, condensed milk."
+      },
       "price": 18000,
       "image": "",
       "available": true,
       "featured": true,
       "order": 1
+    },
+    {
+      "id": "itm_jv8bg",
+      "categoryId": "coffee",
+      "name": {
+        "id": "Americano",
+        "en": ""
+      },
+      "description": {
+        "id": "",
+        "en": ""
+      },
+      "price": 17000,
+      "image": "",
+      "available": true,
+      "featured": false,
+      "order": 4
     }
   ]
 }
