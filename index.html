@@ -12,8 +12,22 @@
 <body>
   <header class="header">
     <div class="header__inner">
-      <h1 class="header__name" id="cafe-name">Kopi Senja</h1>
-      <p class="header__tagline" id="cafe-tagline"></p>
+      <div class="header__top">
+        <div class="header__id">
+          <h1 class="header__name" id="cafe-name">Kopi Senja</h1>
+          <p class="header__tagline" id="cafe-tagline"></p>
+        </div>
+        <div class="lang" role="group" data-i18n-aria-label="langGroup">
+          <button type="button" class="lang__btn" data-lang="id" data-i18n-aria-label="langId" aria-pressed="true">ID</button>
+          <button type="button" class="lang__btn" data-lang="en" data-i18n-aria-label="langEn" aria-pressed="false">EN</button>
+        </div>
+      </div>
+      <!-- Chip skeleton me-reserve tinggi strip sejak first paint. Tanpa ini header
+           membesar saat chip asli muncul dan seluruh halaman bergeser turun (CLS). -->
+      <nav class="chips" id="chips" data-i18n-aria-label="categories" aria-hidden="true">
+        <span class="chip chip--skeleton"></span>
+        <span class="chip chip--skeleton"></span>
+      </nav>
     </div>
   </header>
 
@@ -31,14 +45,14 @@
     <div id="menu" hidden></div>
 
     <div id="empty" class="state" hidden>
-      <h2 class="state__title">Menu segera hadir</h2>
-      <p class="state__text">Coming soon</p>
+      <h2 class="state__title" data-i18n="emptyTitle">Menu segera hadir</h2>
+      <p class="state__text" data-i18n="emptyText">Kami sedang menyiapkannya.</p>
     </div>
 
     <div id="error" class="state" hidden>
-      <h2 class="state__title">Menu gagal dimuat</h2>
-      <p class="state__text">Periksa koneksi Anda, lalu coba lagi.</p>
-      <button type="button" class="button" id="retry">Coba lagi</button>
+      <h2 class="state__title" data-i18n="errorTitle">Menu gagal dimuat</h2>
+      <p class="state__text" data-i18n="errorText">Periksa koneksi Anda, lalu coba lagi.</p>
+      <button type="button" class="button" id="retry" data-i18n="retry">Coba lagi</button>
     </div>
   </main>
 

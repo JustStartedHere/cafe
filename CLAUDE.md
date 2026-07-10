@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 1** — data + render publik |
-| Fase berikutnya | **Phase 2** — design system, i18n + toggle, chip kategori & scroll-spy |
+| Fase terakhir selesai | **Phase 2** — design system, i18n + toggle, chip kategori & scroll-spy |
+| Fase berikutnya | **Phase 3** — wrapper GitHub Contents API (`admin/github-api.js`) |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -115,9 +115,36 @@ Ini bukan preferensi gaya; masing-masing menutup satu kelas bug atau kerentanan 
 
 - **`assets/img/placeholder.svg`, bukan `.webp`.** Placeholder adalah grafis datar: SVG lebih kecil, tajam di semua
   DPI, tanpa blob biner di repo. (Mesin dev juga tidak punya encoder WebP.) Foto item tetap WebP lewat pipeline admin.
-- **String statis "Signature"/"Habis" masih inline di `render.js`.** Pindah ke `i18n.js` saat Phase 2, bersama toggle
-  bahasa. Teks empty/error di `index.html` juga masih Indonesia saja — Phase 2 yang membilingualkannya.
 - **`data/menu.json` belum punya foto asli** (`image: ""` → placeholder). Foto masuk lewat admin di Phase 6.
+- **Lighthouse tidak dijalankan.** Ia butuh `npx lighthouse`, yaitu paket npm — bertentangan dengan keputusan
+  "tanpa build step / tanpa toolchain npm". Sebagai gantinya metrik yang mendasari skornya diukur langsung lewat
+  Chrome DevTools Protocol dengan throttling yang sama (CPU 4×, Slow 4G): FCP, LCP, TBT, CLS, plus pemeriksaan
+  a11y terarah (alt, nama aksesibel, tap target, lang, hierarki heading, ukuran teks) dan audit kontras eksak.
+
+## Token warna — sudah divalidasi (Phase 2)
+
+Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan hapus**:
+
+- **`--on-accent`** (`#FFFFFF` light / `#17120E` dark) — teks di atas `--accent`. Putih di atas accent dark
+  (`#E08A4F`) hanya 2.1:1 dan **gagal AA**. Dipakai tombol, badge Signature, chip aktif, toggle bahasa aktif.
+- **`--border-strong`** (`#96806D` light / `#8A7565` dark) — batas **kontrol interaktif** (chip, toggle bahasa),
+  wajib ≥ 3:1 per WCAG 1.4.11. `--border` yang lembut tetap dipakai kartu, yang dikenali dari shadow + surface,
+  bukan garisnya — jadi dekoratif dan boleh di bawah 3:1.
+
+## Jebakan yang sudah ditemukan dan ditutup (jangan diulang)
+
+- **Scroll-spy tidak cukup dengan IntersectionObserver saja.** Seksi terakhir yang pendek tak pernah mencapai pita
+  observasi karena halaman kehabisan ruang scroll — chip akan tetap menyorot kategori pertama padahal pelanggan
+  sudah di dasar. Karena itu ada listener scroll pasif: saat di dasar, pemenangnya seksi terlihat **terakhir**.
+- **Tinggi strip chip dan baris tagline harus di-reserve di shell HTML.** Keduanya diisi setelah fetch; tanpa
+  reserve, header membesar dan seluruh halaman turun 47.5px → CLS 0.055 (di atas budget 0.05). Chip skeleton di
+  `index.html` dan `min-height` pada `.header__tagline` yang menahannya. CLS sekarang 0.0000.
+- **Scroll-spy dipasang di `requestAnimationFrame` setelah render, bukan di dalamnya.** Ia membaca `offsetHeight`
+  dan `scrollWidth` (memaksa reflow); digabung dengan render ia jadi satu long task ~250 ms → TBT 230 ms. Dipisah,
+  TBT turun ke ~100–180 ms.
+- **`performance.getEntriesByType('largest-contentful-paint')` selalu kosong.** LCP dan `longtask` hanya muncul
+  lewat `PerformanceObserver` dengan `buffered: true`. Mengukur pakai `getEntriesByType` menghasilkan `null`/`0`
+  yang tampak seperti lolos.
 
 ## Gaya kerja di project ini
 

@@ -4,12 +4,6 @@ export const PLACEHOLDER_IMAGE = 'assets/img/placeholder.svg';
 
 const LOCALES = { id: 'id-ID', en: 'en-US' };
 
-/** Bahasa awal dari preferensi perangkat. Persist & toggle menyusul di Phase 2. */
-export function detectLang() {
-  const tag = (navigator.language || 'id').toLowerCase();
-  return tag.startsWith('id') ? 'id' : 'en';
-}
-
 /**
  * Ambil teks dari field bilingual `{ id, en }`.
  * `en` kosong → jatuh ke `id`. Selalu mengembalikan string.

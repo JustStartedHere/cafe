@@ -5,12 +5,7 @@
 // halaman pelanggan tidak boleh jadi vektor XSS.
 
 import { pickLang, formatPrice, imageSrc, groupByCategory, PLACEHOLDER_IMAGE } from './util.js';
-
-// Kamus sementara; Phase 2 memindahkannya ke i18n.js bersama toggle bahasa.
-const STRINGS = {
-  id: { signature: 'Signature', soldOut: 'Habis' },
-  en: { signature: 'Signature', soldOut: 'Sold out' },
-};
+import { t } from './i18n.js';
 
 // Jumlah kartu teratas yang dimuat eager — sisanya lazy. Menjaga LCP tanpa membanjiri jaringan.
 const EAGER_CARDS = 2;
@@ -29,7 +24,6 @@ function text(tag, className, value) {
 
 /** Kartu satu item. `eager` hanya untuk kartu paling atas. */
 function renderCard(item, lang, currency, eager) {
-  const t = STRINGS[lang] ?? STRINGS.id;
   const name = pickLang(item.name, lang);
   const description = pickLang(item.description, lang);
   const available = item.available !== false;
@@ -60,10 +54,10 @@ function renderCard(item, lang, currency, eager) {
   figure.append(img);
 
   if (item.featured && available) {
-    figure.append(text('span', 'badge badge--featured', t.signature));
+    figure.append(text('span', 'badge badge--featured', t('signature', lang)));
   }
   if (!available) {
-    figure.append(text('span', 'badge badge--sold-out', t.soldOut));
+    figure.append(text('span', 'badge badge--sold-out', t('soldOut', lang)));
   }
   card.append(figure);
 
@@ -104,27 +98,47 @@ export function clear(node) {
 
 /** Header: nama cafe + tagline. */
 export function renderHeader(cafe, lang) {
+  const name = cafe?.name ?? '';
   const nameNode = document.getElementById('cafe-name');
   const taglineNode = document.getElementById('cafe-tagline');
-  if (nameNode) nameNode.textContent = cafe?.name ?? '';
+  if (nameNode) nameNode.textContent = name;
   if (taglineNode) taglineNode.textContent = pickLang(cafe?.tagline, lang);
+  if (name) document.title = name;
+}
+
+/** Chip kategori. Anchor sungguhan, jadi tetap bisa dipakai tanpa JS scroll-spy. */
+function renderChips(root, groups, lang) {
+  clear(root); // membuang chip skeleton dari shell HTML
+  const fragment = document.createDocumentFragment();
+  for (const { category } of groups) {
+    const chip = text('a', 'chip', pickLang(category.name, lang));
+    chip.href = `#cat-${category.id}`;
+    chip.dataset.target = `cat-${category.id}`;
+    fragment.append(chip);
+  }
+  root.append(fragment);
+  // Skeleton disembunyikan dari screen reader; chip asli tidak.
+  root.removeAttribute('aria-hidden');
 }
 
 /**
- * Render seluruh menu ke `root`.
- * @returns {number} jumlah item yang benar-benar dirender.
+ * Render chip + seluruh seksi menu.
+ * @returns {{count: number, sectionIds: string[]}} untuk dipakai scroll-spy.
  */
-export function renderMenu(root, menu, lang) {
+export function renderMenu(menuRoot, chipsRoot, menu, lang) {
   const groups = groupByCategory(menu);
   const currency = menu.cafe?.currency ?? 'IDR';
 
-  clear(root);
+  renderChips(chipsRoot, groups, lang);
+
+  clear(menuRoot);
   const fragment = document.createDocumentFragment();
-  let rendered = 0;
+  let count = 0;
   for (const group of groups) {
-    fragment.append(renderSection(group, lang, currency, rendered));
-    rendered += group.items.length;
+    fragment.append(renderSection(group, lang, currency, count));
+    count += group.items.length;
   }
-  root.append(fragment);
-  return rendered;
+  menuRoot.append(fragment);
+
+  return { count, sectionIds: groups.map((g) => `cat-${g.category.id}`) };
 }
