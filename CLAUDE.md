@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 6** — pipeline gambar |
-| Fase berikutnya | **Phase 7** — QR, PWA, dokumentasi (`manifest`, `robots.txt`, `404.html`) |
+| Fase terakhir selesai | **Phase 7** — QR, PWA, dokumentasi |
+| Fase berikutnya | **Phase 8** — hardening & polish (audit ulang a11y, review copy ID+EN) |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -176,6 +176,27 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
 - **`Runtime.evaluate` bukan modul**: top-level `await` di dalamnya adalah SyntaxError. Pakai `import().then()`.
 - **Jangan `git add -A` di repo ini.** User menaruh file kerjanya sendiri (mis. `docs/references/`); sapuan buta
   akan menyeretnya ke dalam commit fase. Tambahkan file per nama.
+- **Ekspektasi tes halaman publik harus dibaca dari `data/menu.json`, bukan di-hardcode.** Owner mengedit menu
+  lewat `/admin/` di produksi; daftar item yang ditulis tangan akan basi dan memunculkan "kegagalan" palsu.
+- **`404.html` tidak boleh menautkan aset apa pun.** GitHub Pages menyajikannya untuk URL di kedalaman mana pun,
+  jadi path relatif meleset; path absolut patah kalau situs pindah ke root domain. CSS di-inline, tautan pulang
+  dihitung runtime dari `location`.
+- **Chrome headless di mesin ini tidak punya `BarcodeDetector`.** Untuk memverifikasi QR, decode dengan jsQR yang
+  disuntik ke halaman **hanya saat tes** (jangan pernah di-commit).
+- **Mesin ini tidak punya encoder gambar** (`convert` = `convert.exe` bawaan Windows, `python` = alias Store).
+  Ikon PNG dirasterisasi dari SVG lewat `Page.captureScreenshot` headless Chrome, sekali, lalu di-commit.
+
+## Kontrak QR & PWA (Phase 7)
+
+- `admin/vendor/qrcode-generator.js` — **di-vendor, di-pin, di-commit.** Header memuat versi, URL sumber, tanggal,
+  dan sha256. Jangan mengubah isinya; kalau perlu upgrade, unduh ulang, audit ulang (nol DOM/fetch/eval/storage),
+  perbarui sha256.
+- `createSvgTag()`/`createImgTag()` milik library **tidak dipakai** — keduanya merakit HTML sebagai string.
+  `admin/qr.js` membaca `isDark()` dan membangun DOM lewat `createElementNS`.
+- URL yang di-encode dihitung dari `location` halaman admin (`config.js` → `SITE_URL`), jadi otomatis benar setelah
+  repo ditransfer. **QR jangan dicetak sebelum transfer selesai.**
+- Quiet zone 4 modul wajib menurut spesifikasi QR — jangan dikurangi demi estetika.
+- Tetap **tanpa service worker**. `pwa-test` menegakkan ini: nol registrasi, `sw.js` harus 404.
 
 ## Kontrak pipeline gambar (Phase 6)
 
