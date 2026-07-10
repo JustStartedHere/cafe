@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 4** — auth admin |
-| Fase berikutnya | **Phase 5** — CRUD teks (tanpa foto), mutator + pemulihan 409 |
+| Fase terakhir selesai | **Phase 5** — CRUD teks + pemulihan 409 |
+| Fase berikutnya | **Phase 6** — pipeline gambar (kompresi, nama unik, partial failure) |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -159,6 +159,25 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
 - **Uji `/admin/` tanpa token GitHub asli**: intercept `api.github.com` lewat CDP `Fetch.enable` dan palsukan
   responsnya (jangan lupa header CORS + membalas preflight `OPTIONS`). Ini sekaligus membuktikan halaman memang
   tidak menghubungi host lain.
+- **`requestSubmit()` diblokir validasi native** kalau ada field `min`/`step`/`required` yang tidak lolos — handler
+  `submit` tidak pernah jalan. Form admin memakai `novalidate` supaya validator `menu-model.js` yang berbicara
+  (bahasa Indonesia, aturan lebih ketat: harga harus bilangan **bulat**).
+- **Autentikasi dan pemuatan data harus terpisah.** Menggabungkan `store.load()` ke dalam `signIn()` membuat
+  `data/menu.json` yang hilang mengunci admin sepenuhnya — owner cuma melihat "kesalahan tak terduga" tanpa jalan
+  keluar. Sekarang login sukses lebih dulu, lalu error pemuatan tampil di editor dengan tombol "Muat ulang".
+- **Nama kategori duplikat harus ditolak, bukan cuma id duplikat.** Id kategori berasal dari slug, jadi kategori
+  lama ber-id `coffee` bernama "Kopi" tidak bentrok dengan slug `kopi` — tapi pelanggan melihat dua "Kopi".
+
+## Kontrak mutator (Phase 5) — jangan dilanggar di Phase 6
+
+`admin/menu-model.js` mengekspor `mutators.*` yang mengembalikan fungsi **`(menu) => menu`**, bukan hasil jadi.
+`admin/menu-store.js` `save(mutator, message)` yang menerapkannya; saat PUT membalas 409 ia mengambil `menu.json`
+segar dan **menerapkan ulang mutator yang sama** ke isi terbaru, lalu retry sekali. 409 lagi → `StaleMenuError`
+dan state dimuat ulang.
+
+Konsekuensi yang mengikat: **mutator harus mencari berdasarkan `id`, tidak pernah berdasarkan indeks/posisi**,
+dan tidak boleh menutup (closure) atas salinan menu lama. Melanggar ini akan menimpa perubahan orang lain secara
+diam-diam, dan tesnya tidak akan menangkapnya kecuali ada penulisan dari "tab lain" di antaranya.
 
 ## Kontrak `admin/github-api.js` (Phase 3)
 
