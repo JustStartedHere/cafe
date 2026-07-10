@@ -22,7 +22,7 @@ const STRINGS = {
     signature: 'Signature',
     soldOut: 'Sold out',
     emptyTitle: 'Coming soon',
-    emptyText: "We're preparing it.",
+    emptyText: "We're still preparing it.",
     errorTitle: "Couldn't load the menu",
     errorText: 'Check your connection and try again.',
     retry: 'Try again',

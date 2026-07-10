@@ -102,7 +102,6 @@ body {
 .header__tagline {
   margin: 0.125rem 0 0;
   color: var(--muted);
-  font-size: 0.9375rem;
   /* Tagline diisi dari menu.json setelah fetch — reserve satu barisnya sekarang. */
   min-height: 1.5em;
 }
@@ -124,7 +123,6 @@ body {
   min-height: 44px;
   padding: 0 0.5rem;
   font: inherit;
-  font-size: 0.875rem;
   font-weight: 600;
   color: var(--muted);
   background: none;
@@ -161,7 +159,6 @@ body {
   padding: 0 0.9375rem;
   color: var(--text);
   text-decoration: none;
-  font-size: 0.9375rem;
   font-weight: 550;
   white-space: nowrap;
   background: var(--surface);
@@ -255,7 +252,6 @@ body {
 .card__desc {
   margin: 0;
   color: var(--muted);
-  font-size: 0.9375rem;
   /* Satu baris; deskripsi panjang dipangkas dengan elipsis. */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -271,13 +267,14 @@ body {
 
 /* Badge */
 
+/* "Habis" adalah satu-satunya penanda tekstual untuk item yang tidak tersedia
+   (desaturasi foto hanyalah isyarat warna). Jadi ia ikut aturan teks >= 16px. */
 .badge {
   position: absolute;
   top: 0.5rem;
   left: 0.5rem;
-  padding: 0.25rem 0.5rem;
+  padding: 0.1875rem 0.625rem;
   border-radius: 999px;
-  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }

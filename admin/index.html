@@ -145,12 +145,15 @@
           </label>
 
           <div class="photo">
-            <span class="field__label">Foto</span>
+            <!-- <label for>, bukan <span>: tanpa ini pembaca layar hanya mengumumkan
+                 "file upload" tanpa tahu ini foto apa. -->
+            <label class="field__label" for="f-photo">Foto</label>
             <div class="photo__body">
               <img id="f-preview" class="photo__preview" alt="" width="120" height="90" hidden>
               <div class="photo__controls">
                 <!-- `capture` membuat HP langsung membuka kamera, bukan galeri. -->
-                <input type="file" id="f-photo" class="photo__input" accept="image/*" capture>
+                <input type="file" id="f-photo" class="photo__input" accept="image/*" capture
+                       aria-describedby="f-photo-note">
                 <p class="photo__note" id="f-photo-note">Foto dikecilkan otomatis dan disimpan sebagai WebP.</p>
                 <button type="button" class="button button--quiet button--small" id="f-photo-clear" hidden>Hapus foto</button>
               </div>

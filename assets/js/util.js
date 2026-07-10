@@ -26,10 +26,22 @@ export function formatPrice(price, currency, lang) {
   }).format(price);
 }
 
-/** Path gambar item, dengan placeholder saat kosong. */
+// Hanya path relatif ke `images/` atau `assets/` yang diterima. Tanpa skema, tanpa
+// traversal, tanpa `//host`.
+const SAFE_IMAGE = /^(images|assets)\/[A-Za-z0-9._/-]+$/;
+
+/**
+ * Path gambar item, dengan placeholder saat kosong atau tidak tepercaya.
+ *
+ * Repo ini publik dan bisa divandal: `image` bisa saja berisi `javascript:…` atau
+ * `//evil.example/x.png`. `<img>` tidak mengeksekusi `javascript:`, dan `onerror`
+ * akan menangkapnya — tapi bergantung pada penanganan error sebagai lapisan keamanan
+ * adalah kebiasaan buruk. Tolak di depan.
+ */
 export function imageSrc(item) {
   const src = typeof item.image === 'string' ? item.image.trim() : '';
-  return src === '' ? PLACEHOLDER_IMAGE : src;
+  if (src === '' || src.includes('..') || !SAFE_IMAGE.test(src)) return PLACEHOLDER_IMAGE;
+  return src;
 }
 
 /**

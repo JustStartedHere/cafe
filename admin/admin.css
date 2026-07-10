@@ -44,6 +44,16 @@
   font-size: 0.9375rem;
 }
 
+/* Aksi utama layar token: berdiri sendiri, jadi ia harus jadi tap target penuh.
+   Tautan inline di tengah kalimat sengaja dibiarkan seukuran teks (WCAG 2.5.8
+   mengecualikannya) — memberi padding di sana justru merusak alur baca. */
+#token-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.125rem;
+}
+
 /* Langkah pembuatan token, tersedia langsung di halaman — owner tidak perlu pergi ke README. */
 
 .steps {
@@ -279,19 +289,38 @@
 
 .photo__input {
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   max-width: 100%;
+  /* Tombol bawaan <input type=file> hanya ~22px. Besarkan supaya bisa disentuh. */
+  min-height: 44px;
+}
+
+.photo__input::file-selector-button {
+  min-height: 44px;
+  margin-right: 0.625rem;
+  padding: 0 0.875rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.photo__input::file-selector-button:hover {
+  background: var(--bg);
 }
 
 .photo__note {
   margin: 0.375rem 0 0.5rem;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 
 .group__title {
   margin: 1.5rem 0 0.5rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
@@ -336,7 +365,7 @@
 .row__meta {
   margin-top: 0.125rem;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 
 .row__actions {
@@ -352,7 +381,7 @@
   min-width: 44px;
   padding: 0 0.625rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--text);
   background: transparent;
   border: 1px solid var(--border-strong);
@@ -376,10 +405,11 @@
   cursor: not-allowed;
 }
 
+/* Pengecualian sadar: label pendek di daftar milik owner, bukan teks baca pelanggan. */
 .tag {
   padding: 0.125rem 0.5rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 

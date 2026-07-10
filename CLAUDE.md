@@ -10,12 +10,13 @@ Requirement asli ada di `Product Discovery.md`. Rencana implementasi lengkap (su
 
 ## Status saat ini
 
-Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
+Semua fase implementasi selesai. Situs live, admin berfungsi, QR siap dicetak
+*setelah* repo dipindah ke akun client.
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 7** — QR, PWA, dokumentasi |
-| Fase berikutnya | **Phase 8** — hardening & polish (audit ulang a11y, review copy ID+EN) |
+| Fase terakhir selesai | **Phase 8** — hardening & polish |
+| Fase berikutnya | **Serah terima**: transfer repo ke akun client, lalu cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -136,6 +137,18 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
   wajib ≥ 3:1 per WCAG 1.4.11. `--border` yang lembut tetap dipakai kartu, yang dikenali dari shadow + surface,
   bukan garisnya — jadi dekoratif dan boleh di bawah 3:1.
 
+## Ukuran teks — ditegakkan (Phase 8)
+
+Aturan **teks ≥ 16px** sempat dilanggar diam-diam di tujuh tempat. Sekarang:
+
+- **Halaman pelanggan: 16px tanpa pengecualian.** Termasuk `.badge` — "Habis" adalah satu-satunya
+  penanda *tekstual* untuk item habis; desaturasi foto hanyalah isyarat warna, dan isyarat warna
+  saja tidak cukup. `.card__desc`, `.chip`, `.header__tagline`, `.lang__btn` kini mewarisi 1rem
+  (font-size-nya dihapus, bukan diubah — supaya tidak ada yang menurunkannya lagi tanpa sadar).
+- **Admin: lantai 15px.** Dipakai owner di layar besar, bukan pelanggan sambil berdiri.
+  `.tag` (label "Signature"/"Habis" di daftar owner) tetap 14px — **pengecualian sadar**.
+- Lantai ini dijaga otomatis oleh `a11y-test.mjs` (16px untuk halaman publik, 15px untuk admin).
+
 ## Jebakan yang sudah ditemukan dan ditutup (jangan diulang)
 
 - **Scroll-spy tidak cukup dengan IntersectionObserver saja.** Seksi terakhir yang pendek tak pernah mencapai pita
@@ -185,6 +198,19 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
   disuntik ke halaman **hanya saat tes** (jangan pernah di-commit).
 - **Mesin ini tidak punya encoder gambar** (`convert` = `convert.exe` bawaan Windows, `python` = alias Store).
   Ikon PNG dirasterisasi dari SVG lewat `Page.captureScreenshot` headless Chrome, sekali, lalu di-commit.
+- **`<span class="field__label">` bukan label.** Pola "span di dalam `<label>` pembungkus" bekerja untuk `<input>`
+  biasa, tapi `<input type="file">` di `admin/index.html` berada di luar pembungkusnya — pembaca layar hanya
+  mengumumkan "file upload". Ia butuh `<label for>` eksplisit. Editor admin **hanya bisa diaudit setelah login**;
+  audit yang berhenti di layar token melewatkan seluruh form.
+- **`getComputedStyle(el, ':focus-visible')` selalu mengembalikan kosong** — itu pseudo-*class*, bukan
+  pseudo-element. Tes "ring fokus ada" yang memakainya lolos secara hampa. Periksa `document.styleSheets`.
+- **Field `image` di `menu.json` divalidasi dengan allowlist** (`^(images|assets)/[A-Za-z0-9._/-]+$`), bukan
+  diserahkan ke `onerror`. Repo publik bisa divandal jadi `javascript:…`; `<img>` memang tidak mengeksekusinya,
+  tapi menggantungkan keamanan pada penanganan error itu kebiasaan buruk.
+- **Harness tes punya dua syarat yang mudah terlupa**: Chrome headless harus dijalankan dengan `--lang=id-ID`
+  (kalau tidak, `getLang()` jatuh ke `en` lewat `navigator.language` dan seluruh ekspektasi bahasa Indonesia
+  "gagal"), dan `idle-test.mjs` harus menunjuk salinan situs yang `IDLE_MINUTES`-nya sudah dipangkas — bukan
+  `D:\Project\cafe` yang aslinya 20 menit.
 
 ## Kontrak QR & PWA (Phase 7)
 
