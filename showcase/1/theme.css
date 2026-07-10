@@ -588,17 +588,28 @@ h3 {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  /* Satu baris yang bisa digulung mendatar. Membungkus (wrap) menjadi 2–3 baris di HP
+     membuat bilah sticky memakan tinggi layar yang berharga. */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
   padding: 0.875rem 0;
   margin-bottom: 0.5rem;
   background: var(--cream);
   border-bottom: 1px solid var(--border);
 }
 
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
 .tab {
+  flex: none; /* jangan menyusut — biar tetap satu baris dan digulung mendatar */
   min-height: 44px;
   padding: 0 1rem;
   font: inherit;
+  white-space: nowrap;
   color: var(--muted);
   background: none;
   border: 1px solid transparent;

@@ -191,6 +191,30 @@ function setFilter(next) {
   filter = next;
   paintFilterState();
   paintDishes();
+  snapTabsIntoView();
+}
+
+/**
+ * Setelah grid menyusut (mis. "Semua" 13 item → "Pembuka" 2 item), halaman jadi jauh
+ * lebih pendek. Kalau pengguna sedang scroll di bawah, viewport tertinggal di dasar dan
+ * baris tab hilang ke atas layar — hidangan hasil filter tak terlihat. Bawa tab ke puncak.
+ *
+ * Targetnya adalah posisi dokumen tempat tab MULAI menempel. Baik `getBoundingClientRect`
+ * maupun `offsetTop` tab GOYAH saat ia sedang sticky — keduanya ikut tergeser oleh pin,
+ * jadi `offsetTop` malah melaporkan posisi scroll saat ini (melingkar). Buka sticky sesaat
+ * (`position: static`) untuk membaca posisi alir sejati, lalu pasang lagi sebelum browser
+ * sempat melukis. Hanya menggulung NAIK: kalau pengguna masih di atas titik sticky, jangan
+ * diusik (klik dari strip kategori tak boleh menyeret turun).
+ */
+function snapTabsIntoView() {
+  const tabs = el('tabs');
+  const prev = tabs.style.position;
+  tabs.style.position = 'static';
+  let target = 0;
+  for (let node = tabs; node; node = node.offsetParent) target += node.offsetTop;
+  tabs.style.position = prev;
+  if (window.scrollY <= target + 1) return;
+  window.scrollTo({ top: target, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
 }
 
 /* ------------------------------------------------------------------ kartu */
@@ -265,6 +289,19 @@ for (const button of document.querySelectorAll('[data-lang]')) {
 
 el('hero-prev').addEventListener('click', () => { goTo(slide - 1); restartTimer(); });
 el('hero-next').addEventListener('click', () => { goTo(slide + 1); restartTimer(); });
+
+// Geser (swipe) foto utama kiri/kanan di layar sentuh. Ambang 40px agar tap tak terpicu.
+const media = document.querySelector('.hero__media');
+let swipeX = null;
+media.addEventListener('touchstart', (event) => { swipeX = event.changedTouches[0].clientX; }, { passive: true });
+media.addEventListener('touchend', (event) => {
+  if (swipeX === null) return;
+  const dx = event.changedTouches[0].clientX - swipeX;
+  swipeX = null;
+  if (Math.abs(dx) < 40) return;
+  goTo(dx < 0 ? slide + 1 : slide - 1); // geser ke kiri → slide berikutnya
+  restartTimer();
+}, { passive: true });
 
 const hero = document.querySelector('.hero');
 hero.addEventListener('mouseenter', stopTimer);
