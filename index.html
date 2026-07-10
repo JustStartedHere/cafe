@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#17120E">
+  <title>Galeri Desain — Pilih Tampilan Menu</title>
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <style>
+    /* Galeri statis: tanpa JS, tanpa webfont. Ini halaman internal untuk client memilih. */
+    :root {
+      --bg: #17120e;
+      --card: #221a14;
+      --text: #f4ece1;
+      --muted: #b4a595;
+      --accent: #e08a4f;
+      --border: #3a2f26;
+      --radius: 16px;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 1rem/1.6 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    a { color: inherit; }
+
+    .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
+
+    .head {
+      text-align: center;
+      padding: 3.5rem 1.25rem 2rem;
+    }
+
+    .head__eyebrow {
+      margin: 0 0 0.5rem;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .head__title {
+      margin: 0 auto 0.75rem;
+      max-width: 32rem;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      line-height: 1.15;
+    }
+
+    .head__text {
+      margin: 0 auto;
+      max-width: 34rem;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+      gap: 1.5rem;
+      padding-bottom: 4rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .card--live:hover,
+    .card--live:focus-visible {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .card__shot {
+      position: relative;
+      aspect-ratio: 16 / 11;
+      background: #0d0a08;
+    }
+
+    .card__shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    /* Kartu "Segera": tidak memakai foto referensi (itu karya orang lain) — gradien + inisial. */
+    .card__placeholder {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: rgb(255 255 255 / 82%);
+      letter-spacing: 0.05em;
+    }
+
+    .ph--2 { background: linear-gradient(135deg, #6d4534, #b6764b); }
+    .ph--3 { background: linear-gradient(135deg, #1f4a3a, #3f7d5f); }
+    .ph--4 { background: linear-gradient(135deg, #3a4a2f, #7a8a54); }
+
+    .tag {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .tag--live { background: var(--accent); color: #17120e; }
+    .tag--soon { background: rgb(255 255 255 / 14%); color: var(--text); }
+
+    .card__body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      padding: 1.125rem 1.25rem 1.375rem;
+      flex: 1;
+    }
+
+    .card__name { margin: 0; font-size: 1.25rem; }
+
+    .card__desc { margin: 0; color: var(--muted); flex: 1; }
+
+    .card__cta {
+      margin-top: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .card--soon { opacity: 0.72; }
+
+    .card--soon .card__cta { color: var(--muted); }
+
+    .foot {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.25rem 3rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    :where(a):focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="head">
+    <p class="head__eyebrow">Contoh Desain</p>
+    <h1 class="head__title">Pilih tampilan untuk menu Anda</h1>
+    <p class="head__text">
+      Lima gaya berbeda, semuanya berfungsi penuh — klik untuk mencobanya seperti pelanggan Anda nanti.
+      Setiap halaman bisa diklik ke dalam.
+    </p>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <a class="card card--live" href="showcase/1/">
+        <div class="card__shot">
+          <img src="showcase/preview/preview-1.webp" alt="Pratinjau desain Klasik Fine Dining" width="640" height="440" loading="lazy">
+          <span class="tag tag--live">Bisa dicoba</span>
+        </div>
+        <div class="card__body">
+          <h2 class="card__name">Klasik Fine Dining</h2>
+          <p class="card__desc">Elegan dan hangat: emas di atas krem, foto bulat, carousel. Cocok untuk restoran.</p>
+          <span class="card__cta">Coba desain ini →</span>
+        </div>
+      </a>
+
+      <a class="card card--live" href="menu/">
+        <div class="card__shot">
+          <img src="showcase/preview/preview-5.webp" alt="Pratinjau desain menu yang sudah jadi" width="640" height="440" loading="lazy">
+          <span class="tag tag--live">Bisa dicoba</span>
+        </div>
+        <div class="card__body">
+          <h2 class="card__name">Menu Sederhana (Siap Pakai)</h2>
+          <p class="card__desc">Desain yang sudah kita bangun: cepat, dark mode otomatis, admin & QR. Inilah yang live.</p>
+          <span class="card__cta">Coba desain ini →</span>
+        </div>
+      </a>
+
+      <div class="card card--soon" aria-disabled="true">
+        <div class="card__shot">
+          <div class="card__placeholder ph--2" aria-hidden="true">SK</div>
+          <span class="tag tag--soon">Segera</span>
+        </div>
+        <div class="card__body">
+          <h2 class="card__name">Savoria Kitchen</h2>
+          <p class="card__desc">Kasual dan cerah: ikon kategori, kartu bersih, aksen bata. Bergaya bistro modern.</p>
+          <span class="card__cta">Segera hadir</span>
+        </div>
+      </div>
+
+      <div class="card card--soon" aria-disabled="true">
+        <div class="card__shot">
+          <div class="card__placeholder ph--3" aria-hidden="true">MP</div>
+          <span class="tag tag--soon">Segera</span>
+        </div>
+        <div class="card__body">
+          <h2 class="card__name">Menu Poster Hijau</h2>
+          <p class="card__desc">Satu halaman bergaya poster: latar hijau tua, foto hidangan tersebar, kesan artistik.</p>
+          <span class="card__cta">Segera hadir</span>
+        </div>
+      </div>
+
+      <div class="card card--soon" aria-disabled="true">
+        <div class="card__shot">
+          <div class="card__placeholder ph--4" aria-hidden="true">DD</div>
+          <span class="tag tag--soon">Segera</span>
+        </div>
+        <div class="card__body">
+          <h2 class="card__name">Dolce Dessert</h2>
+          <p class="card__desc">Fokus pencuci mulut: foto besar berdampingan, tata letak majalah, dua warna tegas.</p>
+          <span class="card__cta">Segera hadir</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p>Halaman internal untuk memilih desain. Foto contoh berlisensi bebas pakai.</p>
+  </footer>
+</body>
+</html>
