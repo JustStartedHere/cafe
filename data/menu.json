@@ -8,7 +8,7 @@
     },
     "currency": "IDR",
     "logo": "",
-    "updatedAt": "2026-07-10T14:57:29.167Z"
+    "updatedAt": "2026-07-10T15:00:44.667Z"
   },
   "categories": [
     {
@@ -75,7 +75,7 @@
         "en": "Steeped cold for 16 hours, unsweetened."
       },
       "price": 28000,
-      "image": "",
+      "image": "images/itm_c2m84-y8l3.webp",
       "available": false,
       "featured": false,
       "order": 3
