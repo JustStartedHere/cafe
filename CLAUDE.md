@@ -14,8 +14,8 @@ Phase 0 selesai. Situs live dan menyajikan placeholder "Menu segera hadir".
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Phase 2** — design system, i18n + toggle, chip kategori & scroll-spy |
-| Fase berikutnya | **Phase 3** — wrapper GitHub Contents API (`admin/github-api.js`) |
+| Fase terakhir selesai | **Phase 3** — wrapper GitHub Contents API |
+| Fase berikutnya | **Phase 4** — auth admin (layar token, storage, idle timeout, meta CSP) |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
 | Situs | `https://juststartedhere.github.io/cafe/` — Pages dari `main`, folder root |
@@ -145,6 +145,29 @@ Seluruh pasangan lolos WCAG AA. Dua token tambahan lahir dari audit; **jangan ha
 - **`performance.getEntriesByType('largest-contentful-paint')` selalu kosong.** LCP dan `longtask` hanya muncul
   lewat `PerformanceObserver` dengan `buffered: true`. Mengukur pakai `getEntriesByType` menghasilkan `null`/`0`
   yang tampak seperti lolos.
+- **Jangan menaruh karakter kontrol literal di source.** Regex `/[<NUL>-<US>]/` yang diketik apa adanya *berfungsi*,
+  tapi tak terlihat, tak bisa di-grep, dan bisa dimakan editor/encoding. Tulis `/[\x00-\x1f\x7f]/`.
+- **Uji `getFile`, `putFile`, `deleteFile` di branch scratch, bukan `main`.** Menulis ke `main` memicu rebuild Pages
+  dan mengotori history yang dilihat owner. Branch scratch membuktikan hal yang sama tanpa efek samping.
+
+## Kontrak `admin/github-api.js` (Phase 3)
+
+`createGitHubClient({ owner, repo, token, branch, fetchImpl })` → `verifyAccess`, `getFile`, `getJson`, `putFile`,
+`putJson`, `deleteFile`, `listDir`. `fetchImpl` ada khusus untuk pengujian — jangan dihapus.
+
+Error bertipe yang **wajib** ditangani pemanggil (Phase 4–6):
+
+| Error | Kapan | Yang harus dilakukan admin |
+|---|---|---|
+| `AuthError` | 401, atau 403 yang bukan kuota | Hapus token tersimpan, kembali ke layar auth |
+| `RateLimitError` | 403 + `x-ratelimit-remaining: 0`, atau `Retry-After` | Tampilkan `resetAt` / `retryAfter` |
+| `NotFoundError` | 404 | Arahkan cek repo/path/scope token |
+| `ConflictError` | 409, `sha` basi | GET ulang → re-apply mutator → retry sekali |
+| `ValidationError` | 422, atau JSON rusak | Tampilkan pesan API |
+| `NetworkError` | fetch gagal / offline | **Pertahankan isi form**, tawarkan Retry |
+
+`putFile` tanpa `sha` = create; dengan `sha` = update. `deleteFile` menolak tanpa `sha`.
+Semua penulisan mengembalikan `sha` baru — pakai itu untuk penulisan berikutnya di sesi yang sama.
 
 ## Gaya kerja di project ini
 
