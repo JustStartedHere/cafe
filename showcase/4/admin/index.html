@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+    CSP ketat. `connect-src` hanya mengizinkan api.github.com dan same-origin, jadi token
+    tidak punya ke mana pun untuk dikirim. `script-src 'self'` melarang script inline dan
+    CDN — satu script pihak ketiga yang disusupi cukup untuk mengeksfiltrasi token.
+    Catatan: `frame-ancestors` diabaikan kalau dipasang lewat <meta>; ia butuh header HTTP,
+    yang tidak bisa disetel di GitHub Pages. Halaman ini tidak menampilkan data sensitif
+    sampai token dimasukkan, jadi risiko clickjacking-nya kecil.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.github.com; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
+  <title>Admin — Dolce</title>
+  <link rel="stylesheet" href="../../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../../admin/admin.css">
+</head>
+<body class="admin">
+  <header class="header">
+    <div class="header__inner header__inner--admin">
+      <div class="header__top">
+        <div class="header__id">
+          <h1 class="header__name">Admin Menu</h1>
+          <p class="header__tagline" id="repo-label"></p>
+        </div>
+        <button type="button" class="button button--quiet" id="logout" hidden>Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap admin__main">
+    <!-- Layar token -->
+    <section id="auth" class="panel" aria-labelledby="auth-title">
+      <h2 class="panel__title" id="auth-title">Masuk dengan token GitHub</h2>
+      <p class="panel__text">
+        Menu disimpan sebagai file di repositori GitHub. Untuk mengubahnya, tempelkan
+        <em>fine-grained personal access token</em> yang punya izin <strong>Contents: Read and write</strong>
+        pada repositori ini saja.
+      </p>
+      <p class="panel__text">
+        <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">
+          Buka halaman pembuatan token di GitHub
+        </a>
+      </p>
+
+      <details class="steps">
+        <summary class="steps__summary">Belum punya token? Buka langkah-langkahnya</summary>
+        <ol class="steps__list">
+          <li><strong>Token name</strong> — isi bebas, misalnya <code>Menu Cafe</code>.</li>
+          <li><strong>Resource owner</strong> — pilih akun pemilik repositori ini.</li>
+          <li><strong>Expiration</strong> — pilih <strong>No expiration</strong>, agar token tidak perlu dibuat ulang tiap tahun.</li>
+          <li><strong>Repository access</strong> — pilih <strong>Only select repositories</strong>, lalu pilih repositori <code>cafe</code> saja.</li>
+          <li><strong>Permissions → Repository permissions → Contents</strong> — ubah menjadi <strong>Read and write</strong>. Jangan menyalakan izin lain. (<em>Metadata: Read-only</em> menyala sendiri; itu wajib.)</li>
+          <li>Klik <strong>Generate token</strong>, salin tokennya, tempelkan di bawah. Token hanya ditampilkan sekali.</li>
+        </ol>
+        <p class="panel__hint">
+          Token ini hanya bisa mengubah isi satu repositori publik. Kalau bocor, hapus saja tokennya di
+          <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener noreferrer">pengaturan token</a>.
+          Penjelasan lengkap ada di
+          <a href="https://github.com/JustStartedHere/cafe#readme" target="_blank" rel="noopener noreferrer">README</a>.
+        </p>
+      </details>
+
+      <form id="token-form" novalidate>
+        <label class="field">
+          <span class="field__label">Token</span>
+          <input
+            type="password"
+            id="token"
+            class="field__input"
+            required
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="github_pat_..."
+          >
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="remember" class="check__box">
+          <span>Ingat di perangkat ini</span>
+        </label>
+        <p class="panel__hint" id="remember-warning" hidden>
+          Perangkat ini akan menyimpan kunci untuk mengubah menu. Jangan centang di komputer bersama.
+        </p>
+
+        <p class="panel__error" id="auth-error" role="alert" hidden></p>
+
+        <button type="submit" class="button" id="submit">Masuk</button>
+      </form>
+    </section>
+
+    <!-- Editor -->
+    <div id="app" hidden>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <p class="panel__error" id="editor-error" role="alert" hidden></p>
+
+      <section class="panel" aria-labelledby="cafe-title">
+        <h2 class="panel__title" id="cafe-title">Identitas &amp; sosial</h2>
+        <p class="panel__text">
+          Nama usaha, tagline, dan tautan yang muncul di halaman pelanggan (WhatsApp,
+          Instagram, TikTok, Google Maps).
+        </p>
+        <form id="cafe-form" class="form" novalidate>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Nama usaha <span aria-hidden="true">*</span></span>
+              <input type="text" id="cf-name" class="field__input" required maxlength="60">
+            </label>
+            <label class="field">
+              <span class="field__label">Nomor WhatsApp (mis. 62812…)</span>
+              <input type="text" id="cf-whatsapp" class="field__input" inputmode="numeric" maxlength="20" placeholder="62812xxxxxxx">
+            </label>
+          </div>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Tagline (Indonesia)</span>
+              <input type="text" id="cf-tag-id" class="field__input" maxlength="80">
+            </label>
+            <label class="field">
+              <span class="field__label">Tagline (English)</span>
+              <input type="text" id="cf-tag-en" class="field__input" maxlength="80">
+            </label>
+          </div>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Instagram (https://…)</span>
+              <input type="url" id="cf-instagram" class="field__input" spellcheck="false" placeholder="https://instagram.com/…">
+            </label>
+            <label class="field">
+              <span class="field__label">TikTok (https://…)</span>
+              <input type="url" id="cf-tiktok" class="field__input" spellcheck="false" placeholder="https://tiktok.com/@…">
+            </label>
+          </div>
+          <label class="field">
+            <span class="field__label">Google Maps (https://…)</span>
+            <input type="url" id="cf-maps" class="field__input" spellcheck="false" placeholder="https://maps.google.com/…">
+          </label>
+          <div class="form__actions">
+            <button type="submit" class="button button--small">Simpan identitas</button>
+            <p class="panel__hint" id="cafe-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="items-title">
+        <div class="panel__head">
+          <h2 class="panel__title" id="items-title">Item menu</h2>
+          <button type="button" class="button button--small" id="item-new">Tambah item</button>
+        </div>
+
+        <!-- novalidate: validasi kita (menu-model.js) yang berbicara, dalam bahasa Indonesia
+             dan dengan aturan lebih ketat (harga harus bilangan BULAT). Atribut required/min/
+             step tetap ada untuk semantik dan keyboard numerik di HP. -->
+        <form id="item-form" class="form" hidden novalidate>
+          <h3 class="form__title" id="item-form-title">Item baru</h3>
+
+          <label class="field">
+            <span class="field__label">Kategori</span>
+            <select id="f-category" class="field__input" required></select>
+          </label>
+
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Nama (Indonesia) <span aria-hidden="true">*</span></span>
+              <input type="text" id="f-name-id" class="field__input" required maxlength="80">
+            </label>
+            <label class="field">
+              <span class="field__label">Nama (English)</span>
+              <input type="text" id="f-name-en" class="field__input" maxlength="80" placeholder="kosongkan untuk memakai teks Indonesia">
+            </label>
+          </div>
+
+          <div class="field-pair">
+            <label class="field">
+              <span class="field__label">Deskripsi (Indonesia)</span>
+              <input type="text" id="f-desc-id" class="field__input" maxlength="120">
+            </label>
+            <label class="field">
+              <span class="field__label">Deskripsi (English)</span>
+              <input type="text" id="f-desc-en" class="field__input" maxlength="120" placeholder="kosongkan untuk memakai teks Indonesia">
+            </label>
+          </div>
+
+          <label class="field field--narrow">
+            <span class="field__label">Harga (rupiah, bulat)</span>
+            <input type="number" id="f-price" class="field__input" required min="0" step="1" inputmode="numeric">
+          </label>
+
+          <div class="photo">
+            <!-- <label for>, bukan <span>: tanpa ini pembaca layar hanya mengumumkan
+                 "file upload" tanpa tahu ini foto apa. -->
+            <label class="field__label" for="f-photo">Foto</label>
+            <div class="photo__body">
+              <img id="f-preview" class="photo__preview" alt="" width="120" height="90" hidden>
+              <div class="photo__controls">
+                <!-- `capture` membuat HP langsung membuka kamera, bukan galeri. -->
+                <input type="file" id="f-photo" class="photo__input" accept="image/*" capture
+                       aria-describedby="f-photo-note">
+                <p class="photo__note" id="f-photo-note">Foto dikecilkan otomatis dan disimpan sebagai WebP.</p>
+                <button type="button" class="button button--quiet button--small" id="f-photo-clear" hidden>Hapus foto</button>
+              </div>
+            </div>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" id="f-available" class="check__box" checked>
+            <span>Tersedia</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="f-featured" class="check__box">
+            <span>Signature (badge unggulan)</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="f-new" class="check__box">
+            <span>Baru (badge “Baru”)</span>
+          </label>
+
+          <div class="form__actions">
+            <button type="submit" class="button" id="f-save">Simpan</button>
+            <button type="button" class="button button--quiet" id="f-cancel">Batal</button>
+          </div>
+        </form>
+
+        <div class="table-scroll">
+          <table class="menu-table">
+            <thead>
+              <tr>
+                <th scope="col">Foto</th>
+                <th scope="col">Produk</th>
+                <th scope="col">Harga</th>
+                <th scope="col">Status</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="item-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="cats-title">
+        <h2 class="panel__title" id="cats-title">Kategori</h2>
+        <ul class="rows" id="category-list"></ul>
+
+        <form id="category-form" class="form form--inline" novalidate>
+          <label class="field">
+            <span class="field__label">Nama (Indonesia) <span aria-hidden="true">*</span></span>
+            <input type="text" id="c-name-id" class="field__input" required maxlength="40">
+          </label>
+          <label class="field">
+            <span class="field__label">Nama (English)</span>
+            <input type="text" id="c-name-en" class="field__input" maxlength="40">
+          </label>
+          <button type="submit" class="button button--small">Tambah kategori</button>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="qr-title">
+        <h2 class="panel__title" id="qr-title">QR untuk meja</h2>
+        <p class="panel__text">
+          Cetak dan tempel di meja. URL-nya tidak akan berubah, jadi cukup sekali cetak.
+          Untuk mencetak, pakai <strong>SVG</strong> — ia tetap tajam di ukuran berapa pun.
+        </p>
+
+        <label class="field">
+          <span class="field__label">Alamat yang di-encode</span>
+          <input type="url" id="qr-url" class="field__input" spellcheck="false">
+        </label>
+
+        <div class="qr">
+          <div class="qr__preview" id="qr-preview"></div>
+          <div class="qr__actions">
+            <button type="button" class="button button--small" id="qr-svg">Unduh SVG (cetak)</button>
+            <button type="button" class="button button--quiet button--small" id="qr-png">Unduh PNG</button>
+            <p class="panel__hint" id="qr-status"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="maint-title">
+        <h2 class="panel__title" id="maint-title">Pemeliharaan</h2>
+        <p class="panel__text">
+          Setiap kali foto item diganti, foto lama tetap tersimpan di repositori. Itu disengaja —
+          foto lama menjadi cadangan bila penyimpanan gagal di tengah jalan. Tombol ini menyapu
+          foto yang sudah tidak dipakai item mana pun.
+        </p>
+        <button type="button" class="button button--quiet button--small" id="clean-orphans">
+          Bersihkan foto tak terpakai
+        </button>
+        <p class="panel__hint" id="orphan-status"></p>
+      </section>
+
+      <p class="panel__hint">
+        Perubahan tampil di halaman pelanggan sekitar satu menit setelah disimpan.
+        Sesi ditutup otomatis setelah <span id="idle-minutes"></span> menit tanpa aktivitas.
+      </p>
+    </div>
+  </main>
+
+  <!-- Di-vendor & di-commit, bukan dari CDN. Lihat header file itu. -->
+  <script src="../../../admin/vendor/qrcode-generator.js"></script>
+  <!-- boot.js: modul same-origin (CSP script-src 'self' melarang <script> inline),
+       men-set window.__ADMIN_CONFIG lalu memuat mesin admin bersama. -->
+  <script type="module" src="boot.js"></script>
+</body>
+</html>
