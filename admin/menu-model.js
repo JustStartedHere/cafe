@@ -62,12 +62,25 @@ function normalizePrice(price, issues) {
   return value;
 }
 
-/** Path gambar wajib berada di bawah `images/`. Cegah penulisan ke luar folder itu. */
+// Folder gambar yang diizinkan (root-relative). Cafe pakai default `images/`. Tiap desain
+// showcase mengizinkan folder upload-nya sendiri PLUS folder seed bersama
+// (`showcase/menu-img/`) tempat foto contoh disimpan. Di-set lewat `configureModel`
+// saat admin dibuka — per halaman (modul segar), jadi aman sebagai state modul.
+let IMAGE_BASES = ['images/'];
+const norm = (p) => p.replace(/\/+$/, '') + '/';
+
+export function configureModel({ imageBase, imageBases } = {}) {
+  const list = imageBases ?? (imageBase ? [imageBase] : null);
+  if (Array.isArray(list) && list.length) IMAGE_BASES = list.map(norm);
+}
+
+/** Path gambar wajib berada di bawah salah satu folder yang dikonfigurasi. Cegah tulis ke luar. */
 function normalizeImage(image, issues) {
   const value = typeof image === 'string' ? image.trim() : '';
   if (value === '') return '';
-  if (!value.startsWith('images/') || value.includes('..') || value.includes('//')) {
-    issues.push('Gambar harus berada di dalam folder images/.');
+  const safe = !value.includes('..') && !value.includes('//') && IMAGE_BASES.some((b) => value.startsWith(b));
+  if (!safe) {
+    issues.push(`Gambar harus berada di dalam folder ${IMAGE_BASES.join(' atau ')}.`);
     return '';
   }
   return value;
@@ -88,6 +101,10 @@ export function normalizeItem(draft, menu) {
 
   if (issues.length) throw new InvalidMenuError(issues);
 
+  // Badge sekunder opsional. `featured` tetap menandai "Signature/Terlaris" (dipakai juga
+  // halaman cafe). `badge: 'new'` hanya lencana "Baru" di halaman showcase; nilai lain dibuang.
+  const badge = draft.badge === 'new' ? 'new' : '';
+
   return {
     id: draft.id,
     categoryId,
@@ -97,6 +114,7 @@ export function normalizeItem(draft, menu) {
     image,
     available: draft.available !== false,
     featured: draft.featured === true,
+    badge,
     order: Number.isFinite(draft.order) ? draft.order : 0,
   };
 }

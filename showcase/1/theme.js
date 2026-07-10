@@ -1,14 +1,16 @@
-// Tema 1 — logika: bahasa, carousel hero, filter kategori.
+// Tema 1 — logika: bahasa, carousel hero, filter kategori. Konten menu (item, brand,
+// sosial) dimuat dari data.json saat runtime; string UI tetap dari strings.js.
 //
-// INVARIAN: seluruh teks masuk lewat `textContent`, atribut lewat `setAttribute`.
-// Tidak pernah `innerHTML`. Data di sini memang milik kita sendiri, tapi pola yang
-// dilanggar di satu tempat akan menular ke halaman pelanggan.
+// INVARIAN: seluruh teks lewat `textContent` (helper make()), atribut lewat setAttribute.
+// Tidak pernah `innerHTML`. Data berasal dari repo publik yang bisa divandal.
 
-import { pickLang, formatPrice } from '../../assets/js/util.js';
-import { getLang, setLang, LANGS } from '../../assets/js/i18n.js';
-import { RESTAURANT_NAME, PHONE_DISPLAY, EMAIL, WHATSAPP, SOCIAL, waLink } from '../config.js';
-import { STRINGS, RESERVE_MESSAGE, HERO, CATEGORIES, ITEMS } from './data.js';
+import {
+  pickLang, formatPrice, getLang, setLang, LANGS,
+  loadMenu, resolveImg, waLink, socialLinks, make, clear,
+} from '../lib.js';
+import { STRINGS, HERO, RESERVE_PREFIX, CONTACT } from './strings.js';
 
+const DATA_URL = new URL('data.json', import.meta.url).href;
 const SLIDE_MS = 6000;
 const ALL = 'all';
 
@@ -16,59 +18,53 @@ let lang = getLang();
 let filter = ALL;
 let slide = 0;
 let timer = null;
+let menu = null;
 
 const el = (id) => document.getElementById(id);
 const t = (key) => pickLang(STRINGS[key], lang);
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-function make(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
-
-function clear(node) {
-  while (node.firstChild) node.removeChild(node.firstChild);
-}
-
-/* ------------------------------------------------------------------ bahasa */
+/* ------------------------------------------------------------ string statis */
 
 function applyStatic() {
   document.documentElement.lang = lang;
-  for (const node of document.querySelectorAll('[data-t]')) {
-    node.textContent = t(node.dataset.t);
-  }
+  for (const node of document.querySelectorAll('[data-t]')) node.textContent = t(node.dataset.t);
   for (const node of document.querySelectorAll('[data-t-aria-label]')) {
     node.setAttribute('aria-label', t(node.dataset.tAriaLabel));
   }
   for (const button of document.querySelectorAll('[data-lang]')) {
     button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
   }
+  el('about-img').alt = t('aboutAlt');
+}
 
-  // Kontak & reservasi: href-nya dihitung, bukan ditulis di HTML.
-  const wa = waLink(pickLang(RESERVE_MESSAGE, lang));
-  for (const id of ['nav-reserve', 'hero-book', 'about-reserve', 'foot-reserve']) {
-    el(id).href = wa;
-  }
+/* --------------------------------------------------- brand & sosial dr data */
 
-  el('tb-phone').href = `tel:+${WHATSAPP}`;
-  el('tb-phone-text').textContent = PHONE_DISPLAY;
-  el('tb-email').href = `mailto:${EMAIL}`;
-  el('tb-email-text').textContent = EMAIL;
+function applyBrand() {
+  if (!menu) return;
+  const cafe = menu.cafe;
+  const name = cafe.name || 'Restaurant';
+  for (const node of document.querySelectorAll('.brand__name')) node.textContent = name;
+  document.title = `${name} — ${pickLang(cafe.tagline, lang) || t('tagline')}`;
+
+  const wa = waLink(cafe.whatsapp, RESERVE_PREFIX[lang] + name + '.');
+  for (const id of ['nav-reserve', 'hero-book', 'about-reserve', 'foot-reserve']) el(id).href = wa;
+
+  const s = socialLinks(cafe);
+  el('tb-phone').href = s.whatsapp ? `tel:+${s.whatsapp}` : '#';
+  el('tb-phone-text').textContent = CONTACT.phoneDisplay;
+  el('tb-email').href = `mailto:${CONTACT.email}`;
+  el('tb-email-text').textContent = CONTACT.email;
 
   const footPhone = el('foot-phone');
-  footPhone.href = `tel:+${WHATSAPP}`;
-  footPhone.textContent = PHONE_DISPLAY;
+  footPhone.href = s.whatsapp ? `tel:+${s.whatsapp}` : '#';
+  footPhone.textContent = CONTACT.phoneDisplay;
 
-  // Tautan sosial (topbar + footer memakai id kembar dengan prefix).
   for (const prefix of ['social', 'foot']) {
-    el(`${prefix}-instagram`).href = SOCIAL.instagram;
-    el(`${prefix}-maps`).href = SOCIAL.maps;
-    el(`${prefix}-tiktok`).href = SOCIAL.tiktok;
+    el(`${prefix}-instagram`).href = s.instagram || '#';
+    el(`${prefix}-maps`).href = s.maps || '#';
+    el(`${prefix}-tiktok`).href = s.tiktok || '#';
   }
-
-  el('about-img').alt = t('aboutAlt');
-  document.title = `${RESTAURANT_NAME} — ${t('tagline')}`;
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -80,11 +76,9 @@ function paintSlide() {
   el('hero-title-rest').textContent = pickLang(s.titleRest, lang);
   el('hero-accent').textContent = pickLang(s.accent, lang);
   el('hero-text').textContent = pickLang(s.text, lang);
-
   const img = el('hero-img');
-  img.src = s.image;
+  img.src = s.image; // foto hero milik tema, path relatif halaman — bukan lewat resolveImg
   img.alt = pickLang(s.alt, lang);
-
   for (const dot of el('hero-dots').children) {
     dot.setAttribute('aria-current', String(Number(dot.dataset.index) === slide));
   }
@@ -103,53 +97,50 @@ function buildDots() {
     dot.type = 'button';
     dot.dataset.index = String(i);
     dot.setAttribute('aria-current', String(i === slide));
-    dot.addEventListener('click', () => {
-      goTo(i);
-      restartTimer();
-    });
+    dot.addEventListener('click', () => { goTo(i); restartTimer(); });
     root.append(dot);
   });
   labelDots();
 }
 
-/** Label dot ikut bahasa; dipanggil ulang saat bahasa berubah. */
 function labelDots() {
   for (const dot of el('hero-dots').children) {
     dot.setAttribute('aria-label', `${t('heroSlide')} ${Number(dot.dataset.index) + 1}`);
   }
 }
 
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
 function startTimer() {
-  // Auto-advance adalah gerak yang tidak diminta pengguna. Hormati preferensinya.
   if (reducedMotion.matches || timer !== null) return;
   timer = setInterval(() => goTo(slide + 1), SLIDE_MS);
 }
+function stopTimer() { clearInterval(timer); timer = null; }
+function restartTimer() { stopTimer(); startTimer(); }
 
-function stopTimer() {
-  clearInterval(timer);
-  timer = null;
+/* ---------------------------------------------------------------- kategori */
+
+/** Foto lingkaran kategori = item pertama (terurut) di kategori itu yang punya gambar. */
+function categoryImage(categoryId) {
+  const items = menu.items
+    .filter((i) => i.categoryId === categoryId && i.image)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  return items.length ? resolveImg(items[0].image) : resolveImg('');
 }
 
-function restartTimer() {
-  stopTimer();
-  startTimer();
+function sortedCategories() {
+  return [...menu.categories].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
-
-/* --------------------------------------------------------------- kategori */
 
 function buildCategories() {
   const root = el('cats');
   clear(root);
-  for (const category of CATEGORIES) {
+  for (const category of sortedCategories()) {
     const li = make('li', 'cat');
     const button = make('button', 'cat__btn');
     button.type = 'button';
     button.dataset.category = category.id;
 
     const img = make('img', 'cat__img');
-    img.src = category.image;
+    img.src = categoryImage(category.id);
     img.alt = '';
     img.width = 104;
     img.height = 104;
@@ -166,7 +157,7 @@ function buildCategories() {
 function buildTabs() {
   const root = el('tabs');
   clear(root);
-  const entries = [{ id: ALL, name: STRINGS.filterAll }, ...CATEGORIES];
+  const entries = [{ id: ALL, name: STRINGS.filterAll }, ...sortedCategories()];
   for (const entry of entries) {
     const tab = make('button', 'tab', pickLang(entry.name, lang));
     tab.type = 'button';
@@ -176,7 +167,7 @@ function buildTabs() {
   }
 }
 
-/** Tab dan lingkaran kategori adalah dua tampilan atas SATU state. */
+/** Tab dan lingkaran kategori = dua tampilan atas SATU state filter. */
 function paintFilterState() {
   for (const tab of el('tabs').children) {
     tab.setAttribute('aria-pressed', String(tab.dataset.category === filter));
@@ -195,16 +186,9 @@ function setFilter(next) {
 }
 
 /**
- * Setelah grid menyusut (mis. "Semua" 13 item → "Pembuka" 2 item), halaman jadi jauh
- * lebih pendek. Kalau pengguna sedang scroll di bawah, viewport tertinggal di dasar dan
- * baris tab hilang ke atas layar — hidangan hasil filter tak terlihat. Bawa tab ke puncak.
- *
- * Targetnya adalah posisi dokumen tempat tab MULAI menempel. Baik `getBoundingClientRect`
- * maupun `offsetTop` tab GOYAH saat ia sedang sticky — keduanya ikut tergeser oleh pin,
- * jadi `offsetTop` malah melaporkan posisi scroll saat ini (melingkar). Buka sticky sesaat
- * (`position: static`) untuk membaca posisi alir sejati, lalu pasang lagi sebelum browser
- * sempat melukis. Hanya menggulung NAIK: kalau pengguna masih di atas titik sticky, jangan
- * diusik (klik dari strip kategori tak boleh menyeret turun).
+ * Setelah grid menyusut, kalau pengguna sedang di bawah, bawa tab ke puncak. Posisi alir
+ * sejati dibaca dengan membuka sticky sesaat (position:static) — `offsetTop`/`rect` goyah
+ * saat elemen sticky. Hanya menggulung NAIK.
  */
 function snapTabsIntoView() {
   const tabs = el('tabs');
@@ -221,10 +205,11 @@ function snapTabsIntoView() {
 
 function renderDish(item) {
   const li = make('li', 'dish');
+  if (item.available === false) li.classList.add('dish--sold');
 
   const figure = make('figure', 'dish__media');
   const img = make('img', 'dish__img');
-  img.src = item.image;
+  img.src = resolveImg(item.image);
   img.alt = pickLang(item.name, lang);
   img.width = 800;
   img.height = 600;
@@ -232,22 +217,29 @@ function renderDish(item) {
   img.decoding = 'async';
   figure.append(img);
 
-  if (item.badge === 'best') figure.append(make('span', 'badge badge--best', t('badgeBest')));
-  if (item.badge === 'new') figure.append(make('span', 'badge badge--new', t('badgeNew')));
+  if (item.available === false) figure.append(make('span', 'badge badge--sold', t('badgeSold') || 'Habis'));
+  else if (item.featured) figure.append(make('span', 'badge badge--best', t('badgeBest')));
+  else if (item.badge === 'new') figure.append(make('span', 'badge badge--new', t('badgeNew')));
   li.append(figure);
 
   const body = make('div', 'dish__body');
   body.append(make('h3', 'dish__name', pickLang(item.name, lang)));
   body.append(make('p', 'dish__desc', pickLang(item.description, lang)));
-  body.append(make('p', 'dish__price', formatPrice(item.price, 'IDR', lang)));
+  body.append(make('p', 'dish__price', formatPrice(item.price, menu.cafe.currency || 'IDR', lang)));
   li.append(body);
-
   return li;
+}
+
+/** Item terurut & terkelompok per kategori (order bersifat per-kategori, bukan global). */
+function orderedItems() {
+  return sortedCategories().flatMap((cat) =>
+    menu.items.filter((i) => i.categoryId === cat.id).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
 }
 
 function paintDishes() {
   const root = el('dishes');
-  const visible = filter === ALL ? ITEMS : ITEMS.filter((item) => item.categoryId === filter);
+  const all = orderedItems();
+  const visible = filter === ALL ? all : all.filter((i) => i.categoryId === filter);
 
   clear(root);
   const fragment = document.createDocumentFragment();
@@ -267,10 +259,49 @@ function switchLang(next) {
   applyStatic();
   labelDots();
   paintSlide();
+  if (menu) {
+    applyBrand();
+    buildCategories();
+    buildTabs();
+    paintFilterState();
+    paintDishes();
+  }
+}
+
+/* --------------------------------------------------------- muat & render */
+
+function renderMenu() {
+  applyBrand();
   buildCategories();
   buildTabs();
   paintFilterState();
   paintDishes();
+}
+
+function showError() {
+  const root = el('dishes');
+  clear(root);
+  el('menu-status').textContent = '';
+  el('dishes-empty').hidden = true;
+  const box = make('div', 'dishes__error');
+  box.append(make('p', 'dishes__error-title', t('errorTitle')));
+  const retry = make('button', 'button button--gold', t('retry'));
+  retry.type = 'button';
+  retry.addEventListener('click', load);
+  box.append(retry);
+  root.append(box);
+}
+
+async function load() {
+  el('menu-status').textContent = t('loading');
+  el('dishes-empty').hidden = true;
+  clear(el('dishes'));
+  try {
+    menu = await loadMenu(DATA_URL);
+    renderMenu();
+  } catch {
+    showError();
+  }
 }
 
 /* -------------------------------------------------------------------- init */
@@ -278,10 +309,6 @@ function switchLang(next) {
 applyStatic();
 buildDots();
 paintSlide();
-buildCategories();
-buildTabs();
-paintFilterState();
-paintDishes();
 
 for (const button of document.querySelectorAll('[data-lang]')) {
   button.addEventListener('click', () => switchLang(button.dataset.lang));
@@ -290,16 +317,16 @@ for (const button of document.querySelectorAll('[data-lang]')) {
 el('hero-prev').addEventListener('click', () => { goTo(slide - 1); restartTimer(); });
 el('hero-next').addEventListener('click', () => { goTo(slide + 1); restartTimer(); });
 
-// Geser (swipe) foto utama kiri/kanan di layar sentuh. Ambang 40px agar tap tak terpicu.
+// Swipe foto hero di layar sentuh. Ambang 40px agar tap tak terpicu.
 const media = document.querySelector('.hero__media');
 let swipeX = null;
-media.addEventListener('touchstart', (event) => { swipeX = event.changedTouches[0].clientX; }, { passive: true });
-media.addEventListener('touchend', (event) => {
+media.addEventListener('touchstart', (e) => { swipeX = e.changedTouches[0].clientX; }, { passive: true });
+media.addEventListener('touchend', (e) => {
   if (swipeX === null) return;
-  const dx = event.changedTouches[0].clientX - swipeX;
+  const dx = e.changedTouches[0].clientX - swipeX;
   swipeX = null;
   if (Math.abs(dx) < 40) return;
-  goTo(dx < 0 ? slide + 1 : slide - 1); // geser ke kiri → slide berikutnya
+  goTo(dx < 0 ? slide + 1 : slide - 1);
   restartTimer();
 }, { passive: true });
 
@@ -311,3 +338,4 @@ hero.addEventListener('focusout', startTimer);
 reducedMotion.addEventListener('change', () => (reducedMotion.matches ? stopTimer() : startTimer()));
 
 startTimer();
+load();

@@ -1,89 +1,81 @@
-# Showcase — 5 opsi desain untuk client
+# Showcase — 5 desain, tiap desain punya admin sendiri
 
-Etalase sementara. Client membuka satu tautan, melihat lima pilihan tampilan, dan mencoba
-masing-masing sebagai situs sungguhan (bisa diklik, bukan gambar mati).
+Etalase untuk client: satu tautan, lima gaya tampilan, semuanya berfungsi penuh dan
+punya admin GitHub-token sendiri. Client mencoba, memilih, lalu desain yang tak dipakai
+boleh dihapus.
 
 ## Peta URL
 
 | URL | Isi |
 |---|---|
-| `/` | Galeri 5 opsi. **Sementara** — boleh dihapus setelah client memilih. |
-| `/menu/` | **Situs pelanggan sungguhan.** Inilah yang di-encode ke QR. Permanen. |
-| `/admin/` | Panel owner. Tidak berubah. |
-| `/showcase/1/` … `/showcase/4/` | Tema hasil tiru `docs/references/1–4.jpg`. |
+| `/` | Galeri 5 opsi. **Sementara.** |
+| `/menu/` + `/admin/` | Cafe "Kopi Senja" — situs pelanggan + admin. Data: `data/menu.json`. **QR menunjuk `/menu/`.** |
+| `/showcase/1/` + `/showcase/1/admin/` | Tema 1 "Klasik Fine Dining". Data: `showcase/1/data.json`. |
+| `/showcase/2/` + `/showcase/2/admin/` | Tema 2 "Savoria Kitchen". Data: `showcase/2/data.json`. |
+| `/showcase/3/` + `/showcase/3/admin/` | Tema 3 "Poster Hijau". Data: `showcase/3/data.json`. |
+| `/showcase/4/` + `/showcase/4/admin/` | Tema 4 "Dolce Dessert". Data: `showcase/4/data.json`. |
 
-**QR menunjuk `/menu/`, bukan `/`.** Itu yang membuat galeri di root bisa dibuang kapan saja tanpa
-mematikan QR yang sudah tercetak. Jangan pernah memindahkan `/menu/` lagi setelah QR dicetak.
+## Arsitektur (keputusan 2026-07-11)
 
-## Status tema
+- **Tiap desain = data.json sendiri + admin sendiri.** Tema membaca datanya saat runtime
+  (fetch cache-busted, ada loading/error state), tidak lagi hardcoded.
+- **Satu mesin admin bersama, halaman terpisah per desain.** Modul keamanan yang sudah
+  teruji dipakai ulang; trust boundary tidak ditulis ulang 5×:
+  - `admin/github-api.js`, `admin/token-store.js`, `admin/qr.js` — dipakai apa adanya.
+  - `admin/menu-store.js` — `path` sudah parameter.
+  - `admin/menu-model.js` — ditambah `configureModel({ imageBase })` (validasi path gambar per desain).
+  - `admin/image.js` — `imagePath(itemId, dir)` menerima folder tujuan.
+  - `admin/admin-core.js` (BARU) — orkestrasi login/idle/QR generik, dikonfigurasi lewat
+    `window.__ADMIN_CONFIG` yang di-set halaman admin tiap desain.
+  - `admin/table-editor.js` (BARU) — **editor tabel** (form builder): baris produk bisa
+    tambah/edit/hapus/urут, upload foto, atur kategori, plus panel branding + sosial.
+- **Skema data seragam** (semua data.json):
+  ```
+  { schemaVersion, cafe: { name, tagline{id,en}, currency, whatsapp, instagram, tiktok,
+    maps, address{id,en}?, hours{id,en}?, updatedAt },
+    categories: [{ id, name{id,en}, order }],
+    items: [{ id, categoryId, name{id,en}, description{id,en}, price, image, available,
+      featured, order }] }
+  ```
+  Kunci meta tetap `cafe` (sekadar nama kunci; isinya brand + sosial). Sosial di sini →
+  memenuhi "semua desain nge-link IG/TikTok/Maps/WhatsApp" DAN bisa diedit di admin.
+- **Foto produk per desain**: cafe → `images/`; tema N → `showcase/N/img/`. Path disimpan
+  ROOT-RELATIVE di data.json; tema menyelesaikannya via `new URL(path, SITE_ROOT)`.
+  "Bersihkan foto yatim" tiap desain hanya menyapu foldernya sendiri.
+- **Login admin**: sama persis dengan cafe — fine-grained GitHub PAT (`Contents: R/W`),
+  satu token menjangkau semua data.json karena semuanya di repo yang sama.
 
-| # | Nama | Referensi | Status |
-|---|---|---|---|
-| 1 | Klasik Fine Dining | `docs/references/1.jpg` | **selesai** — `showcase/1/` |
-| 2 | Savoria Kitchen | `docs/references/2.jpg` | belum |
-| 3 | Menu Poster Hijau | `docs/references/3.jpg` | belum |
-| 4 | Dolce Dessert | `docs/references/4.jpg` | belum |
-| 5 | Desain sekarang | — | live di `/menu/` |
+## Aturan yang tetap mengikat (dari CLAUDE.md)
 
-Galeri root (`index.html`) sudah menautkan tema 1 + situs `/menu/` sebagai "Bisa dicoba",
-dan menyediakan tiga kartu "Segera" untuk tema 2–4.
+Tanpa build step · nol script pihak ketiga di admin + CSP · `textContent`/`createElement`
+bukan `innerHTML` · nama file gambar unik + urutan gambar-dulu-JSON · pola mutator + retry
+409 · token tak pernah di-log (sessionStorage default) · base64 UTF-8-safe · path relatif ·
+teks ≥16px, kontras AA, tap target ≥44px · commit per file, bukan `git add -A`.
 
-## Cara menambah tema berikutnya (2–4)
+## Menu (≥ 25 produk distinct, foto CC0/PD diverifikasi mata)
 
-1. Siapkan foto: `node ov.mjs "<kueri>" <slug> 3` (CC0/PD dari Openverse) → `sheet.mjs` untuk
-   tinjau → pilih → `prep-img.mjs` untuk crop+WebP. Lihat sitasi di `img/CREDITS.md`.
-2. Bangun `showcase/{n}/` dengan pola tema 1: `index.html` + `theme.css` + `theme.js` + `data.js`.
-   Impor `pickLang`/`formatPrice` dari `assets/js/util.js`, `getLang`/`setLang` dari `i18n.js`,
-   dan `showcase/config.js`.
-3. Ganti kartu "Segera" ke-n di `index.html` root menjadi `<a class="card card--live">`, dan
-   ambil pratinjau (`shot.mjs` → `topng2webp.mjs`) ke `showcase/preview/preview-{n}.webp`.
-4. Salin `theme1-test.mjs` → `theme{n}-test.mjs`, sesuaikan; jalankan a11y + ext + kontras.
-   Semua harness ada di scratchpad; jalankan Chrome dengan `--lang=id-ID`.
+Pool Nusantara + Western + Chinese. Sumber Openverse (CC0/Public-Domain), tiap foto dibuka
+sebelum dipakai, dikompres WebP lewat canvas headless Chrome. Sitasi di `*/img/CREDITS.md`.
 
-## Kontrak yang berlaku untuk SEMUA halaman tema
+## Perbaikan UX yang diadopsi semua desain
 
-Tema adalah demo, tapi bukan alasan melonggarkan aturan project. Yang di bawah ini mengikat.
+Sticky tab bisa scroll horizontal (safe center) · hero swipe + panah + auto-advance yang
+hormat `prefers-reduced-motion` · snap-scroll saat filter dari bawah · transisi halus.
 
-- **Data tema hardcoded** di `showcase/{n}/data.js` — tidak menyentuh `data/menu.json`, `/admin/`,
-  atau pipeline gambar. Field teks berbentuk `{ id, en }` seperti di situs pelanggan.
-- **Render lewat `textContent` / `createElement`.** Tidak pernah `innerHTML`, walau datanya milik kita
-  sendiri. Pola yang dilanggar di satu tempat akan menular ke halaman pelanggan.
-- **Nol request pihak ketiga.** Font di-self-host di `showcase/assets/fonts/` (woff2, subset latin,
-  di-commit). Bukan `<link>` ke `fonts.googleapis.com`. CSP `<meta>` `default-src 'self'` di tiap tema.
-- **Tanpa build step.** HTML/CSS/ES modules polos.
-- **Semua path relatif.** Situs harus jalan di `user.github.io/cafe/` maupun di root domain.
-- **`<meta name="robots" content="noindex">`** di halaman tema dan galeri.
-- Aksesibilitas sama ketatnya: **teks ≥ 16px**, kontras AA ≥ 4.5:1, tap target ≥ 44×44px.
-- **Tidak ada kontrol mati.** Kalau referensi menampilkan tombol yang tak menuju ke mana pun
-  (Search, dropdown "Pages", ikon Profile), tombol itu dibuang — bukan dipasang sebagai hiasan.
+## Status
 
-## Yang dipakai ulang, bukan ditulis ulang
+| Desain | Situs | data.json | Admin | Commit |
+|---|---|---|---|---|
+| Cafe | ✅ (perlu revamp admin + perkaya menu) | ✅ | ⏳ tabel | |
+| Tema 1 | ✅ | ⏳ konversi | ⏳ | |
+| Tema 2 | ⏳ | ⏳ | ⏳ | |
+| Tema 3 | ⏳ | ⏳ | ⏳ | |
+| Tema 4 | ⏳ | ⏳ | ⏳ | |
 
-- `assets/js/util.js` → `pickLang(field, lang)`, `formatPrice(price, 'IDR', lang)`.
-- `assets/js/i18n.js` → `getLang()` / `setLang()`. Kunci `localStorage` sama (`lang`), jadi pilihan
-  bahasa ikut berpindah antar halaman. Kamus string statis tiap tema tinggal di `data.js` tema itu.
-- `showcase/config.js` → `WHATSAPP`, `RESTAURANT_NAME`. Satu tempat untuk diganti saat demo ke client.
+## Cara menambah tema (pola)
 
-## Tema 1 — deviasi sadar dari referensi
-
-- **Dibuang atas permintaan user**: halaman/ikon Profile, banner "Get 20% Off On Your First Order",
-  rating bintang per produk.
-- **Dibuang karena akan jadi kontrol mati**: dropdown "Pages", ikon Search.
-- **Reservation → WhatsApp** (`wa.me`), bukan halaman reservasi.
-- **Harga Rupiah**, halaman bilingual ID/EN (referensi hanya Inggris + dolar).
-- **Nama restoran "Your Restaurant"**.
-- **Tab filter memuat ke-6 kategori**, sementara referensi hanya menampilkan 5 tab padahal
-  lingkaran kategorinya 6. Kalau ditiru mentah, mengklik lingkaran "Pizza" akan menonaktifkan
-  seluruh baris tab — pelanggan melihat filter aktif yang tak tercermin di mana pun.
-
-## Foto & font
-
-- Foto: Unsplash (lisensi bebas pakai). Diunduh, **dilihat satu per satu** untuk memastikan
-  subjeknya benar, lalu dikompresi ke WebP lewat headless Chrome (`canvas.toBlob('image/webp')`) —
-  mesin ini tidak punya encoder gambar. Lingkaran kategori memakai ulang foto hidangan.
-- Font tema 1: **Playfair Display** (judul, logo) + **Inter** (teks). Keduanya SIL OFL.
-
-## Budget
-
-Budget 30 KB gzip milik **situs pelanggan** (`/menu/`), bukan halaman tema — tema memuat webfont dan
-foto hero besar. Ukuran tema tetap diukur dan dilaporkan apa adanya, tidak disembunyikan.
+1. Foto: `node ov.mjs "<kueri>" <slug> 3` → `sheet.mjs` tinjau → pilih → `prep-img.mjs`.
+2. `showcase/N/data.json` (skema di atas) + `showcase/N/theme.{css,js}` + `index.html`.
+3. `showcase/N/admin/index.html` set `window.__ADMIN_CONFIG` lalu impor `admin/admin-core.js`.
+4. Kartu galeri jadi `card--live` + pratinjau `shot.mjs`→`topng2webp.mjs`.
+5. Tes: `themeN-test.mjs` + a11y + ext + kontras (Chrome `--lang=id-ID`).

@@ -21,11 +21,16 @@ export class ImageError extends Error {
   }
 }
 
-/** `images/itm_ax9f2-k3m9.webp`. Acak agar dua upload untuk item yang sama tidak bertabrakan. */
-export function imagePath(itemId) {
+/**
+ * `images/itm_ax9f2-k3m9.webp`. Acak agar dua upload untuk item yang sama tidak bertabrakan.
+ * `dir` bisa diganti agar tiap desain showcase menulis ke foldernya sendiri
+ * (mis. `showcase/2/img`) — orphan cleanup per desain lalu hanya menyapu foldernya.
+ */
+export function imagePath(itemId, dir = 'images') {
   const bytes = crypto.getRandomValues(new Uint8Array(4));
   const suffix = [...bytes].map((b) => RANDOM_ALPHABET[b % RANDOM_ALPHABET.length]).join('');
-  return `images/${itemId}-${suffix}.webp`;
+  const base = dir.replace(/\/+$/, '');
+  return `${base}/${itemId}-${suffix}.webp`;
 }
 
 const toBlob = (canvas, quality) =>
