@@ -8,7 +8,7 @@
     },
     "currency": "IDR",
     "logo": "",
-    "updatedAt": "2026-07-10T14:40:13.228Z"
+    "updatedAt": "2026-07-10T14:57:18.426Z"
   },
   "categories": [
     {
@@ -58,7 +58,7 @@
         "en": ""
       },
       "price": 15000,
-      "image": "",
+      "image": "images/itm_b7k31-wl6z.webp",
       "available": true,
       "featured": false,
       "order": 2
