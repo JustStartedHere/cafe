@@ -45,8 +45,25 @@
         <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">
           Buka halaman pembuatan token di GitHub
         </a>
-        — panduan langkah demi langkah ada di README.
       </p>
+
+      <details class="steps">
+        <summary class="steps__summary">Belum punya token? Buka langkah-langkahnya</summary>
+        <ol class="steps__list">
+          <li><strong>Token name</strong> — isi bebas, misalnya <code>Menu Cafe</code>.</li>
+          <li><strong>Resource owner</strong> — pilih akun pemilik repositori ini.</li>
+          <li><strong>Expiration</strong> — pilih <strong>No expiration</strong>, agar token tidak perlu dibuat ulang tiap tahun.</li>
+          <li><strong>Repository access</strong> — pilih <strong>Only select repositories</strong>, lalu pilih repositori <code>cafe</code> saja.</li>
+          <li><strong>Permissions → Repository permissions → Contents</strong> — ubah menjadi <strong>Read and write</strong>. Jangan menyalakan izin lain. (<em>Metadata: Read-only</em> menyala sendiri; itu wajib.)</li>
+          <li>Klik <strong>Generate token</strong>, salin tokennya, tempelkan di bawah. Token hanya ditampilkan sekali.</li>
+        </ol>
+        <p class="panel__hint">
+          Token ini hanya bisa mengubah isi satu repositori publik. Kalau bocor, hapus saja tokennya di
+          <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener noreferrer">pengaturan token</a>.
+          Penjelasan lengkap ada di
+          <a href="https://github.com/JustStartedHere/cafe#readme" target="_blank" rel="noopener noreferrer">README</a>.
+        </p>
+      </details>
 
       <form id="token-form" novalidate>
         <label class="field">

@@ -44,6 +44,42 @@
   font-size: 0.9375rem;
 }
 
+/* Langkah pembuatan token, tersedia langsung di halaman — owner tidak perlu pergi ke README. */
+
+.steps {
+  margin-top: 1rem;
+  padding: 0.75rem 0.875rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.steps__summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.steps__list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+}
+
+.steps__list li + li {
+  margin-top: 0.5rem;
+}
+
+.steps code {
+  padding: 0.0625rem 0.3125rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 0.9375em;
+}
+
 .field {
   display: block;
   margin-top: 1.25rem;
