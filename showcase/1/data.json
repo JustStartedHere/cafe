@@ -12,7 +12,7 @@
     "instagram": "https://instagram.com/yourrestaurant",
     "tiktok": "https://tiktok.com/@yourrestaurant",
     "maps": "https://maps.google.com/?q=Your+Restaurant",
-    "updatedAt": "2026-07-11T06:16:15.025Z"
+    "updatedAt": "2026-07-11T06:16:17.051Z"
   },
   "categories": [
     {
@@ -99,7 +99,7 @@
       "available": true,
       "featured": false,
       "badge": "",
-      "order": 3
+      "order": 2
     },
     {
       "id": "itm_dim-sum",
@@ -117,7 +117,7 @@
       "available": true,
       "featured": false,
       "badge": "",
-      "order": 2
+      "order": 3
     },
     {
       "id": "itm_gado-gado",
