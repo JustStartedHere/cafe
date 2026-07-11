@@ -1,6 +1,5 @@
-// Tema 6 "Dolce Dessert" — poster dwiwarna krem+olive (setia ke referensi 4).
-// String UI tetap + konten poster kiri (judul, daftar fitur, kotak tambahan).
-// Konten menu dari data.json. Dipakai engine bersama menu-view.js.
+// Tema 5 "Rimba Hijau" — poster hijau (setia ke referensi 3). String UI tetap;
+// konten menu dari data.json. Dipakai engine bersama menu-view.js.
 export const STRINGS = {
   skip: { id: 'Langsung ke menu', en: 'Skip to the menu' },
   langGroup: { id: 'Pilih bahasa', en: 'Select language' },
@@ -11,29 +10,14 @@ export const STRINGS = {
   socialMaps: { id: 'Lokasi di Google Maps', en: 'Location on Google Maps' },
   socialTiktok: { id: 'TikTok kami', en: 'Our TikTok' },
 
-  posterKicker: { id: 'Dessert dengan jiwa', en: 'Desserts with soul' },
-  posterTitle: { id: 'Manis untuk\nMomen Spesial', en: 'Sweet for\nSpecial Moments' },
-  posterText: {
-    id: 'Setiap sajian dipotret dari atas di atas piring hitam — daftar lengkap dari dapur kami.',
-    en: 'Every plate shot from above on black ceramic — the full list from our kitchen.',
+  heroEyebrow: { id: 'Sajian Pilihan', en: 'Curated Plates' },
+  heroWord: { id: 'Menu', en: 'Menu' },
+  heroText: {
+    id: 'Tiap hidangan dipotret dari atas, ditata seperti poster — cita rasa nusantara dan dunia dalam satu daftar.',
+    en: 'Every dish shot from above, arranged like a poster — flavours of the archipelago and the world on one list.',
   },
-
-  feat1: { id: 'Bahan alami', en: 'Natural ingredients' },
-  feat2: { id: 'Dibuat dengan cinta', en: 'Made with love' },
-  feat3: { id: 'Lembut & harum', en: 'Soft & fragrant' },
-  feat4: { id: 'Segar setiap hari', en: 'Fresh every day' },
-
-  addonTitle: { id: 'Tambahan', en: 'Add-ons' },
-  addon1: { id: 'Saus cokelat', en: 'Chocolate sauce' },
-  addon1Price: { id: 'Rp 15.000', en: 'Rp 15,000' },
-  addon2: { id: 'Saus karamel', en: 'Caramel sauce' },
-  addon2Price: { id: 'Rp 15.000', en: 'Rp 15,000' },
-  addon3: { id: 'Krim kocok', en: 'Whipped cream' },
-  addon3Price: { id: 'Rp 12.000', en: 'Rp 12,000' },
-  addon4: { id: 'Beri segar', en: 'Fresh berries' },
-  addon4Price: { id: 'Rp 20.000', en: 'Rp 20,000' },
-
   heroCta: { id: 'Pesan lewat WhatsApp', en: 'Order on WhatsApp' },
+  heroBrowse: { id: 'Lihat menu', en: 'Browse menu' },
 
   menuTitle: { id: 'Daftar Hidangan', en: 'The Menu' },
   filterAll: { id: 'Semua', en: 'All' },

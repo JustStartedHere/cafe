@@ -1,4 +1,4 @@
-// Tema 2 — logika tipis: seluruh perilaku menu (filter, bahasa, sosial, loading/error)
+// Tema 6 — logika tipis: seluruh perilaku menu (filter, bahasa, sosial, loading/error)
 // ditangani engine bersama. Hanya perlu meneruskan string + prefiks pesan WA.
 import { initMenuView } from '../menu-view.js';
 import { STRINGS, RESERVE_PREFIX } from './strings.js';

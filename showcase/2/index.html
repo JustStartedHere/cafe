@@ -3,121 +3,110 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#FFF8F0">
-  <title>Your Restaurant</title>
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="../skeleton.css">
+  <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Menu Kopi Senja — kopi & camilan.">
+  <title>Menu Cafe</title>
+  <link rel="stylesheet" href="../../assets/css/styles.css">
+  <link rel="manifest" href="../../manifest.webmanifest">
   <link rel="icon" href="../../assets/img/icon.svg" type="image/svg+xml">
-  <link rel="preload" href="../assets/fonts/playfair-display-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="apple-touch-icon" href="../../assets/img/icon-192.png">
 </head>
 <body>
-  <a class="skip" href="#menu" data-t="skip">Langsung ke menu</a>
-
-  <header class="top">
-    <div class="top__inner wrap">
-      <a class="brand" href="#home">
-        <span class="brand__mark" aria-hidden="true">🍴</span>
-        <span class="brand__text">
-          <span class="brand__name">Your Restaurant</span>
-          <span class="brand__tag" data-brand-tagline></span>
-        </span>
-      </a>
-      <div class="top__right">
-        <ul class="social" data-t-aria-label="social">
-          <li><a class="social__link" data-social="instagram" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialInstagram" hidden>
-            <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.6.2-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.6-.4-1.3-.5-2.3C2.4 15 2.4 14.7 2.4 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.6-.2 1.3-.4 2.3-.5C9 2.4 9.3 2.4 12 2.4Zm0 3.2A6.4 6.4 0 1 0 12 18 6.4 6.4 0 0 0 12 5.2Zm0 2.3a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2Zm5.1-.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg></a></li>
-          <li><a class="social__link" data-social="tiktok" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialTiktok" hidden>
-            <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c.4 2.4 1.8 3.9 4.1 4.1v3c-1.5.1-2.9-.4-4.1-1.2v5.6a6 6 0 1 1-6-6c.4 0 .7 0 1 .1v3.1a2.9 2.9 0 1 0 2 2.8V3h3Z"/></svg></a></li>
-          <li><a class="social__link" data-social="maps" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialMaps" hidden>
-            <svg class="social__icon" viewBox="0 0 24 24" fill-rule="evenodd" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg></a></li>
-        </ul>
-        <div class="lang" role="group" data-t-aria-label="langGroup">
-          <button type="button" class="lang__btn" data-lang="id" data-t-aria-label="langId" aria-pressed="true">ID</button>
-          <button type="button" class="lang__btn" data-lang="en" data-t-aria-label="langEn" aria-pressed="false">EN</button>
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__top">
+        <div class="header__lead">
+          <img id="cafe-logo" class="header__logo" alt="" width="52" height="52" hidden>
+          <div class="header__id">
+            <h1 class="header__name" id="cafe-name">Kopi Senja</h1>
+            <p class="header__tagline" id="cafe-tagline"></p>
+          </div>
+        </div>
+        <div class="lang" role="group" data-i18n-aria-label="langGroup">
+          <button type="button" class="lang__btn" data-lang="id" data-i18n-aria-label="langId" aria-pressed="true">ID</button>
+          <button type="button" class="lang__btn" data-lang="en" data-i18n-aria-label="langEn" aria-pressed="false">EN</button>
         </div>
       </div>
+      <!-- Chip skeleton me-reserve tinggi strip sejak first paint. Tanpa ini header
+           membesar saat chip asli muncul dan seluruh halaman bergeser turun (CLS). -->
+      <nav class="chips" id="chips" data-i18n-aria-label="categories" aria-hidden="true">
+        <span class="chip chip--skeleton"></span>
+        <span class="chip chip--skeleton"></span>
+      </nav>
     </div>
   </header>
 
-  <main>
-    <section class="hero" id="home">
-      <div class="hero__inner wrap">
-        <div class="hero__copy">
-          <p class="hero__eyebrow" data-t="heroEyebrow">Dapur Keluarga</p>
-          <h1 class="hero__title" data-t="heroTitle">Masakan rumahan, porsi royal</h1>
-          <p class="hero__text" data-t="heroText"></p>
-          <div class="hero__actions">
-            <a class="button button--primary" data-social="wa" target="_blank" rel="noopener noreferrer" data-t="heroCta" hidden>Pesan lewat WhatsApp</a>
-            <a class="button button--ghost" href="#menu" data-t="heroBrowse">Lihat menu</a>
-          </div>
-        </div>
-        <figure class="hero__media">
-          <img src="../menu-img/rendang.webp" alt="Rendang sapi" width="800" height="600" fetchpriority="high" decoding="async">
-        </figure>
-      </div>
-    </section>
+  <main class="wrap">
+    <!-- Skeleton hidup di shell HTML: first paint instan, tinggi kartu sudah ter-reserve. -->
+    <div id="skeleton" aria-hidden="true">
+      <ul class="grid">
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+        <li class="card"><div class="skeleton__media"></div><div class="skeleton__line"></div><div class="skeleton__line skeleton__line--short"></div></li>
+      </ul>
+    </div>
 
-    <section class="section" id="menu" aria-labelledby="menu-title">
-      <div class="wrap">
-        <h2 class="section__title" id="menu-title" data-t="menuTitle">Menu Kami</h2>
-        <ul class="cats" id="cats"></ul>
-        <div class="tabs" id="tabs" role="group" aria-labelledby="menu-title"></div>
-        <p class="tabs__status" id="menu-status" role="status" aria-live="polite"></p>
-        <ul class="dishes" id="dishes"></ul>
-        <p class="dishes__empty" id="dishes-empty" data-t="emptyFilter" hidden>Belum ada hidangan di kategori ini.</p>
-      </div>
-    </section>
+    <div id="menu" hidden></div>
 
-    <section class="section section--about" id="about" aria-labelledby="about-title">
-      <div class="wrap about">
-        <div class="about__copy">
-          <h2 class="section__title" id="about-title" data-t="aboutTitle">Tentang Your Restaurant</h2>
-          <p data-t="aboutText"></p>
-          <ul class="feats">
-            <li class="feat"><span class="feat__dot" aria-hidden="true">●</span><span data-t="feat1">Porsi Mengenyangkan</span></li>
-            <li class="feat"><span class="feat__dot" aria-hidden="true">●</span><span data-t="feat2">Bahan Segar</span></li>
-            <li class="feat"><span class="feat__dot" aria-hidden="true">●</span><span data-t="feat3">Ramah di Kantong</span></li>
-          </ul>
-        </div>
-        <figure class="about__media">
-          <img src="../menu-img/chef-plate.webp" alt="" width="800" height="600" loading="lazy" decoding="async">
-        </figure>
-      </div>
-    </section>
+    <div id="empty" class="state" hidden>
+      <h2 class="state__title" data-i18n="emptyTitle">Menu segera hadir</h2>
+      <p class="state__text" data-i18n="emptyText">Kami sedang menyiapkannya.</p>
+    </div>
+
+    <div id="error" class="state" hidden>
+      <h2 class="state__title" data-i18n="errorTitle">Menu gagal dimuat</h2>
+      <p class="state__text" data-i18n="errorText">Periksa koneksi Anda, lalu coba lagi.</p>
+      <button type="button" class="button" id="retry" data-i18n="retry">Coba lagi</button>
+    </div>
   </main>
 
-  <footer class="footer">
-    <div class="wrap footer__inner">
-      <div>
-        <p class="brand__name brand__name--footer">Your Restaurant</p>
-        <p class="footer__note" data-t="footNote">Contoh desain — bukan restoran sungguhan.</p>
+  <!-- Footer sosial: href diisi runtime dari menu.cafe (renderFooter). Tautan yang
+       tak punya URL disembunyikan; footer disembunyikan bila tak ada satu pun. -->
+  <footer class="site-footer" id="site-footer" hidden>
+    <div class="wrap site-footer__inner">
+      <!-- Deskripsi & alamat usaha, diisi runtime dari menu.cafe (renderFooter). -->
+      <p class="site-footer__about" id="foot-description" hidden></p>
+      <p class="site-footer__address" id="foot-address" hidden></p>
+      <!-- Jam operasional (master per hari), diisi runtime dari menu.cafe.hours (renderFooter). -->
+      <div class="site-footer__hours" id="foot-hours-block" hidden>
+        <p class="site-footer__head" data-i18n="hoursHead">Jam operasional</p>
+        <div class="hours-list" id="foot-hours"></div>
       </div>
-      <div>
-        <p class="footer__head" data-t="footContact">Kontak</p>
-        <div id="foot-hours-block" class="foot-hours-block">
-          <p class="footer__head footer__head--hours" data-t="footHours">Jam Buka</p>
-          <div id="foot-hours" class="foot-hours"></div>
-        </div>
-        <div class="footer__cta">
-          <a class="button button--primary button--small" data-social="wa" target="_blank" rel="noopener noreferrer" data-t="heroCta" hidden>Pesan lewat WhatsApp</a>
-        </div>
-        <ul class="social social--footer" data-t-aria-label="social">
-          <li><a class="social__link" data-social="instagram" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialInstagram" hidden>
-            <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.6.2-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.6-.4-1.3-.5-2.3C2.4 15 2.4 14.7 2.4 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.6-.2 1.3-.4 2.3-.5C9 2.4 9.3 2.4 12 2.4Zm0 3.2A6.4 6.4 0 1 0 12 18 6.4 6.4 0 0 0 12 5.2Zm0 2.3a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2Zm5.1-.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg></a></li>
-          <li><a class="social__link" data-social="tiktok" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialTiktok" hidden>
-            <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c.4 2.4 1.8 3.9 4.1 4.1v3c-1.5.1-2.9-.4-4.1-1.2v5.6a6 6 0 1 1-6-6c.4 0 .7 0 1 .1v3.1a2.9 2.9 0 1 0 2 2.8V3h3Z"/></svg></a></li>
-          <li><a class="social__link" data-social="maps" target="_blank" rel="noopener noreferrer" data-t-aria-label="socialMaps" hidden>
-            <svg class="social__icon" viewBox="0 0 24 24" fill-rule="evenodd" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg></a></li>
+      <p class="site-footer__head" data-i18n="follow">Ikuti &amp; kunjungi kami</p>
+      <div class="site-footer__links">
+        <a class="wa-button" id="foot-wa" href="#" target="_blank" rel="noopener noreferrer" hidden>
+          <svg class="wa-button__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.5-.7-2.5-1.3-3.4-3-.3-.4.3-.4.7-1.3.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5 4.5 1.9.8 2.6.9 3.5.8.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3ZM12 2a10 10 0 0 0-8.6 15l-1.3 4.9 5-1.3A10 10 0 1 0 12 2Zm0 18.3c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.3 8.3 0 1 1 12 20.3Z"/></svg>
+          <span data-i18n="waContact">Chat WhatsApp</span>
+        </a>
+        <ul class="socials">
+          <li>
+            <a id="foot-instagram" class="social-link" href="#" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="socialInstagram" hidden>
+              <svg class="social-link__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.7 0 3 0 4.1.1 1 .1 1.7.2 2.3.5.6.2 1.1.5 1.6 1s.8 1 1 1.6c.2.6.4 1.3.5 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c-.1 1-.2 1.7-.5 2.3-.2.6-.5 1.1-1 1.6s-1 .8-1.6 1c-.6.2-1.3.4-2.3.5-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1-.1-1.7-.2-2.3-.5-.6-.2-1.1-.5-1.6-1s-.8-1-1-1.6c-.2-.6-.4-1.3-.5-2.3C2.4 15 2.4 14.7 2.4 12s0-3 .1-4.1c.1-1 .2-1.7.5-2.3.2-.6.5-1.1 1-1.6s1-.8 1.6-1c.6-.2 1.3-.4 2.3-.5C9 2.4 9.3 2.4 12 2.4Zm0 3.2A6.4 6.4 0 1 0 12 18 6.4 6.4 0 0 0 12 5.2Zm0 2.3a4.1 4.1 0 1 1 0 8.2 4.1 4.1 0 0 1 0-8.2Zm5.1-.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a id="foot-tiktok" class="social-link" href="#" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="socialTiktok" hidden>
+              <svg class="social-link__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3c.4 2.4 1.8 3.9 4.1 4.1v3c-1.5.1-2.9-.4-4.1-1.2v5.6a6 6 0 1 1-6-6c.4 0 .7 0 1 .1v3.1a2.9 2.9 0 1 0 2 2.8V3h3Z"/></svg>
+            </a>
+          </li>
+          <li>
+            <a id="foot-maps" class="social-link" href="#" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="socialMaps" hidden>
+              <svg class="social-link__icon" viewBox="0 0 24 24" fill-rule="evenodd" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
-    <p class="footer__back wrap"><a href="../../" data-t="backToGallery">← Kembali ke galeri desain</a></p>
   </footer>
 
-  <script type="module" src="theme.js"></script>
+  <!-- Kembali ke galeri desain — hanya relevan selama fase showcase (galeri di root
+       bersifat sementara, lihat CLAUDE.md). Hapus baris ini saat handover. -->
+  <nav class="gallery-back" aria-label="Showcase">
+    <a href="../../" data-i18n="backToGallery">← Kembali ke galeri desain</a>
+  </nav>
+
+  <script type="module" src="../../assets/js/menu.js"></script>
 </body>
 </html>

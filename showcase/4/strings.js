@@ -1,4 +1,4 @@
-// Tema 4 "Dolce" — string UI tetap. Konten menu dari data.json.
+// Tema 3 "Verde" — string UI tetap. Konten menu dari data.json.
 export const STRINGS = {
   skip: { id: 'Langsung ke menu', en: 'Skip to the menu' },
   langGroup: { id: 'Pilih bahasa', en: 'Select language' },
@@ -9,18 +9,18 @@ export const STRINGS = {
   socialMaps: { id: 'Lokasi di Google Maps', en: 'Location on Google Maps' },
   socialTiktok: { id: 'TikTok kami', en: 'Our TikTok' },
 
-  heroEyebrow: { id: 'Manis · Gurih · Kopi', en: 'Sweet · Savoury · Coffee' },
-  heroTitle: { id: 'Sepotong bahagia untuk hari Anda', en: 'A little slice of happy for your day' },
+  heroEyebrow: { id: 'Segar Setiap Hari', en: 'Fresh Every Day' },
+  heroTitle: { id: 'Dari kebun, ke dapur, ke meja Anda', en: 'From garden, to kitchen, to your table' },
   heroText: {
-    id: 'Kue, pencuci mulut, dan hidangan hangat — dibuat kecil-kecilan setiap hari.',
-    en: 'Cakes, desserts, and warm plates — made in small batches, every day.',
+    id: 'Bahan lokal pilihan, dimasak sederhana agar rasa aslinya bicara.',
+    en: 'Hand-picked local produce, cooked simply so the true flavour speaks.',
   },
   heroCta: { id: 'Pesan lewat WhatsApp', en: 'Order on WhatsApp' },
   heroBrowse: { id: 'Lihat menu', en: 'Browse menu' },
 
-  menuTitle: { id: 'Menu Manis Kami', en: 'Our Sweet Menu' },
+  menuTitle: { id: 'Daftar Menu', en: 'The Menu' },
   filterAll: { id: 'Semua', en: 'All' },
-  badgeBest: { id: 'Favorit', en: 'Favourite' },
+  badgeBest: { id: 'Terlaris', en: 'Bestseller' },
   badgeNew: { id: 'Baru', en: 'New' },
   badgeSold: { id: 'Habis', en: 'Sold out' },
   emptyFilter: { id: 'Belum ada hidangan di kategori ini.', en: 'No dishes in this category yet.' },
@@ -29,14 +29,14 @@ export const STRINGS = {
   errorTitle: { id: 'Menu gagal dimuat', en: "Couldn't load the menu" },
   retry: { id: 'Coba lagi', en: 'Try again' },
 
-  aboutTitle: { id: 'Dari Dapur Your Restaurant', en: 'From the Your Restaurant Kitchen' },
+  aboutTitle: { id: 'Filosofi Kami', en: 'Our Philosophy' },
   aboutText: {
-    id: 'Kami memanggang dalam porsi kecil agar semua keluar segar. Cokelat, buah, dan mentega asli — tanpa jalan pintas.',
-    en: 'We bake in small batches so everything comes out fresh. Real chocolate, fruit, and butter — no shortcuts.',
+    id: 'Kami memasak dengan bahan musiman dari petani sekitar. Sedikit proses, sedikit limbah, banyak rasa.',
+    en: 'We cook with seasonal produce from nearby farms. Less processing, less waste, more flavour.',
   },
-  feat1: { id: 'Dipanggang Harian', en: 'Baked Daily' },
-  feat2: { id: 'Cokelat & Buah Asli', en: 'Real Chocolate & Fruit' },
-  feat3: { id: 'Porsi Kecil Segar', en: 'Small Fresh Batches' },
+  feat1: { id: '100% Bahan Lokal', en: '100% Local Produce' },
+  feat2: { id: 'Tanpa Pengawet', en: 'No Preservatives' },
+  feat3: { id: 'Dimasak Hari Ini', en: 'Cooked Today' },
 
   footContact: { id: 'Kontak', en: 'Contact' },
   footHours: { id: 'Jam Buka', en: 'Opening Hours' },

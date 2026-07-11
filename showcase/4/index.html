@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="robots" content="noindex, nofollow">
   <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#FFF5F7">
+  <meta name="theme-color" content="#20361F">
   <title>Your Restaurant</title>
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="../skeleton.css">
@@ -20,7 +20,7 @@
   <header class="top">
     <div class="top__inner wrap">
       <a class="brand" href="#home">
-        <span class="brand__mark" aria-hidden="true">🍰</span>
+        <span class="brand__mark" aria-hidden="true">🌿</span>
         <span class="brand__name">Your Restaurant</span>
       </a>
       <div class="top__right">
@@ -44,8 +44,9 @@
     <section class="hero" id="home">
       <div class="hero__inner wrap">
         <div class="hero__copy">
-          <p class="hero__eyebrow" data-t="heroEyebrow">Manis · Gurih · Kopi</p>
+          <p class="hero__eyebrow" data-t="heroEyebrow">Segar Setiap Hari</p>
           <h1 class="hero__title" data-t="heroTitle"></h1>
+          <p class="hero__tag" data-brand-tagline></p>
           <p class="hero__text" data-t="heroText"></p>
           <div class="hero__actions">
             <a class="button button--primary" data-social="wa" target="_blank" rel="noopener noreferrer" data-t="heroCta" hidden>Pesan lewat WhatsApp</a>
@@ -53,15 +54,14 @@
           </div>
         </div>
         <figure class="hero__media">
-          <img src="../menu-img/berry-cheesecake.webp" alt="Cheesecake beri" width="800" height="600" fetchpriority="high" decoding="async">
+          <img src="../menu-img/gado-gado.webp" alt="Gado-gado" width="800" height="600" fetchpriority="high" decoding="async">
         </figure>
       </div>
     </section>
 
     <section class="section" id="menu" aria-labelledby="menu-title">
       <div class="wrap">
-        <h2 class="section__title" id="menu-title" data-t="menuTitle">Menu Manis Kami</h2>
-        <ul class="cats" id="cats"></ul>
+        <h2 class="section__title" id="menu-title"><span class="brand__name"></span> · <span data-t="menuTitle">Daftar Menu</span></h2>
         <div class="tabs" id="tabs" role="group" aria-labelledby="menu-title"></div>
         <p class="tabs__status" id="menu-status" role="status" aria-live="polite"></p>
         <ul class="dishes" id="dishes"></ul>
@@ -71,18 +71,18 @@
 
     <section class="section section--about" id="about" aria-labelledby="about-title">
       <div class="wrap about">
+        <figure class="about__media">
+          <img src="../menu-img/caesar-salad.webp" alt="" width="800" height="600" loading="lazy" decoding="async">
+        </figure>
         <div class="about__copy">
-          <h2 class="section__title" id="about-title" data-t="aboutTitle">Dari Dapur Your Restaurant</h2>
+          <h2 class="section__title" id="about-title" data-t="aboutTitle">Filosofi Kami</h2>
           <p data-t="aboutText"></p>
           <ul class="feats">
-            <li class="feat"><span class="feat__dot" aria-hidden="true">♥</span><span data-t="feat1">Dipanggang Harian</span></li>
-            <li class="feat"><span class="feat__dot" aria-hidden="true">♥</span><span data-t="feat2">Cokelat &amp; Buah Asli</span></li>
-            <li class="feat"><span class="feat__dot" aria-hidden="true">♥</span><span data-t="feat3">Porsi Kecil Segar</span></li>
+            <li class="feat"><span class="feat__leaf" aria-hidden="true">🌱</span><span data-t="feat1">100% Bahan Lokal</span></li>
+            <li class="feat"><span class="feat__leaf" aria-hidden="true">🌱</span><span data-t="feat2">Tanpa Pengawet</span></li>
+            <li class="feat"><span class="feat__leaf" aria-hidden="true">🌱</span><span data-t="feat3">Dimasak Hari Ini</span></li>
           </ul>
         </div>
-        <figure class="about__media">
-          <img src="../menu-img/macaron.webp" alt="" width="800" height="600" loading="lazy" decoding="async">
-        </figure>
       </div>
     </section>
   </main>

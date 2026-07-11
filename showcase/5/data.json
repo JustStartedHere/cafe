@@ -3,8 +3,8 @@
   "cafe": {
     "name": "Your Restaurant",
     "tagline": {
-      "id": "Menu poster, cita rasa nusantara & dunia",
-      "en": "Poster menu, flavours of the world"
+      "id": "Manis & gurih, sepanjang hari",
+      "en": "Sweet & savoury, all day"
     },
     "currency": "IDR",
     "hours": [

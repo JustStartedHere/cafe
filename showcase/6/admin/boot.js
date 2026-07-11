@@ -1,4 +1,4 @@
-// Konfigurasi admin tema 6 "Dolce Dessert". Men-set window.__ADMIN_CONFIG lalu memuat
+// Konfigurasi admin tema 5 "Rimba Hijau". Men-set window.__ADMIN_CONFIG lalu memuat
 // mesin bersama. CSP script-src 'self' melarang <script> inline, jadi config di modul ini.
 
 const siteUrl = new URL('../', location.href).href; // showcase/6/admin/ -> showcase/6/

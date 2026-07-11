@@ -13,23 +13,55 @@ Di atasnya kini ada pekerjaan kedua: **etalase opsi desain untuk client**, renca
 
 ## Status saat ini
 
-Situs pelanggan selesai (Phase 1–8). **Showcase SELESAI (2026-07-11):** galeri 7 kartu di root
-(cafe + tema 1–6), masing-masing tema dengan `data.json` + admin tabel sendiri lewat satu mesin
-admin bersama. Tema 5 & 6 ditambahkan setia ke referensi 3 & 4 (poster); tema 3 & 4 lama dibiarkan
-apa adanya atas keputusan user meski tak sepenuhnya menyerupai referensinya.
+Situs pelanggan selesai (Phase 1–8). **Showcase SELESAI (2026-07-11):** galeri 7 kartu di root,
+masing-masing dengan `data.json` + admin tabel sendiri lewat satu mesin admin bersama. Tema 5 & 6
+ditambahkan setia ke referensi 3 & 4 (poster); tema 3 & 4 lama dibiarkan apa adanya atas keputusan user.
+
+**Re-map showcase (2026-07-11, di branch):** situs pelanggan **dipindah `/menu/` → `/showcase/2/`** (adminnya
+`/admin/` shell → `/showcase/2/admin/`; mesin dasbor tetap di `/admin/`), dan tema lama `showcase/2..6`
+digeser jadi `showcase/3..7`. Keputusan terkunci "situs pelanggan di `/menu/`" **sengaja di-override** atas
+permintaan user (QR belum pernah dicetak → jendela aman), murni demi konsistensi penomoran katalog. Detail di
+"### Re-map showcase" di bawah.
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Showcase 6 tema + galeri 7 kartu + admin tabel per tema** — `SHOWCASE_PLAN.md` |
+| Fase terakhir selesai | **Jam operasional per hari + re-map showcase (`/menu/`→`/showcase/2/`)** — lihat di bawah |
 | Berikutnya | **Serah terima**: transfer repo ke akun client, ganti placeholder sosial, cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
-| Situs pelanggan | `https://juststartedhere.github.io/cafe/menu/` ← **yang di-encode QR cafe** |
+| Situs pelanggan | `https://juststartedhere.github.io/cafe/showcase/2/` ← **yang di-encode QR cafe** (dipindah dari `/menu/`) |
+| Admin pelanggan | `https://juststartedhere.github.io/cafe/showcase/2/admin/` (shell di `showcase/2/admin/`; mesin di `/admin/`) |
 | Galeri showcase | `https://juststartedhere.github.io/cafe/` — sementara, boleh dihapus nanti |
-| Tema showcase | `…/cafe/showcase/1..6/` (+ `…/showcase/N/admin/`) |
+| Tema showcase | `…/cafe/showcase/1,3..7/` (+ `…/showcase/N/admin/`) — slot 2 = situs pelanggan |
 | Blocker | — |
 
 Update tabel ini setiap kali sebuah fase selesai.
+
+### Re-map showcase — `/menu/` → `/showcase/2/` (2026-07-11, di branch)
+
+Atas permintaan user, situs pelanggan dipindah agar masuk penomoran katalog. **Keputusan terkunci
+"situs pelanggan hidup di `/menu/`" di-override secara sadar** (QR belum pernah dicetak, handover belum
+jalan → satu-satunya jendela aman). Layout akhir: `showcase/1` (tema 1) · **`showcase/2` = situs pelanggan**
+· `showcase/3..7` (tema 2..6 lama).
+
+- **Yang PINDAH (git mv):** `menu/` → `showcase/2/`; `admin/index.html` + `admin/boot.js` → `showcase/2/admin/`.
+  Tema `showcase/2..6` → `showcase/3..7` (turun dari 6, ke atas, agar tak bentrok).
+- **Yang TETAP di root (dipakai bersama, root-relative):** `data/menu.json` (sumber kebenaran pelanggan),
+  `images/`, `assets/`, dan **mesin dasbor `admin/`** (dashboard-core/editor/css + github-api/menu-model/
+  image/qr/token-store/menu-store + vendor). Jadi `/admin/` sekarang **cuma rumah mesin**, bukan admin cafe.
+- **Kenapa aman:** JS pelanggan (`assets/js/menu.js`) menghitung `data/menu.json` dari `import.meta.url`
+  (module-relative) → tak peduli halaman pindah. Path repo-relative admin (`dataPath`/`imageDir`/`imageBases`)
+  tak berubah. Yang berubah cuma path **page-relative** (kedalaman): `menu/index.html` `../` → `../../`;
+  shell admin cafe → depth-3 (`../../../admin/…`, `../../../assets/…`, `imagePreviewBase '../../../'`,
+  `siteUrl` `../`, `import('../../../admin/dashboard-core.js')`). Tema geser = kedalaman SAMA (`showcase/X/`),
+  jadi `index.html`/`theme.js`/`theme.css` tak disentuh; hanya `admin/boot.js` tiap tema (dataPath/imageDir/
+  imageBases + fallback URL) di-renumber.
+- **Referensi `/menu/` yang ikut diubah:** galeri root (7 href `showcase/1..7/`), `404.html` (href statis +
+  JS `root + 'showcase/2/'`), `manifest.webmanifest` (`start_url: showcase/2/`), `README.md`.
+- **Terverifikasi headless:** galeri 1..7, pelanggan render + jam di `showcase/2/`, tema renumber render,
+  admin cafe `showcase/2/admin/` login→muat `data/menu.json`, admin tema `showcase/3/admin/`→`showcase/3/
+  data.json`, 404 home→`showcase/2/`, **nol path aset patah**.
+- **⚠️ Jangan hapus `showcase/2/` saat handover** — itu situs pelanggan permanen di dalam pohon showcase.
 
 ### Arsitektur showcase & admin bersama (fase 2026-07-11) — detail di `SHOWCASE_PLAN.md`
 
@@ -53,7 +85,7 @@ Update tabel ini setiap kali sebuah fase selesai.
 
 ### Dasbor admin — layout sidebar + tabel, dipakai SEMUA admin (fase 2026-07-11)
 
-**Semua admin (cafe `/admin/` + 6 tema `/showcase/N/admin/`) memakai satu mesin dasbor** (referensi
+**Semua admin (cafe `/showcase/2/admin/` + tema `/showcase/{1,3..7}/admin/`) memakai satu mesin dasbor** (referensi
 tabel produk): sidebar navigasi + bagian terpisah per halaman (Ringkasan · Kelola menu · Kategori ·
 Identitas · Media sosial · Kode QR · Pemeliharaan) supaya menu panjang tidak jadi satu halaman menurun.
 Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas permintaan user.
@@ -167,8 +199,10 @@ Permintaan user: jangan biarkan layar kosong lalu konten tiba-tiba muncul setela
     (mewarisi posisi mark tiap tema; emoji disimpan di `dataset.mark` untuk fallback). CSS `.brand__logo`
     (ukuran `em`, auto-skala) di `showcase/skeleton.css` bersama. Dipanggil dari `applyBrand` (theme.js +
     menu-view.js).
-- **SEMUA form admin diduplikasi di 7 shell** (cafe `admin/index.html` + 6 `showcase/N/admin/index.html`).
-  Perubahan markup form WAJIB diterapkan ke ketujuhnya (skrip replace exact-string; CSS/JS bersama otomatis).
+- **SEMUA form admin diduplikasi di 7 shell** — sejak re-map semuanya di `showcase/N/admin/index.html`
+  (N = 1..7; **`showcase/2/admin/` = cafe**, sisanya tema). Perubahan markup form WAJIB diterapkan ke
+  ketujuhnya (skrip replace exact-string; CSS/JS bersama otomatis). Cafe shell beda tipis: mark ☕ (tema 🍽),
+  tanpa `palette.css`.
 
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
@@ -365,11 +399,13 @@ Aturan **teks ≥ 16px** sempat dilanggar diam-diam di tujuh tempat. Sekarang:
   perbarui sha256.
 - `createSvgTag()`/`createImgTag()` milik library **tidak dipakai** — keduanya merakit HTML sebagai string.
   `admin/qr.js` membaca `isDark()` dan membangun DOM lewat `createElementNS`.
-- URL yang di-encode dihitung dari `location` halaman admin (`config.js` → `SITE_URL` = `../menu/`), jadi otomatis
-  benar setelah repo ditransfer. **QR jangan dicetak sebelum transfer selesai.**
-- **Situs pelanggan hidup di `/menu/`, bukan di root.** Root ditempati galeri showcase yang sifatnya sementara.
-  Itulah sebabnya QR menunjuk `/menu/`: galeri boleh dihapus kapan pun tanpa mematikan QR yang sudah tercetak.
-  Setelah QR dicetak, **`/menu/` tidak boleh dipindah lagi**.
+- URL yang di-encode dihitung dari `location` halaman admin (`boot.js` `siteUrl` = `../` dari `showcase/2/admin/`
+  → `showcase/2/`), jadi otomatis benar setelah repo ditransfer. **QR jangan dicetak sebelum transfer selesai.**
+- **Situs pelanggan hidup di `/showcase/2/`, bukan di root maupun `/menu/` lagi.** Root ditempati galeri showcase.
+  QR menunjuk `/showcase/2/`. Setelah QR dicetak, **`/showcase/2/` tidak boleh dipindah lagi**. ⚠️ **Catatan:**
+  situs pelanggan kini berada DI DALAM pohon `showcase/` yang secara historis ditandai "sementara/boleh dihapus" —
+  jangan hapus `showcase/2/` (itu situs pelanggan permanen); yang boleh dihapus saat handover hanyalah kartu galeri
+  root + tema alternatif (showcase 1,3..7), bukan slot 2.
 - Quiet zone 4 modul wajib menurut spesifikasi QR — jangan dikurangi demi estetika.
 - Tetap **tanpa service worker**. `pwa-test` menegakkan ini: nol registrasi, `sw.js` harus 404.
 

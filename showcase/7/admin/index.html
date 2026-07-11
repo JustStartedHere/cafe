@@ -15,10 +15,11 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
-  <title>Dasbor Menu</title>
-  <link rel="icon" href="../assets/img/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../assets/css/styles.css">
-  <link rel="stylesheet" href="dashboard.css">
+  <title>Admin — Your Restaurant</title>
+  <link rel="icon" href="../../../assets/img/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../assets/css/styles.css">
+  <link rel="stylesheet" href="../../../admin/dashboard.css">
+  <link rel="stylesheet" href="palette.css">
 </head>
 <body class="dash">
 
@@ -85,7 +86,7 @@
     <!-- Sidebar navigasi. Di layar sempit ia jadi laci yang bisa dibuka lewat tombol menu. -->
     <aside class="sidebar" id="sidebar" aria-label="Navigasi dasbor">
       <div class="sidebar__brand">
-        <span class="sidebar__mark" aria-hidden="true">☕</span>
+        <span class="sidebar__mark" aria-hidden="true">🍽</span>
         <span class="sidebar__brand-text">
           <span class="sidebar__brand-name" id="brand-name">Menu Cafe</span>
           <span class="sidebar__brand-sub">Dashboard Admin</span>
@@ -437,9 +438,9 @@
   </dialog>
 
   <!-- Di-vendor & di-commit, bukan dari CDN. Lihat header file itu. -->
-  <script src="vendor/qrcode-generator.js"></script>
+  <script src="../../../admin/vendor/qrcode-generator.js"></script>
   <!-- boot.js: modul same-origin (CSP script-src 'self' melarang <script> inline),
-       men-set window.__ADMIN_CONFIG lalu memuat mesin dasbor cafe. -->
+       men-set window.__ADMIN_CONFIG lalu memuat mesin dasbor bersama. -->
   <script type="module" src="boot.js"></script>
 </body>
 </html>

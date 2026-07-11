@@ -1,4 +1,4 @@
-// Konfigurasi admin tema 3 "Verde". Men-set window.__ADMIN_CONFIG lalu memuat
+// Konfigurasi admin tema 2 "Savoria Kitchen". Men-set window.__ADMIN_CONFIG lalu memuat
 // mesin bersama. CSP script-src 'self' melarang <script> inline, jadi config di modul ini.
 
 const siteUrl = new URL('../', location.href).href; // showcase/3/admin/ -> showcase/3/

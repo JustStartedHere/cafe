@@ -3,8 +3,8 @@
   "cafe": {
     "name": "Your Restaurant",
     "tagline": {
-      "id": "Segar, jujur, dari dapur kami",
-      "en": "Fresh, honest, from our kitchen"
+      "id": "Dapur ramai, rasa juara",
+      "en": "Buzzing kitchen, bold flavours"
     },
     "currency": "IDR",
     "hours": [

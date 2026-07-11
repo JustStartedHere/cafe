@@ -4,8 +4,8 @@ Website menu untuk pelanggan yang scan QR di meja. Tidak ada pemesanan — murni
 
 | | |
 |---|---|
-| Halaman pelanggan | <https://juststartedhere.github.io/cafe/menu/> |
-| Halaman pengelola | <https://juststartedhere.github.io/cafe/admin/> |
+| Halaman pelanggan | <https://juststartedhere.github.io/cafe/showcase/2/> |
+| Halaman pengelola | <https://juststartedhere.github.io/cafe/showcase/2/admin/> |
 | Tempat data disimpan | `data/menu.json` di repositori ini |
 
 Tidak ada server, tidak ada tagihan bulanan, tidak ada yang perlu diperbarui. Menu Anda adalah sebuah file
@@ -52,7 +52,7 @@ Saran: nyalakan **two-factor authentication** di akun GitHub Anda, dan buat toke
 
 ## 2. Masuk ke halaman admin
 
-1. Buka <https://juststartedhere.github.io/cafe/admin/>
+1. Buka <https://juststartedhere.github.io/cafe/showcase/2/admin/>
 2. Tempelkan token, lalu klik **Masuk**.
 3. **"Ingat di perangkat ini"** — biarkan **tidak dicentang** di komputer bersama. Kalau tidak dicentang, token
    hilang begitu tab ditutup. Kalau dicentang, token tersimpan di perangkat itu sampai Anda klik **Keluar**.
@@ -184,15 +184,15 @@ dipakai halaman pelanggan — termasuk footer sosial dan tombol WhatsApp. (Tauta
 Dua tempat yang **tidak** ikut berubah otomatis dan harus disunting manual di repositori:
 
 - `manifest.webmanifest` — nama yang muncul saat menu dipasang ke layar utama HP.
-- `menu/index.html` — `<meta name="description">` halaman pelanggan.
+- `showcase/2/index.html` — `<meta name="description">` halaman pelanggan.
 
 ## Etalase desain (sementara)
 
-Selama masa memilih, root situs (<https://juststartedhere.github.io/cafe/>) menampilkan **galeri 7 kartu**:
-situs cafe yang siap pakai (`/menu/`) plus **enam gaya tampilan** di `/showcase/1..6/`, masing-masing punya
-admin sendiri di `/showcase/N/admin/` dengan cara login yang **sama** (token GitHub yang sama). Tema 5 & 6
-adalah poster yang setia ke referensi 3 & 4. Setelah client memilih satu desain, sisanya boleh dihapus —
-QR menunjuk `/menu/`, jadi tidak terpengaruh.
+Selama masa memilih, root situs (<https://juststartedhere.github.io/cafe/>) menampilkan **galeri 7 kartu**
+di `/showcase/1..7/`, masing-masing punya admin sendiri di `/showcase/N/admin/` dengan cara login yang
+**sama** (token GitHub yang sama). **Situs cafe siap pakai ada di `/showcase/2/`** (dulu `/menu/`, dipindah
+agar konsisten dengan penomoran katalog); enam kartu lain adalah gaya tampilan alternatif. Setelah client
+memilih satu desain, sisanya boleh dihapus. **QR menunjuk `/showcase/2/`.**
 
 ---
 

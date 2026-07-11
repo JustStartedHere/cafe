@@ -1,5 +1,4 @@
-// Tema 5 "Rimba Hijau" — poster hijau (setia ke referensi 3). String UI tetap;
-// konten menu dari data.json. Dipakai engine bersama menu-view.js.
+// Tema 4 "Dolce" — string UI tetap. Konten menu dari data.json.
 export const STRINGS = {
   skip: { id: 'Langsung ke menu', en: 'Skip to the menu' },
   langGroup: { id: 'Pilih bahasa', en: 'Select language' },
@@ -10,18 +9,18 @@ export const STRINGS = {
   socialMaps: { id: 'Lokasi di Google Maps', en: 'Location on Google Maps' },
   socialTiktok: { id: 'TikTok kami', en: 'Our TikTok' },
 
-  heroEyebrow: { id: 'Sajian Pilihan', en: 'Curated Plates' },
-  heroWord: { id: 'Menu', en: 'Menu' },
+  heroEyebrow: { id: 'Manis · Gurih · Kopi', en: 'Sweet · Savoury · Coffee' },
+  heroTitle: { id: 'Sepotong bahagia untuk hari Anda', en: 'A little slice of happy for your day' },
   heroText: {
-    id: 'Tiap hidangan dipotret dari atas, ditata seperti poster — cita rasa nusantara dan dunia dalam satu daftar.',
-    en: 'Every dish shot from above, arranged like a poster — flavours of the archipelago and the world on one list.',
+    id: 'Kue, pencuci mulut, dan hidangan hangat — dibuat kecil-kecilan setiap hari.',
+    en: 'Cakes, desserts, and warm plates — made in small batches, every day.',
   },
   heroCta: { id: 'Pesan lewat WhatsApp', en: 'Order on WhatsApp' },
   heroBrowse: { id: 'Lihat menu', en: 'Browse menu' },
 
-  menuTitle: { id: 'Daftar Hidangan', en: 'The Menu' },
+  menuTitle: { id: 'Menu Manis Kami', en: 'Our Sweet Menu' },
   filterAll: { id: 'Semua', en: 'All' },
-  badgeBest: { id: 'Favorit', en: 'Popular' },
+  badgeBest: { id: 'Favorit', en: 'Favourite' },
   badgeNew: { id: 'Baru', en: 'New' },
   badgeSold: { id: 'Habis', en: 'Sold out' },
   emptyFilter: { id: 'Belum ada hidangan di kategori ini.', en: 'No dishes in this category yet.' },
@@ -29,6 +28,15 @@ export const STRINGS = {
   loading: { id: 'Memuat menu…', en: 'Loading the menu…' },
   errorTitle: { id: 'Menu gagal dimuat', en: "Couldn't load the menu" },
   retry: { id: 'Coba lagi', en: 'Try again' },
+
+  aboutTitle: { id: 'Dari Dapur Your Restaurant', en: 'From the Your Restaurant Kitchen' },
+  aboutText: {
+    id: 'Kami memanggang dalam porsi kecil agar semua keluar segar. Cokelat, buah, dan mentega asli — tanpa jalan pintas.',
+    en: 'We bake in small batches so everything comes out fresh. Real chocolate, fruit, and butter — no shortcuts.',
+  },
+  feat1: { id: 'Dipanggang Harian', en: 'Baked Daily' },
+  feat2: { id: 'Cokelat & Buah Asli', en: 'Real Chocolate & Fruit' },
+  feat3: { id: 'Porsi Kecil Segar', en: 'Small Fresh Batches' },
 
   footContact: { id: 'Kontak', en: 'Contact' },
   footHours: { id: 'Jam Buka', en: 'Opening Hours' },
