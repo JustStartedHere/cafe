@@ -38,6 +38,20 @@
   .dish--skeleton .skel-bar { animation: none; }
 }
 
+/* Jam operasional di footer (master per hari). Warna & font mewarisi footer tiap tema
+   (currentColor), jadi menyatu terang/gelap tanpa token per tema. Tiap baris = rentang
+   hari + jam, disejajarkan kiri–kanan agar mudah dipindai. */
+.foot-hours { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.35rem; }
+.foot-hours__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  line-height: 1.4;
+}
+.foot-hours__day { flex: 0 0 auto; }
+.foot-hours__val { flex: 0 0 auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.footer__head--hours { margin-top: 1rem; }
+
 /* Logo usaha di header tema: menggantikan mark dekoratif, mewarisi posisinya.
    `em` relatif ke ukuran font mark tiap tema → skala otomatis mengikuti tema. */
 .brand__mark--logo,

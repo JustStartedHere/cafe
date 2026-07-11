@@ -435,6 +435,21 @@ body {
   font-weight: 600;
 }
 
+/* Jam operasional per hari. Baris = rentang hari + jam, disejajarkan kiri–kanan.
+   Blok TIDAK diberi `display:` — kelas ber-display akan mengalahkan aturan UA
+   `[hidden]{display:none}` (spesifisitas lebih tinggi), sehingga `hidden` tak lagi
+   menyembunyikan saat jam belum diatur. Susun head + daftar dengan alur blok biasa. */
+.hours-list { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.35rem; }
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  max-width: 22rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.hours-row__val { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 /* Tautan kembali ke galeri desain — hanya untuk fase showcase. */
 .gallery-back {
   text-align: center;

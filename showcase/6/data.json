@@ -7,6 +7,15 @@
       "en": "Desserts with soul"
     },
     "currency": "IDR",
+    "hours": [
+      { "closed": false, "open": "09:00", "close": "22:00" },
+      { "closed": false, "open": "09:00", "close": "22:00" },
+      { "closed": false, "open": "09:00", "close": "22:00" },
+      { "closed": false, "open": "09:00", "close": "22:00" },
+      { "closed": false, "open": "09:00", "close": "23:00" },
+      { "closed": false, "open": "10:00", "close": "23:00" },
+      { "closed": false, "open": "10:00", "close": "21:00" }
+    ],
     "logo": "",
     "whatsapp": "6281234567890",
     "instagram": "https://instagram.com/yourrestaurant",

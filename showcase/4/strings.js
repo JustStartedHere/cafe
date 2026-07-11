@@ -39,7 +39,7 @@ export const STRINGS = {
   feat3: { id: 'Porsi Kecil Segar', en: 'Small Fresh Batches' },
 
   footContact: { id: 'Kontak', en: 'Contact' },
-  footHours: { id: 'Setiap hari · 10.00 – 22.00', en: 'Every day · 10:00 – 22:00' },
+  footHours: { id: 'Jam Buka', en: 'Opening Hours' },
   footNote: { id: 'Contoh desain — bukan restoran sungguhan.', en: 'Design sample — not a real restaurant.' },
   backToGallery: { id: '← Kembali ke galeri desain', en: '← Back to the design gallery' },
 };

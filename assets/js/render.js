@@ -4,7 +4,7 @@
 // `setAttribute`. Tidak pernah `innerHTML`. Repo ini publik dan bisa divandal;
 // halaman pelanggan tidak boleh jadi vektor XSS.
 
-import { pickLang, formatPrice, imageSrc, logoSrc, groupByCategory, PLACEHOLDER_IMAGE } from './util.js';
+import { pickLang, formatPrice, imageSrc, logoSrc, formatHours, groupByCategory, PLACEHOLDER_IMAGE } from './util.js';
 import { t } from './i18n.js';
 
 // Jumlah kartu teratas yang dimuat eager — sisanya lazy. Menjaga LCP tanpa membanjiri jaringan.
@@ -136,6 +136,21 @@ export function renderFooter(cafe = {}, lang) {
   };
   setText('foot-description', pickLang(cafe.description, lang));
   setText('foot-address', pickLang(cafe.address, lang));
+
+  // Jam operasional per hari. Rentang hari dengan jam sama digabung oleh formatHours.
+  const hoursBlock = document.getElementById('foot-hours-block');
+  const hoursList = document.getElementById('foot-hours');
+  if (hoursBlock && hoursList) {
+    clear(hoursList);
+    const lines = formatHours(cafe.hours, lang);
+    for (const { label, value } of lines) {
+      const row = el('div', 'hours-row');
+      row.append(text('span', 'hours-row__day', label), text('span', 'hours-row__val', value));
+      hoursList.append(row);
+    }
+    hoursBlock.hidden = lines.length === 0;
+    if (lines.length) any = true;
+  }
 
   const setLink = (id, url) => {
     const a = document.getElementById(id);

@@ -70,7 +70,6 @@ export const STRINGS = {
 
   // footer
   footHours: { id: 'Jam Buka', en: 'Opening Hours' },
-  footHoursValue: { id: 'Setiap hari, 10.00 – 22.00', en: 'Every day, 10:00 – 22:00' },
   footContact: { id: 'Kontak', en: 'Contact' },
   footReserve: { id: 'Reservasi lewat WhatsApp', en: 'Reserve via WhatsApp' },
   footNote: { id: 'Contoh desain — bukan restoran sungguhan.', en: 'Design sample — not a real restaurant.' },

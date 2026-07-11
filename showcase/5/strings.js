@@ -31,7 +31,7 @@ export const STRINGS = {
   retry: { id: 'Coba lagi', en: 'Try again' },
 
   footContact: { id: 'Kontak', en: 'Contact' },
-  footHours: { id: 'Setiap hari · 09.00 – 22.00', en: 'Every day · 09:00 – 22:00' },
+  footHours: { id: 'Jam Buka', en: 'Opening Hours' },
   footNote: { id: 'Contoh desain — bukan restoran sungguhan.', en: 'Design sample — not a real restaurant.' },
   backToGallery: { id: '← Kembali ke galeri desain', en: '← Back to the design gallery' },
 };
