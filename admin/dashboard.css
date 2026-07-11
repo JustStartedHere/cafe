@@ -1,19 +1,47 @@
 /* Dasbor admin — struktur bersama cafe + semua tema showcase. Terpisah dari styles.css
-   (halaman pelanggan). Token warna diwarisi dari styles.css; tema showcase menimpanya
-   lewat palette.css masing-masing. Floor teks admin 15px sesuai aturan project. */
+   (halaman pelanggan). Floor teks admin 15px sesuai aturan project.
+
+   PALET & TIPOGRAFI "GALERI" (permintaan user 2026-07-11): semua admin memakai tampilan
+   galeri — latar #F4F4F0, aksen terracotta, judul serif elegan. Diterapkan lewat
+   `body.dash` (spesifisitas 0,1,1) yang MENANG atas `:root` dari styles.css DAN palette.css
+   tiap tema (0,1,0), jadi berlaku seragam untuk cafe + 6 tema (light-only, seperti galeri). */
 
 :root {
+  --sidebar-w: 15.5rem;
+}
+
+body.dash {
+  --bg: #F4F4F0;
+  --surface: #FFFFFF;
+  --text: #23201C;
+  --muted: #6B655C;
+  --accent: #B23A1E;
+  --on-accent: #FFFFFF;
+  --border: #E5E2DB;
+  --border-strong: #8C857A; /* >=3:1 di atas surface/bg — batas kontrol WCAG 1.4.11 */
+  --danger-bg: #FCEBEA;
+  --danger-border: #E4A79F;
+  --danger-text: #A0281C;
+  --skeleton: #ECEAE4;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgb(35 32 28 / 4%), 0 10px 30px rgb(35 32 28 / 6%);
   --ok-text: #1a6a4f;
   --ok-bg: #e7f4ee;
   --ok-border: #7cbfa4;
-  --sidebar-w: 15.5rem;
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, 'Times New Roman', serif;
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ok-text: #7fd6b3;
-    --ok-bg: #16302a;
-    --ok-border: #2f6d57;
-  }
+
+/* Judul memakai serif display galeri; tabel & form tetap sans (keterbacaan data). */
+.auth-card__title,
+.sidebar__brand-name,
+.topbar__title,
+.card__title,
+.dialog__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 /* Selektor kelas di bawah menyetel `display:` (grid/flex), yang di author stylesheet
