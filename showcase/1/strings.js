@@ -36,7 +36,7 @@ export const STRINGS = {
   catsTitle: { id: 'Kategori Menu Kami', en: 'Our Menu Categories' },
 
   // menu
-  menuTitle: { id: 'Rekomendasi Chef', en: "Chef's Recommendations" },
+  menuTitle: { id: 'Menu', en: 'Menu' },
   filterAll: { id: 'Semua', en: 'All Items' },
   badgeBest: { id: 'Terlaris', en: 'Bestseller' },
   badgeNew: { id: 'Baru', en: 'New' },

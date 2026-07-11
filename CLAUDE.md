@@ -104,6 +104,13 @@ Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas
 - **Header tabel admin sticky**: `.table-scroll` diberi `max-height` + `overflow:auto` (jadi scroller
   vertikal) dan `thead th` `z-index:2` (tbody ada setelah thead → tanpa z-index, sel tergulung menimpa header).
   Berlaku semua admin (dashboard.css bersama).
+- **Admin kini memakai palet + tipografi GALERI** (permintaan user): `dashboard.css` `body.dash` men-set
+  latar `#F4F4F0` + aksen terracotta `#B23A1E` + judul serif, MENANG atas `:root` styles.css & palette.css
+  (spesifisitas 0,1,1 > 0,1,0) → **semua admin (cafe + 6 tema) seragam, light-only**. Palet per-tema di
+  `palette.css` kini tertimpa (praktis inert kecuali `color-scheme:light`). Admin tak lagi punya dark mode.
+- **Showcase 1**: judul section menu `menuTitle` "Rekomendasi Chef" → **"Menu"** (strings.js + fallback HTML);
+  editor tak punya badge "rekomendasi chef" jadi labelnya menyesatkan. Ornamen ♛ dekoratif tema dibiarkan.
+- **Katalog**: nama kartu desain 5 **"Rimba Hijau" → "Organic"** (nama restoran di dalam tetap "Your Restaurant").
 - **URL `menu_showcase` — DIBATALKAN user (2026-07-11).** Sempat diminta ganti `…github.io/cafe/` →
   `…/menu_showcase`; itu butuh **rename repo** (URL Pages = nama repo), operasi **admin** yang hanya bisa
   dilakukan owner `JustStartedHere` (kolaborator `itdevcba` = `admin:false`). User memilih **tetap `/cafe/`**.
