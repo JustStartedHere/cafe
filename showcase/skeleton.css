@@ -37,3 +37,16 @@
   .dish--skeleton .dish__media,
   .dish--skeleton .skel-bar { animation: none; }
 }
+
+/* Logo usaha di header tema: menggantikan mark dekoratif, mewarisi posisinya.
+   `em` relatif ke ukuran font mark tiap tema → skala otomatis mengikuti tema. */
+.brand__mark--logo,
+.brand__crown.brand__mark--logo { display: inline-flex; align-items: center; }
+.brand__logo {
+  height: 1.7em;
+  width: auto;
+  max-width: 3.2em;
+  object-fit: contain;
+  border-radius: 5px;
+  vertical-align: middle;
+}

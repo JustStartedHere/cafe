@@ -50,6 +50,17 @@ export function imageSrc(item) {
 }
 
 /**
+ * URL logo usaha untuk header. Divalidasi dengan allowlist yang sama seperti foto item
+ * (repo publik bisa divandal). Kosong/invalid → '' agar logo cukup disembunyikan, bukan
+ * diganti placeholder.
+ */
+export function logoSrc(cafe) {
+  const src = typeof cafe?.logo === 'string' ? cafe.logo.trim() : '';
+  if (src === '' || src.includes('..') || !SAFE_IMAGE.test(src)) return '';
+  return new URL(src, SITE_ROOT).href;
+}
+
+/**
  * Kelompokkan item ke dalam kategori, keduanya terurut menurut `order`.
  * Item dengan `categoryId` tak dikenal dibuang — bukan dirender di kategori asal-asalan.
  * Kategori tanpa item ikut dibuang agar tidak ada heading kosong.
