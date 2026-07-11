@@ -6,10 +6,10 @@
 // dari repo publik yang bisa divandal. `resolveImg` menolak path di luar allowlist alih-alih
 // bergantung pada `onerror`.
 
-import { pickLang, formatPrice } from '../assets/js/util.js';
+import { pickLang, formatPrice, formatHours } from '../assets/js/util.js';
 import { getLang, setLang, LANGS } from '../assets/js/i18n.js';
 
-export { pickLang, formatPrice, getLang, setLang, LANGS };
+export { pickLang, formatPrice, formatHours, getLang, setLang, LANGS };
 
 // Akar repo (cafe/). Path gambar di data.json disimpan root-relative
 // (mis. `showcase/menu-img/x.webp`), jadi harus diselesaikan terhadap akar,
@@ -32,6 +32,27 @@ export function logoSrc(cafe) {
   const src = typeof cafe?.logo === 'string' ? cafe.logo.trim() : '';
   if (src === '' || src.includes('..') || !SAFE_IMAGE.test(src)) return '';
   return new URL(src, SITE_ROOT).href;
+}
+
+/**
+ * Render jam operasional (master per hari) ke footer tema. Butuh `#foot-hours` (wadah baris)
+ * dan opsional `#foot-hours-block` (blok label+wadah, disembunyikan bila jam belum diatur).
+ * Baris digabung per rentang hari oleh `formatHours`. Semua teks via textContent.
+ */
+export function renderHours(cafe, lang) {
+  const root = document.getElementById('foot-hours');
+  const block = document.getElementById('foot-hours-block');
+  if (!root) return;
+  clear(root);
+  const lines = formatHours(cafe?.hours, lang);
+  if (block) block.hidden = lines.length === 0;
+  root.hidden = lines.length === 0;
+  for (const { label, value } of lines) {
+    const row = make('div', 'foot-hours__row');
+    row.append(make('span', 'foot-hours__day', label));
+    row.append(make('span', 'foot-hours__val', value));
+    root.append(row);
+  }
 }
 
 /**

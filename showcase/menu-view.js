@@ -20,7 +20,7 @@
 
 import {
   pickLang, formatPrice, getLang, setLang, LANGS,
-  loadMenu, resolveImg, waLink, socialLinks, make, clear, renderSkeleton, renderBrandLogo,
+  loadMenu, resolveImg, waLink, socialLinks, make, clear, renderSkeleton, renderBrandLogo, renderHours,
 } from './lib.js';
 
 const ALL = 'all';
@@ -56,6 +56,7 @@ export function initMenuView({ dataUrl, strings, reservePrefix }) {
       node.textContent = pickLang(cafe.tagline, lang);
     }
     renderBrandLogo(cafe);
+    renderHours(cafe, lang);
     document.title = `${name}${cafe.tagline ? ' — ' + pickLang(cafe.tagline, lang) : ''}`;
 
     const s = socialLinks(cafe);

@@ -46,6 +46,9 @@ const formatRupiahInput = (value) => {
   return d === '' ? '' : Number(d).toLocaleString('id-ID');
 };
 
+// Jam operasional: admin berbahasa Indonesia, urutan Senin..Minggu (index 0=Senin).
+const DAY_LABELS_ID = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
 const SVG_NS = 'http://www.w3.org/2000/svg';
 function svgEl(tag, attrs) {
   const n = document.createElementNS(SVG_NS, tag);
@@ -348,6 +351,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     el('brand-name').textContent = cafe.name || 'Menu Cafe';
     resetLogoState();
     showExistingLogo(cafe);
+    fillHours(cafe.hours);
   }
 
   /* ------------------------------------------------------------------ logo */
@@ -420,6 +424,83 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     logoClear.hidden = true;
     logoNote.textContent = 'Logo akan dihapus saat disimpan.';
   });
+
+  /* ---------------------------------------------------- jam operasional */
+
+  const hoursRoot = el('cf-hours');
+
+  // Baris 7 hari dibangun sekali (statis); nilai diisi ulang tiap load lewat fillHours.
+  function buildHoursRows() {
+    if (!hoursRoot) return;
+    clear(hoursRoot);
+    DAY_LABELS_ID.forEach((day, i) => {
+      const row = node('div', 'hours-editor__row');
+      row.append(node('span', 'hours-editor__day', day));
+
+      const closed = document.createElement('input');
+      closed.type = 'checkbox';
+      closed.dataset.hoursClosed = String(i);
+      const closedLabel = node('label', 'hours-editor__closed');
+      closedLabel.append(closed, node('span', undefined, 'Tutup'));
+
+      const open = document.createElement('input');
+      open.type = 'time';
+      open.className = 'input hours-editor__time';
+      open.dataset.hoursOpen = String(i);
+      open.setAttribute('aria-label', `Jam buka ${day}`);
+
+      const close = document.createElement('input');
+      close.type = 'time';
+      close.className = 'input hours-editor__time';
+      close.dataset.hoursClose = String(i);
+      close.setAttribute('aria-label', `Jam tutup ${day}`);
+
+      const times = node('div', 'hours-editor__times');
+      times.append(open, node('span', 'hours-editor__sep', '–'), close);
+
+      const syncDisabled = () => {
+        open.disabled = closed.checked;
+        close.disabled = closed.checked;
+        times.classList.toggle('hours-editor__times--off', closed.checked);
+      };
+      closed.addEventListener('change', syncDisabled);
+
+      row.append(closedLabel, times);
+      hoursRoot.append(row);
+    });
+  }
+
+  function fillHours(hours) {
+    if (!hoursRoot) return;
+    if (!hoursRoot.children.length) buildHoursRows();
+    const arr = Array.isArray(hours) && hours.length === 7 ? hours : null;
+    for (let i = 0; i < 7; i += 1) {
+      const entry = arr?.[i] ?? {};
+      const closedEl = hoursRoot.querySelector(`[data-hours-closed="${i}"]`);
+      const openEl = hoursRoot.querySelector(`[data-hours-open="${i}"]`);
+      const closeEl = hoursRoot.querySelector(`[data-hours-close="${i}"]`);
+      const isClosed = arr ? entry.closed === true || !entry.open || !entry.close : false;
+      closedEl.checked = isClosed;
+      // Belum pernah diatur → tawarkan default 09.00–22.00 agar owner cukup klik Simpan.
+      openEl.value = arr ? (entry.open ?? '') : '09:00';
+      closeEl.value = arr ? (entry.close ?? '') : '22:00';
+      openEl.disabled = isClosed;
+      closeEl.disabled = isClosed;
+      openEl.closest('.hours-editor__times')?.classList.toggle('hours-editor__times--off', isClosed);
+    }
+  }
+
+  function collectHours() {
+    if (!hoursRoot || !hoursRoot.children.length) return undefined;
+    const out = [];
+    for (let i = 0; i < 7; i += 1) {
+      const closed = hoursRoot.querySelector(`[data-hours-closed="${i}"]`)?.checked;
+      const open = hoursRoot.querySelector(`[data-hours-open="${i}"]`)?.value ?? '';
+      const close = hoursRoot.querySelector(`[data-hours-close="${i}"]`)?.value ?? '';
+      out.push(closed || !open || !close ? { closed: true } : { closed: false, open, close });
+    }
+    return out;
+  }
 
   /* -------------------------------------------------------------- seleksi */
 
@@ -965,6 +1046,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
         description: { id: el('cf-desc-id').value, en: el('cf-desc-en').value },
         address: { id: el('cf-address').value, en: '' },
         logo,
+        hours: collectHours(),
       };
       const saved = await writeMenu(mutators.updateCafe(fields), 'Perbarui identitas usaha', { statusEl: cafeStatus });
       if (!saved && logoUploadedPath) {

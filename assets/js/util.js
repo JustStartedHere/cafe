@@ -60,6 +60,43 @@ export function logoSrc(cafe) {
   return new URL(src, SITE_ROOT).href;
 }
 
+// Jam operasional: master per hari (Senin..Minggu), tiap hari buka–tutup atau tutup.
+const DAY_NAMES = {
+  id: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+  en: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+};
+const CLOSED_LABEL = { id: 'Tutup', en: 'Closed' };
+
+/**
+ * Ubah `cafe.hours` (array 7 hari, index 0=Senin) jadi baris footer yang ringkas:
+ * hari berturut dengan jam sama DIGABUNG jadi rentang ("Senin–Jumat · 09.00–22.00").
+ * ID pakai pemisah jam ".", EN pakai ":". Bukan array 7 → [] (disembunyikan).
+ * @returns {{label: string, value: string}[]}
+ */
+export function formatHours(hours, lang) {
+  if (!Array.isArray(hours) || hours.length !== 7) return [];
+  const L = lang === 'en' ? 'en' : 'id';
+  const days = DAY_NAMES[L];
+  const sep = L === 'en' ? ':' : '.';
+  const valueOf = (e) =>
+    !e || e.closed || !e.open || !e.close
+      ? CLOSED_LABEL[L]
+      : `${e.open.replace(':', sep)}–${e.close.replace(':', sep)}`;
+  const values = hours.map(valueOf);
+
+  const lines = [];
+  let start = 0;
+  for (let i = 1; i <= 7; i += 1) {
+    if (i === 7 || values[i] !== values[start]) {
+      const end = i - 1;
+      const label = start === end ? days[start] : `${days[start]}–${days[end]}`;
+      lines.push({ label, value: values[start] });
+      start = i;
+    }
+  }
+  return lines;
+}
+
 /**
  * Kelompokkan item ke dalam kategori, keduanya terurut menurut `order`.
  * Item dengan `categoryId` tak dikenal dibuang — bukan dirender di kategori asal-asalan.

@@ -86,6 +86,25 @@ function normalizeImage(image, issues) {
   return value;
 }
 
+// Jam operasional: master 7 hari (index 0=Senin..6=Minggu). Tiap hari buka–tutup ("HH:MM")
+// atau tutup. `undefined` = belum diatur (tak ditampilkan). Additif — tema yang tak mengirim
+// field ini mempertahankan `prev`.
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+function normalizeHours(hours, prev) {
+  const source = Array.isArray(hours) ? hours : (Array.isArray(prev) ? prev : null);
+  if (!source) return undefined;
+  const out = [];
+  for (let i = 0; i < 7; i += 1) {
+    const entry = isPlainObject(source[i]) ? source[i] : {};
+    const open = typeof entry.open === 'string' && TIME_RE.test(entry.open) ? entry.open : '';
+    const close = typeof entry.close === 'string' && TIME_RE.test(entry.close) ? entry.close : '';
+    // Tutup bila ditandai tutup, atau jam tak lengkap/tak valid.
+    if (entry.closed === true || !open || !close) out.push({ closed: true });
+    else out.push({ closed: false, open, close });
+  }
+  return out;
+}
+
 /** Validasi + normalisasi draft item. Melempar `InvalidMenuError` bila ada masalah. */
 export function normalizeItem(draft, menu) {
   const issues = [];
@@ -159,6 +178,7 @@ export function normalizeCafe(draft, prev = {}) {
   // Logo usaha: path gambar di folder yang diizinkan (sama seperti foto item), opsional.
   // Tampil di header halaman pelanggan dan di tengah kode QR.
   const logo = normalizeImage(draft.logo ?? prev.logo, issues);
+  const hours = normalizeHours(draft.hours, prev.hours);
   const whatsapp = String(draft.whatsapp ?? prev.whatsapp ?? '').replace(/[^0-9]/g, '');
 
   const httpsUrl = (value, fallback, label) => {
@@ -185,6 +205,7 @@ export function normalizeCafe(draft, prev = {}) {
     address,
     currency: prev.currency || 'IDR',
     logo,
+    ...(hours ? { hours } : {}),
     whatsapp,
     instagram,
     tiktok,

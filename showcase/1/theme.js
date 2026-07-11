@@ -6,7 +6,7 @@
 
 import {
   pickLang, formatPrice, getLang, setLang, LANGS,
-  loadMenu, resolveImg, waLink, socialLinks, make, clear, renderSkeleton, renderBrandLogo,
+  loadMenu, resolveImg, waLink, socialLinks, make, clear, renderSkeleton, renderBrandLogo, renderHours,
 } from '../lib.js';
 import { STRINGS, HERO, RESERVE_PREFIX, CONTACT } from './strings.js';
 
@@ -46,6 +46,7 @@ function applyBrand() {
   const name = cafe.name || 'Restaurant';
   for (const node of document.querySelectorAll('.brand__name')) node.textContent = name;
   renderBrandLogo(cafe);
+  renderHours(cafe, lang);
   document.title = `${name} — ${pickLang(cafe.tagline, lang) || t('tagline')}`;
 
   const wa = waLink(cafe.whatsapp, RESERVE_PREFIX[lang] + name + '.');
