@@ -1,6 +1,6 @@
-/* Dasbor admin cafe. Terpisah dari styles.css (halaman pelanggan) dan dari admin.css
-   (dipakai bersama tema showcase). Token warna diwarisi dari styles.css. Floor teks
-   admin 15px sesuai aturan project. */
+/* Dasbor admin — struktur bersama cafe + semua tema showcase. Terpisah dari styles.css
+   (halaman pelanggan). Token warna diwarisi dari styles.css; tema showcase menimpanya
+   lewat palette.css masing-masing. Floor teks admin 15px sesuai aturan project. */
 
 :root {
   --ok-text: #1a6a4f;

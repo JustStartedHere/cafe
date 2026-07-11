@@ -1,7 +1,7 @@
-// Dasbor menu cafe: satu tabel produk dengan cari / saring / urut / seleksi massal,
-// plus form identitas, media sosial, kategori, ringkasan, dan pemeliharaan foto.
-// KHUSUS CAFE — tema showcase memakai table-editor.js. Semua teks lewat `textContent`;
-// tidak ada `innerHTML`.
+// Dasbor menu: satu tabel produk dengan cari / saring / urut / seleksi massal, plus
+// form identitas, media sosial, kategori, ringkasan, dan pemeliharaan foto. Dipakai
+// bersama cafe + semua tema showcase (dikonfigurasi lewat opsi). Semua teks lewat
+// `textContent`; tidak ada `innerHTML`.
 //
 // Menyimpan seluruh invarian yang sudah teruji dari editor lama:
 //   - URUTAN WAJIB: unggah gambar dulu, tulis menu.json kemudian.

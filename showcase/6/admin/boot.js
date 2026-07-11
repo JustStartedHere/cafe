@@ -16,4 +16,4 @@ window.__ADMIN_CONFIG = {
   imagePreviewBase: '../../../',
 };
 
-await import('../../../admin/admin-core.js');
+await import('../../../admin/dashboard-core.js');
