@@ -2,14 +2,14 @@
    dashboard.css, jadi token di sini menang di light maupun dark OS. */
 :root {
   color-scheme: light;
-  --bg: #F5F2E8;
+  --bg: #F4F1E4;
   --surface: #FFFFFF;
-  --text: #2A2A22;
-  --muted: #565A44;
-  --accent: #4E5D2E;
+  --text: #233020;
+  --muted: #4E5A46;
+  --accent: #2F6B3A;
   --on-accent: #FFFFFF;
-  --border: #E4E0CF;
-  --border-strong: #8A8C6E;
+  --border: #E1DCC7;
+  --border-strong: #7E8A6F;
   --skeleton: #ece4da;
   --danger-bg: #FCEBEA;
   --danger-border: #E4A79F;

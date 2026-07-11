@@ -1,4 +1,4 @@
-// Tema 4 — logika tipis; perilaku menu ditangani engine bersama.
+// Tema 3 — logika tipis; perilaku menu ditangani engine bersama.
 import { initMenuView } from '../menu-view.js';
 import { STRINGS, RESERVE_PREFIX } from './strings.js';
 

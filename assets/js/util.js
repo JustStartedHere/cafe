@@ -1,8 +1,8 @@
 // Helper murni: tanpa DOM, tanpa fetch. Dipakai render.js dan menu.js.
 
 // Path gambar di `menu.json` (mis. `images/foo.webp`) relatif terhadap AKAR SITUS, bukan
-// terhadap halaman yang memuatnya. Halaman pelanggan tinggal di `/menu/`, jadi resolusi
-// bawaan browser akan meleset. Akar dihitung dari lokasi modul ini (`assets/js/`).
+// terhadap halaman yang memuatnya. Halaman pelanggan tinggal di `/showcase/2/` (dipindah dari
+// `/menu/`), jadi resolusi bawaan browser akan meleset. Akar dihitung dari lokasi modul ini (`assets/js/`).
 const SITE_ROOT = new URL('../../', import.meta.url);
 
 export const PLACEHOLDER_IMAGE = new URL('assets/img/placeholder.svg', SITE_ROOT).href;

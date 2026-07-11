@@ -1,4 +1,6 @@
-// Tema 2 "Savoria Kitchen" — string UI tetap. Konten menu dari data.json.
+// Tema 6 "Dolce Dessert" — poster dwiwarna krem+olive (setia ke referensi 4).
+// String UI tetap + konten poster kiri (judul, daftar fitur, kotak tambahan).
+// Konten menu dari data.json. Dipakai engine bersama menu-view.js.
 export const STRINGS = {
   skip: { id: 'Langsung ke menu', en: 'Skip to the menu' },
   langGroup: { id: 'Pilih bahasa', en: 'Select language' },
@@ -9,19 +11,31 @@ export const STRINGS = {
   socialMaps: { id: 'Lokasi di Google Maps', en: 'Location on Google Maps' },
   socialTiktok: { id: 'TikTok kami', en: 'Our TikTok' },
 
-  navMenu: { id: 'Menu', en: 'Menu' },
-  navAbout: { id: 'Tentang', en: 'About' },
-
-  heroEyebrow: { id: 'Dapur Keluarga', en: 'Family Kitchen' },
-  heroTitle: { id: 'Masakan rumahan, porsi royal', en: 'Home cooking, generous plates' },
-  heroText: {
-    id: 'Nusantara, Western, dan Chinese dalam satu meja. Dimasak segar tiap hari.',
-    en: 'Nusantara, Western, and Chinese at one table. Cooked fresh every day.',
+  posterKicker: { id: 'Dessert dengan jiwa', en: 'Desserts with soul' },
+  posterTitle: { id: 'Manis untuk\nMomen Spesial', en: 'Sweet for\nSpecial Moments' },
+  posterText: {
+    id: 'Setiap sajian dipotret dari atas di atas piring hitam — daftar lengkap dari dapur kami.',
+    en: 'Every plate shot from above on black ceramic — the full list from our kitchen.',
   },
-  heroCta: { id: 'Pesan lewat WhatsApp', en: 'Order on WhatsApp' },
-  heroBrowse: { id: 'Lihat menu', en: 'Browse menu' },
 
-  menuTitle: { id: 'Menu Kami', en: 'Our Menu' },
+  feat1: { id: 'Bahan alami', en: 'Natural ingredients' },
+  feat2: { id: 'Dibuat dengan cinta', en: 'Made with love' },
+  feat3: { id: 'Lembut & harum', en: 'Soft & fragrant' },
+  feat4: { id: 'Segar setiap hari', en: 'Fresh every day' },
+
+  addonTitle: { id: 'Tambahan', en: 'Add-ons' },
+  addon1: { id: 'Saus cokelat', en: 'Chocolate sauce' },
+  addon1Price: { id: 'Rp 15.000', en: 'Rp 15,000' },
+  addon2: { id: 'Saus karamel', en: 'Caramel sauce' },
+  addon2Price: { id: 'Rp 15.000', en: 'Rp 15,000' },
+  addon3: { id: 'Krim kocok', en: 'Whipped cream' },
+  addon3Price: { id: 'Rp 12.000', en: 'Rp 12,000' },
+  addon4: { id: 'Beri segar', en: 'Fresh berries' },
+  addon4Price: { id: 'Rp 20.000', en: 'Rp 20,000' },
+
+  heroCta: { id: 'Pesan lewat WhatsApp', en: 'Order on WhatsApp' },
+
+  menuTitle: { id: 'Daftar Hidangan', en: 'The Menu' },
   filterAll: { id: 'Semua', en: 'All' },
   badgeBest: { id: 'Favorit', en: 'Popular' },
   badgeNew: { id: 'Baru', en: 'New' },
@@ -31,15 +45,6 @@ export const STRINGS = {
   loading: { id: 'Memuat menu…', en: 'Loading the menu…' },
   errorTitle: { id: 'Menu gagal dimuat', en: "Couldn't load the menu" },
   retry: { id: 'Coba lagi', en: 'Try again' },
-
-  aboutTitle: { id: 'Tentang Your Restaurant', en: 'About Your Restaurant' },
-  aboutText: {
-    id: 'Kami percaya makan enak tak harus mahal. Bahan dipilih tiap pagi, bumbu diracik sendiri, dan setiap piring keluar hangat dari dapur.',
-    en: "We believe good food needn't be expensive. Ingredients picked each morning, spices blended in-house, every plate served warm.",
-  },
-  feat1: { id: 'Porsi Mengenyangkan', en: 'Hearty Portions' },
-  feat2: { id: 'Bahan Segar', en: 'Fresh Ingredients' },
-  feat3: { id: 'Ramah di Kantong', en: 'Easy on the Wallet' },
 
   footContact: { id: 'Kontak', en: 'Contact' },
   footHours: { id: 'Jam Buka', en: 'Opening Hours' },

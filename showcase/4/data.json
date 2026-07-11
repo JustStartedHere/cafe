@@ -3,8 +3,8 @@
   "cafe": {
     "name": "Your Restaurant",
     "tagline": {
-      "id": "Manis & gurih, sepanjang hari",
-      "en": "Sweet & savoury, all day"
+      "id": "Segar, jujur, dari dapur kami",
+      "en": "Fresh, honest, from our kitchen"
     },
     "currency": "IDR",
     "hours": [

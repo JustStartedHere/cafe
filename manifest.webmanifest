@@ -3,7 +3,7 @@
   "short_name": "Menu",
   "description": "Menu kopi & camilan Kopi Senja.",
   "lang": "id",
-  "start_url": "menu/",
+  "start_url": "showcase/2/",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
