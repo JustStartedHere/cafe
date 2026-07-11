@@ -29,7 +29,7 @@ export const STRINGS = {
   errorTitle: { id: 'Menu gagal dimuat', en: "Couldn't load the menu" },
   retry: { id: 'Coba lagi', en: 'Try again' },
 
-  aboutTitle: { id: 'Dari Dapur Dolce', en: 'From the Dolce Kitchen' },
+  aboutTitle: { id: 'Dari Dapur Your Restaurant', en: 'From the Your Restaurant Kitchen' },
   aboutText: {
     id: 'Kami memanggang dalam porsi kecil agar semua keluar segar. Cokelat, buah, dan mentega asli — tanpa jalan pintas.',
     en: 'We bake in small batches so everything comes out fresh. Real chocolate, fruit, and butter — no shortcuts.',

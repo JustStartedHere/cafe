@@ -50,6 +50,41 @@ Update tabel ini setiap kali sebuah fase selesai.
   `https`, WA disaring digit). Item punya `badge:'new'` selain `featured`. Halaman `/menu/` cafe kini
   punya footer sosial (`renderFooter`, href https-only).
 
+### Dasbor admin cafe — layout sidebar + tabel (fase 2026-07-11, di branch)
+
+Atas permintaan user, **admin cafe `/admin/` di-redesain jadi dasbor** (referensi tabel produk):
+sidebar navigasi + bagian terpisah per halaman (Ringkasan · Kelola menu · Kategori · Identitas ·
+Media sosial · Kode QR · Pemeliharaan) supaya menu panjang tidak jadi satu halaman menurun.
+
+- **Cafe punya mesin sendiri, tema showcase TIDAK ikut berubah.** `admin/admin-core.js` +
+  `admin/table-editor.js` + `admin/admin.css` **tetap** dipakai 6 tema (jangan diedit untuk cafe).
+  Cafe memakai file baru: `admin/dashboard-core.js` (auth/idle/QR/**routing sidebar** via `location.hash`)
+  + `admin/dashboard-editor.js` (tabel + form) + `admin/dashboard.css`. `boot.js` cafe kini meng-`import`
+  `dashboard-core.js`. Semua modul keamanan (github-api, token-store, menu-store, menu-model, image, qr)
+  dipakai ULANG apa adanya — trust boundary tidak ditulis ulang.
+- **Tabel produk tunggal**: cari (nama id/en), saring kategori, urut kolom (nama/kategori/harga/status),
+  checkbox + **aksi massal** (aktif/nonaktif/hapus lewat satu commit komposit, aman untuk id yang hilang),
+  status = toggle **Aktif/Nonaktif** (stok memang tak ada di model — hanya `available`). Panah reorder hanya
+  muncul saat urutan default (kategori asc, tanpa cari/saring). Form item pindah ke `<dialog>` modal.
+- **Invarian dipertahankan**: gambar-dulu-lalu-JSON, nama file unik, pola mutator + retry 409, `textContent`
+  (bukan `innerHTML`), CSP `script-src 'self'` (config di `boot.js` same-origin, dynamic-import).
+- **`normalizeCafe` ditambah `description{id,en}` + `address{id,en}`** (additif, opsional, dipertahankan via
+  `...prev` — tema yang tak mengirimnya tidak terpengaruh). Belum ditampilkan di `/menu/` (baru dikelola di admin).
+- **Jebakan yang sudah ditutup**: selektor kelas ber-`display:` (grid/flex) **mengalahkan** aturan UA
+  `[hidden]{display:none}` (author > UA pada spesifisitas sama), jadi atribut `hidden` berhenti menyembunyikan.
+  `dashboard.css` memasang `[hidden]{display:none!important}` di awal. Tes fungsional yang cuma cek properti
+  `.hidden` tak menangkap ini — screenshot yang menangkapnya.
+
+### Showcase kini generik "Your Restaurant" + galeri "Katalog Menu Restoran" (2026-07-11, di branch)
+
+- **Nama restoran di semua tema showcase (1–6) = "Your Restaurant"** (placeholder untuk client). Sumbernya
+  `cafe.name` di `showcase/N/data.json`; `menu-view.js` menyetel `.brand__name` + `document.title` runtime.
+  Fallback statis HTML (`<title>`, brand header/footer, admin `<title>`) + `aboutTitle` merek (tema 2 & 4)
+  ikut diganti. **Komentar dev** (`// Tema 2 "Savoria Kitchen"…`) sengaja dibiarkan — itu identitas desain.
+  **Cafe `/menu/` tetap "Kopi Senja"** (bukan showcase). **Label kartu galeri tetap nama desain** (kalau semua
+  jadi "Your Restaurant", kartu jadi kembar). Preview tema 2–6 di-regen (framing 1280×880 → 16:11) agar tak basi.
+- **Galeri root `/`** kini berframing "Katalog Menu Restoran" (eyebrow + judul + copy).
+
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
 Selama development: **`JustStartedHere`** — pemilik repo, jadi sudah admin. Fine-grained PAT single-repo tanpa
