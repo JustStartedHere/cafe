@@ -1,5 +1,5 @@
 /* Palet admin — senada dengan warna showcase-nya. Dimuat setelah styles.css +
-   admin.css, jadi token di sini menang di light maupun dark OS. */
+   dashboard.css, jadi token di sini menang di light maupun dark OS. */
 :root {
   color-scheme: light;
   --bg: #F3F6ED;
@@ -16,4 +16,7 @@
   --danger-text: #A0281C;
   --shadow: 0 6px 18px rgba(40, 30, 20, 0.08);
 }
-body.admin { background: var(--bg); color: var(--text); }
+body.dash { background: var(--bg); color: var(--text); }
+
+/* Status "Aktif" (pil hijau) tetap kontras walau OS gelap — showcase dipaksa light. */
+:root { --ok-text: #1a6a4f; --ok-bg: #e7f4ee; --ok-border: #7cbfa4; }

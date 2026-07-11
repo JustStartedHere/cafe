@@ -33,11 +33,12 @@ Update tabel ini setiap kali sebuah fase selesai.
 
 ### Arsitektur showcase & admin bersama (fase 2026-07-11) — detail di `SHOWCASE_PLAN.md`
 
-- **Tiap desain `data.json` + admin sendiri, satu mesin admin bersama.** `admin/admin-core.js`
-  (login/idle/QR generik, dikonfigurasi `window.__ADMIN_CONFIG` dari `boot.js` tiap desain) +
-  `admin/table-editor.js` (editor **tabel** + panel identitas/sosial). Modul keamanan lama dipakai apa adanya.
+- **Tiap desain `data.json` + admin sendiri, satu mesin admin bersama.** Sejak 2026-07-11 mesin itu
+  adalah **dasbor** `admin/dashboard-core.js` + `admin/dashboard-editor.js` + `admin/dashboard.css`
+  (lihat "### Dasbor admin" di bawah). Mesin lama `admin-core.js`/`table-editor.js`/`admin.css` **sudah
+  dihapus**. Modul keamanan lama tetap dipakai apa adanya.
 - **`boot.js` per admin** — CSP `script-src 'self'` melarang `<script>` inline, jadi config di modul
-  same-origin yang **dynamic-import** admin-core (static import di-hoist → jalan sebelum config di-set).
+  same-origin yang **dynamic-import** `dashboard-core.js` (static import di-hoist → jalan sebelum config di-set).
 - **Halaman tema** membaca `data.json` runtime: tema 1 pakai `showcase/lib.js`; tema 2–6 pakai engine
   bersama `showcase/menu-view.js`. Foto seed 31 hidangan di `showcase/menu-img/`. **CSP tema
   `connect-src 'self'`** (perlu fetch data sendiri).
@@ -50,18 +51,24 @@ Update tabel ini setiap kali sebuah fase selesai.
   `https`, WA disaring digit). Item punya `badge:'new'` selain `featured`. Halaman `/menu/` cafe kini
   punya footer sosial (`renderFooter`, href https-only).
 
-### Dasbor admin cafe — layout sidebar + tabel (fase 2026-07-11, di branch)
+### Dasbor admin — layout sidebar + tabel, dipakai SEMUA admin (fase 2026-07-11)
 
-Atas permintaan user, **admin cafe `/admin/` di-redesain jadi dasbor** (referensi tabel produk):
-sidebar navigasi + bagian terpisah per halaman (Ringkasan · Kelola menu · Kategori · Identitas ·
-Media sosial · Kode QR · Pemeliharaan) supaya menu panjang tidak jadi satu halaman menurun.
+**Semua admin (cafe `/admin/` + 6 tema `/showcase/N/admin/`) memakai satu mesin dasbor** (referensi
+tabel produk): sidebar navigasi + bagian terpisah per halaman (Ringkasan · Kelola menu · Kategori ·
+Identitas · Media sosial · Kode QR · Pemeliharaan) supaya menu panjang tidak jadi satu halaman menurun.
+Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas permintaan user.
 
-- **Cafe punya mesin sendiri, tema showcase TIDAK ikut berubah.** `admin/admin-core.js` +
-  `admin/table-editor.js` + `admin/admin.css` **tetap** dipakai 6 tema (jangan diedit untuk cafe).
-  Cafe memakai file baru: `admin/dashboard-core.js` (auth/idle/QR/**routing sidebar** via `location.hash`)
-  + `admin/dashboard-editor.js` (tabel + form) + `admin/dashboard.css`. `boot.js` cafe kini meng-`import`
-  `dashboard-core.js`. Semua modul keamanan (github-api, token-store, menu-store, menu-model, image, qr)
-  dipakai ULANG apa adanya — trust boundary tidak ditulis ulang.
+- **Satu mesin dasbor bersama.** `admin/dashboard-core.js` (auth/idle/QR/**routing sidebar** via
+  `location.hash`) + `admin/dashboard-editor.js` (tabel + form + dialog) + `admin/dashboard.css`.
+  Tiap admin men-set `window.__ADMIN_CONFIG` (owner/repo/dataPath/imageDir/imageBases/imagePreviewBase/
+  siteUrl) di `boot.js`-nya lalu **dynamic-import** `dashboard-core.js`. Semua modul keamanan (github-api,
+  token-store, menu-store, menu-model, image, qr) dipakai ULANG apa adanya — trust boundary tidak ditulis ulang.
+- **Mesin admin LAMA dihapus.** `admin/admin-core.js`, `admin/table-editor.js`, `admin/admin.css` sudah
+  **tidak ada lagi** (semua admin pindah ke dasbor). Jangan mencari/mengembalikannya.
+- **Shell admin showcase identik** (semua di kedalaman `/showcase/N/admin/`, path sama `../../../admin/…`),
+  jadi 6 `index.html` sama persis; yang beda cuma `boot.js` (config) + `palette.css` (warna tema) tiap folder.
+  Shell showcase memakai mark 🍽 (cafe pakai ☕). `palette.css` memaksa `color-scheme: light` + menimpa token
+  warna; ia juga men-set `--ok-*` (pil "Aktif" hijau) versi light agar tetap kontras walau OS gelap.
 - **Tabel produk tunggal**: cari (nama id/en), saring kategori, urut kolom (nama/kategori/harga/status),
   checkbox + **aksi massal** (aktif/nonaktif/hapus lewat satu commit komposit, aman untuk id yang hilang),
   status = toggle **Aktif/Nonaktif** (stok memang tak ada di model — hanya `available`). Panah reorder hanya

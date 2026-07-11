@@ -1,6 +1,6 @@
-// Orkestrasi DASBOR cafe: auth, sesi, idle timeout, QR, dan routing antar-bagian
-// (sidebar). Khusus cafe — tema showcase tetap memakai admin-core.js. Kedua mesin
-// berbagi modul keamanan yang sama.
+// Orkestrasi DASBOR: auth, sesi, idle timeout, QR, dan routing antar-bagian (sidebar).
+// Satu mesin untuk cafe + semua tema showcase; tiap halaman admin men-set
+// `window.__ADMIN_CONFIG` sebelum modul ini dimuat, lalu memakai palette.css sendiri.
 //
 // Tidak ada `console.*` di file ini, dan tidak akan pernah ada. Satu console.log yang
 // men-serialize objek request sudah cukup untuk menaruh token di log browser.
