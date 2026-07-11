@@ -1,0 +1,39 @@
+/* Skeleton loading BERSAMA untuk semua tema showcase (1–6).
+   Struktur kartu berasal dari kelas .dish tiap tema (bentuk pas per tema); di sini hanya
+   kilau (shimmer). Warna memakai `currentColor` translucent → menyatu dengan latar tema
+   apa pun, terang maupun gelap, tanpa perlu token warna per tema. */
+
+.dish--skeleton { pointer-events: none; }
+
+.dish--skeleton .dish__media,
+.dish--skeleton .skel-bar {
+  background-color: color-mix(in srgb, currentColor 14%, transparent);
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in srgb, currentColor 14%, transparent) 0%,
+    color-mix(in srgb, currentColor 30%, transparent) 50%,
+    color-mix(in srgb, currentColor 14%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: skel-shimmer 1.4s ease-in-out infinite;
+}
+
+/* Baris teks tiruan di dalam .dish__body. */
+.dish--skeleton .skel-bar {
+  display: block;
+  height: 0.85rem;
+  margin: 0.6rem 0;
+  border-radius: 999px;
+}
+.dish--skeleton .skel-bar--title { height: 1.15rem; width: 68%; margin-top: 0; }
+.dish--skeleton .skel-bar--price { height: 1rem; width: 34%; margin-bottom: 0; }
+
+@keyframes skel-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dish--skeleton .dish__media,
+  .dish--skeleton .skel-bar { animation: none; }
+}

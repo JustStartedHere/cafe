@@ -6,7 +6,7 @@
 
 import {
   pickLang, formatPrice, getLang, setLang, LANGS,
-  loadMenu, resolveImg, waLink, socialLinks, make, clear,
+  loadMenu, resolveImg, waLink, socialLinks, make, clear, renderSkeleton,
 } from '../lib.js';
 import { STRINGS, HERO, RESERVE_PREFIX, CONTACT } from './strings.js';
 
@@ -295,7 +295,7 @@ function showError() {
 async function load() {
   el('menu-status').textContent = t('loading');
   el('dishes-empty').hidden = true;
-  clear(el('dishes'));
+  renderSkeleton(el('dishes'));
   try {
     menu = await loadMenu(DATA_URL);
     renderMenu();

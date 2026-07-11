@@ -192,7 +192,7 @@ function stopIdleWatch() {
 /* ------------------------------------------------------------------- auth */
 
 async function loadMenu(store) {
-  editor.setStatus('Memuat menu…');
+  editor.showLoading();
   try {
     await store.load();
     editor.setStatus('');
