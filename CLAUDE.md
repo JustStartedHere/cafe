@@ -104,10 +104,11 @@ Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas
 - **Header tabel admin sticky**: `.table-scroll` diberi `max-height` + `overflow:auto` (jadi scroller
   vertikal) dan `thead th` `z-index:2` (tbody ada setelah thead → tanpa z-index, sel tergulung menimpa header).
   Berlaku semua admin (dashboard.css bersama).
-- **URL `menu_showcase` (tugas terbuka)**: mengubah `…github.io/cafe/` → `…/menu_showcase` butuh **rename
-  repo** (URL Pages = nama repo), operasi **admin** yang hanya bisa dilakukan owner `JustStartedHere`
-  (kolaborator `itdevcba` `admin:false`). Setelah rename, ubah `repo:'cafe'`→`'menu_showcase'` di semua
-  `boot.js` + fallback URL + README, lalu cetak QR (jangan sebelum URL final).
+- **URL `menu_showcase` — DIBATALKAN user (2026-07-11).** Sempat diminta ganti `…github.io/cafe/` →
+  `…/menu_showcase`; itu butuh **rename repo** (URL Pages = nama repo), operasi **admin** yang hanya bisa
+  dilakukan owner `JustStartedHere` (kolaborator `itdevcba` = `admin:false`). User memilih **tetap `/cafe/`**.
+  Kalau diminta lagi: owner rename repo dulu, baru ubah `repo:'cafe'`→`'menu_showcase'` di semua `boot.js` +
+  fallback URL + README (jangan sebelum rename — admin akan gagal menulis), lalu cetak QR.
 
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
