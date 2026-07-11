@@ -22,6 +22,7 @@ const STRINGS = {
     socialInstagram: 'Instagram kami',
     socialMaps: 'Lokasi di Google Maps',
     socialTiktok: 'TikTok kami',
+    backToGallery: '← Kembali ke galeri desain',
   },
   en: {
     signature: 'Signature',
