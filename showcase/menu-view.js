@@ -20,7 +20,7 @@
 
 import {
   pickLang, formatPrice, getLang, setLang, LANGS,
-  loadMenu, resolveImg, waLink, socialLinks, make, clear,
+  loadMenu, resolveImg, waLink, socialLinks, make, clear, renderSkeleton,
 } from './lib.js';
 
 const ALL = 'all';
@@ -223,7 +223,7 @@ export function initMenuView({ dataUrl, strings, reservePrefix }) {
     if (status) status.textContent = t('loading');
     const empty = el('dishes-empty');
     if (empty) empty.hidden = true;
-    clear(el('dishes'));
+    renderSkeleton(el('dishes'));
     try {
       menu = await loadMenu(dataUrl);
       renderMenu();

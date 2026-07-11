@@ -40,6 +40,29 @@ export function clear(node) {
 }
 
 /**
+ * Isi wadah kartu (#dishes) dengan kartu skeleton saat data sedang dimuat, agar
+ * layar tidak kosong lalu tiba-tiba terisi. Memakai ULANG kelas `.dish`/`.dish__media`/
+ * `.dish__body` tiap tema → bentuk kartu otomatis mengikuti tema; kilau (shimmer) dan
+ * warnanya berasal dari `showcase/skeleton.css` (currentColor, jadi menyatu tema apa pun).
+ */
+export function renderSkeleton(root, count = 6) {
+  if (!root) return;
+  clear(root);
+  const bar = (mod) => make('span', mod ? `skel-bar ${mod}` : 'skel-bar');
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < count; i += 1) {
+    const li = make('li', 'dish dish--skeleton');
+    li.setAttribute('aria-hidden', 'true');
+    li.append(make('figure', 'dish__media'));
+    const body = make('div', 'dish__body');
+    body.append(bar('skel-bar--title'), bar(), bar('skel-bar--price'));
+    li.append(body);
+    frag.append(li);
+  }
+  root.append(frag);
+}
+
+/**
  * Muat data.json cache-busted. GitHub Pages menyajikan lewat Fastly dengan
  * `max-age=600`; owner yang baru menyimpan harus langsung melihat perubahannya.
  * Melempar Error berpesan Indonesia bila gagal/rusak — pemanggil menampilkan state error.

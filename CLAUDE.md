@@ -126,6 +126,26 @@ Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas
   Kalau diminta lagi: owner rename repo dulu, baru ubah `repo:'cafe'`→`'menu_showcase'` di semua `boot.js` +
   fallback URL + README (jangan sebelum rename — admin akan gagal menulis), lalu cetak QR.
 
+### Loading skeleton di semua halaman yang fetch data (2026-07-11)
+
+Permintaan user: jangan biarkan layar kosong lalu konten tiba-tiba muncul setelah fetch selesai.
+
+- **Cafe `/menu/`** sudah punya skeleton sejak awal (`show('skeleton')` di `assets/js/menu.js`) — tak diubah.
+- **Tema showcase 1–6**: dulu `#dishes` cuma di-`clear()` (blank) saat load → kini `renderSkeleton()` di
+  `showcase/lib.js` mengisi 6 kartu skeleton. Kedua engine memanggilnya (`showcase/1/theme.js` + `menu-view.js`
+  untuk 2–6). **Kartu skeleton MEMAKAI ULANG kelas `.dish/.dish__media/.dish__body` tiap tema** → bentuknya
+  otomatis ikut tema (kartu 4:3 tema 1, baris 120px tema 3, lingkaran 1:1 tema 6). Kilaunya di
+  **`showcase/skeleton.css` bersama** (ditautkan di 6 shell tema, path `../skeleton.css`), warna pakai
+  `color-mix(currentColor …)` → menyatu dengan latar tema apa pun tanpa token per-tema. CSP tema `style-src 'self'`
+  mengizinkan link same-origin. `renderSkeleton` diekspor dari lib.js; jangan hapus.
+- **Admin (semua)**: `editor.showLoading()` (di `dashboard-editor.js`, dipanggil `dashboard-core.js loadMenu`)
+  mengisi skeleton **baris tabel Kelola menu (6) + kartu statistik Ringkasan** sebelum `store.load()`. Kilau
+  `.skel-bar`/`.skel-block` + `@keyframes dash-shimmer` di `dashboard.css` (pakai token `--skeleton`). Ringkasan
+  = view default setelah login, jadi statnya juga di-skeleton, bukan cuma tabel.
+- **Uji loading**: server/mocks **menunda respons data.json** (~1.6–1.8s) agar skeleton tertangkap screenshot;
+  fast-path (mock instan) membuat skeleton hanya berkedip. Tes fungsional cek jumlah `.dish--skeleton`/`.drow--skeleton`,
+  `animationName`, lalu pastikan **skeleton hilang & konten asli render** setelah data datang.
+
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
 Selama development: **`JustStartedHere`** — pemilik repo, jadi sudah admin. Fine-grained PAT single-repo tanpa

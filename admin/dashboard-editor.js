@@ -576,6 +576,42 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     });
   }
 
+  /* --------------------------------------------------------- skeleton muat */
+
+  const skelBar = (mod) => node('span', mod ? `skel-bar ${mod}` : 'skel-bar');
+
+  function skeletonRow() {
+    const tr = node('tr', 'drow drow--skeleton');
+    tr.setAttribute('aria-hidden', 'true');
+    tr.append(node('td', 'dtable__check'));
+    const photo = node('td', 'drow__photo');
+    photo.append(node('span', 'skel-block'));
+    tr.append(photo);
+    const name = node('td', 'drow__name-cell');
+    name.append(skelBar('skel-bar--title'));
+    tr.append(name);
+    const cat = node('td', 'drow__cat'); cat.append(skelBar()); tr.append(cat);
+    const price = node('td', 'drow__price'); price.append(skelBar('skel-bar--price')); tr.append(price);
+    const status = node('td', 'drow__status'); status.append(skelBar('skel-bar--pill')); tr.append(status);
+    tr.append(node('td', 'drow__actions'));
+    return tr;
+  }
+
+  // Tampilkan skeleton saat data pertama kali dimuat: Ringkasan (kartu statistik default
+  // setelah login) + tabel Kelola menu, agar tak ada layar kosong sebelum data datang.
+  function showLoading() {
+    setStatus('Memuat menu…');
+    for (const id of ['stat-items', 'stat-active', 'stat-inactive', 'stat-categories']) {
+      const cell = el(id);
+      if (cell) { clear(cell); cell.append(skelBar('skel-bar--stat')); }
+    }
+    const note = el('updated-note');
+    if (note) note.textContent = '';
+    clear(tbody);
+    menuEmpty.hidden = true;
+    for (let i = 0; i < 6; i += 1) tbody.append(skeletonRow());
+  }
+
   /* ---------------------------------------------------------------- render */
 
   function render() {
@@ -845,6 +881,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
   return {
     render,
     setStatus,
+    showLoading,
     newItem() { openForm(); },
     showLoadError(error, onRetry) {
       setStatus('');

@@ -468,6 +468,41 @@ body.dash {
 .iconbtn[disabled] { opacity: 0.35; cursor: not-allowed; }
 .iconbtn--danger { color: var(--danger-text); border-color: var(--danger-border); }
 
+/* --------------------------------------------------------------- skeleton */
+/* Ditampilkan saat data admin pertama kali dimuat (Ringkasan + tabel Kelola menu)
+   supaya tak ada layar kosong sebelum data GitHub datang. */
+.skel-bar,
+.skel-block {
+  display: inline-block;
+  background-color: var(--skeleton);
+  background-image: linear-gradient(
+    90deg,
+    var(--skeleton) 0%,
+    color-mix(in srgb, var(--skeleton) 55%, #fff) 50%,
+    var(--skeleton) 100%
+  );
+  background-size: 200% 100%;
+  animation: dash-shimmer 1.4s ease-in-out infinite;
+  border-radius: 999px;
+}
+.skel-block { width: 44px; height: 44px; border-radius: 8px; }
+.skel-bar { height: 0.85rem; width: 80%; }
+.skel-bar--title { width: 62%; }
+.skel-bar--price { width: 3.5rem; }
+.skel-bar--pill { width: 4.75rem; height: 1.5rem; }
+.skel-bar--stat { width: 2.75rem; height: 1.75rem; border-radius: 8px; }
+.drow--skeleton td { vertical-align: middle; }
+.drow--skeleton:hover { background: transparent !important; }
+
+@keyframes dash-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel-bar,
+  .skel-block { animation: none; }
+}
+
 .btn-text {
   min-height: 40px;
   padding: 0 0.75rem;
