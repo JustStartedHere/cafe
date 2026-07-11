@@ -104,5 +104,7 @@ export function formatBytes(size) {
  */
 export function findOrphans(files, menu) {
   const used = new Set(menu.items.map((item) => item.image).filter(Boolean));
+  // Logo usaha juga dipakai (di header + QR) meski bukan foto item — jangan disapu.
+  if (menu.cafe?.logo) used.add(menu.cafe.logo);
   return files.filter((file) => file.type === 'file' && file.name !== '.gitkeep' && !used.has(file.path));
 }

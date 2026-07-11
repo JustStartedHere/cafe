@@ -156,6 +156,9 @@ export function normalizeCafe(draft, prev = {}) {
   // Additif — tema showcase yang tidak mengirim field ini mempertahankan nilai `prev`.
   const description = normalizeBilingual(draft.description ?? prev.description, 'Deskripsi', issues, { required: false });
   const address = normalizeBilingual(draft.address ?? prev.address, 'Alamat', issues, { required: false });
+  // Logo usaha: path gambar di folder yang diizinkan (sama seperti foto item), opsional.
+  // Tampil di header halaman pelanggan dan di tengah kode QR.
+  const logo = normalizeImage(draft.logo ?? prev.logo, issues);
   const whatsapp = String(draft.whatsapp ?? prev.whatsapp ?? '').replace(/[^0-9]/g, '');
 
   const httpsUrl = (value, fallback, label) => {
@@ -181,7 +184,7 @@ export function normalizeCafe(draft, prev = {}) {
     description,
     address,
     currency: prev.currency || 'IDR',
-    logo: typeof prev.logo === 'string' ? prev.logo : '',
+    logo,
     whatsapp,
     instagram,
     tiktok,

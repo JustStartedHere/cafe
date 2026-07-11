@@ -94,6 +94,9 @@ body.dash {
 .input--search { padding-left: 0.75rem; }
 
 .field-pair { display: grid; gap: 0.9rem; grid-template-columns: 1fr 1fr; }
+/* Di dalam grid .field-pair, field kedua adalah `.field + .field` → aturan margin-top:1rem
+   di atas menurunkannya 16px sehingga kolom kanan tak sejajar kolom kiri. Nolkan di sini. */
+.field-pair > .field { margin-top: 0; }
 .field--narrow { max-width: 14rem; }
 
 @media (max-width: 40rem) {
@@ -560,6 +563,8 @@ body.dash {
 .photo { margin-top: 1rem; }
 .photo__body { display: flex; gap: 0.875rem; align-items: flex-start; margin-top: 0.375rem; }
 .photo__preview { flex: none; width: 120px; height: 90px; object-fit: cover; background: var(--skeleton); border: 1px solid var(--border); border-radius: 8px; }
+/* Logo bisa transparan & tidak persegi panjang → tampilkan utuh (contain) di atas surface. */
+.photo__preview--logo { width: 90px; height: 90px; object-fit: contain; background: var(--surface); }
 .photo__controls { flex: 1; min-width: 0; }
 .photo__input { font: inherit; font-size: 0.9375rem; max-width: 100%; min-height: 44px; }
 .photo__input::file-selector-button {

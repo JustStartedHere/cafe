@@ -236,6 +236,17 @@
                 <span class="field__label">Nama usaha <span aria-hidden="true">*</span></span>
                 <input type="text" id="cf-name" class="input" required maxlength="60">
               </label>
+              <div class="photo">
+                <label class="field__label" for="cf-logo">Logo restoran</label>
+                <div class="photo__body">
+                  <img id="cf-logo-preview" class="photo__preview photo__preview--logo" alt="" width="90" height="90" hidden>
+                  <div class="photo__controls">
+                    <input type="file" id="cf-logo" class="photo__input" accept="image/*" aria-describedby="cf-logo-note">
+                    <p class="photo__note" id="cf-logo-note">Tampil di header halaman menu dan di tengah kode QR. PNG transparan didukung.</p>
+                    <button type="button" class="button button--quiet button--small" id="cf-logo-clear" hidden>Hapus logo</button>
+                  </div>
+                </div>
+              </div>
               <div class="field-pair">
                 <label class="field">
                   <span class="field__label">Tagline (Indonesia)</span>
@@ -256,16 +267,10 @@
                   <textarea id="cf-desc-en" class="input input--area" maxlength="300" rows="3"></textarea>
                 </label>
               </div>
-              <div class="field-pair">
-                <label class="field">
-                  <span class="field__label">Alamat (Indonesia)</span>
-                  <textarea id="cf-address-id" class="input input--area" maxlength="200" rows="2"></textarea>
-                </label>
-                <label class="field">
-                  <span class="field__label">Alamat (English)</span>
-                  <textarea id="cf-address-en" class="input input--area" maxlength="200" rows="2"></textarea>
-                </label>
-              </div>
+              <label class="field">
+                <span class="field__label">Alamat</span>
+                <textarea id="cf-address" class="input input--area" maxlength="200" rows="2"></textarea>
+              </label>
               <div class="form__actions">
                 <button type="submit" class="button button--small">Simpan identitas</button>
                 <p class="hint" id="cafe-status" role="status" aria-live="polite"></p>
@@ -280,26 +285,22 @@
             <h2 class="card__title">Media sosial</h2>
             <p class="card__text">Tautan ini muncul di halaman pelanggan. Kosongkan yang tidak dipakai.</p>
             <form id="social-form" class="form" novalidate>
-              <div class="field-pair">
-                <label class="field">
-                  <span class="field__label">Nomor WhatsApp (mis. 62812…)</span>
-                  <input type="text" id="cf-whatsapp" class="input" inputmode="numeric" maxlength="20" placeholder="62812xxxxxxx">
-                </label>
-                <label class="field">
-                  <span class="field__label">Instagram (https://…)</span>
-                  <input type="url" id="cf-instagram" class="input" spellcheck="false" placeholder="https://instagram.com/…">
-                </label>
-              </div>
-              <div class="field-pair">
-                <label class="field">
-                  <span class="field__label">TikTok (https://…)</span>
-                  <input type="url" id="cf-tiktok" class="input" spellcheck="false" placeholder="https://tiktok.com/@…">
-                </label>
-                <label class="field">
-                  <span class="field__label">Google Maps (https://…)</span>
-                  <input type="url" id="cf-maps" class="input" spellcheck="false" placeholder="https://maps.google.com/…">
-                </label>
-              </div>
+              <label class="field">
+                <span class="field__label">Nomor WhatsApp (mis. 62812…)</span>
+                <input type="text" id="cf-whatsapp" class="input" inputmode="numeric" maxlength="20" placeholder="62812xxxxxxx">
+              </label>
+              <label class="field">
+                <span class="field__label">Instagram (https://…)</span>
+                <input type="url" id="cf-instagram" class="input" spellcheck="false" placeholder="https://instagram.com/…">
+              </label>
+              <label class="field">
+                <span class="field__label">TikTok (https://…)</span>
+                <input type="url" id="cf-tiktok" class="input" spellcheck="false" placeholder="https://tiktok.com/@…">
+              </label>
+              <label class="field">
+                <span class="field__label">Google Maps (https://…)</span>
+                <input type="url" id="cf-maps" class="input" spellcheck="false" placeholder="https://maps.google.com/…">
+              </label>
               <div class="form__actions">
                 <button type="submit" class="button button--small">Simpan media sosial</button>
                 <p class="hint" id="social-status" role="status" aria-live="polite"></p>
@@ -392,7 +393,7 @@
 
         <label class="field field--narrow">
           <span class="field__label">Harga (rupiah, bulat)</span>
-          <input type="number" id="f-price" class="input" required min="0" step="1" inputmode="numeric">
+          <input type="text" id="f-price" class="input" required inputmode="numeric" autocomplete="off" placeholder="55.000">
         </label>
 
         <div class="photo">
