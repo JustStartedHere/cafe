@@ -40,6 +40,10 @@ const logoutButton = el('logout');
 let client = null;
 let editor = null;
 let idleTimer = null;
+let menuStore = null;
+// Isi tengah QR: { href } logo terunggah, atau { bell } ikon bawaan bila belum ada logo.
+let qrCenter = { bell: true };
+let qrLogoPath = null;
 
 /* --------------------------------------------------------------- tampilan */
 
@@ -131,6 +135,7 @@ function navigate(section, { focus = false } = {}) {
     else link.removeAttribute('aria-current');
   }
   el('view-title').textContent = TITLES[target];
+  if (target === 'qr') refreshQrLogo();
   closeDrawer();
   // Fokus ke area konten agar pembaca layar tahu bagian berpindah.
   if (focus) el('view-title').focus?.();
@@ -197,6 +202,7 @@ async function loadMenu(store) {
     await store.load();
     editor.setStatus('');
     editor.render();
+    refreshQrLogo();
   } catch (error) {
     if (error instanceof AuthError) { logout(explain(error)); return; }
     editor.showLoadError(error, () => loadMenu(store));
@@ -211,6 +217,7 @@ async function signIn(token, { remember = false, persist = true } = {}) {
   if (persist) tokenStore.save(token, remember);
 
   const store = createMenuStore(candidate, { path: DATA_PATH });
+  menuStore = store;
   editor = createDashboard({
     store,
     client: candidate,
@@ -252,7 +259,7 @@ function renderQrPreview() {
   qrPreview.replaceChildren();
   qrStatus.textContent = '';
   try {
-    qrPreview.append(toSvg(qrUrl.value, { moduleSize: 4 }));
+    qrPreview.append(toSvg(qrUrl.value, { moduleSize: 4, center: qrCenter }));
   } catch (error) {
     qrStatus.textContent = error instanceof QrError ? error.message : 'Gagal membuat QR.';
   }
@@ -261,14 +268,40 @@ function renderQrPreview() {
 async function downloadQr(kind) {
   try {
     if (kind === 'svg') {
-      download(toSvgBlob(qrUrl.value, { moduleSize: 8 }), qrFilename('svg'));
+      download(toSvgBlob(qrUrl.value, { moduleSize: 8, center: qrCenter }), qrFilename('svg'));
     } else {
-      download(await toPngBlob(qrUrl.value, { size: 1024 }), qrFilename('png'));
+      download(await toPngBlob(qrUrl.value, { size: 1024, center: qrCenter }), qrFilename('png'));
     }
     qrStatus.textContent = 'Berkas diunduh.';
   } catch (error) {
     qrStatus.textContent = error instanceof QrError ? error.message : 'Gagal membuat berkas.';
   }
+}
+
+const blobToDataUri = (blob) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(reader.error);
+  reader.readAsDataURL(blob);
+});
+
+/**
+ * Sinkronkan isi tengah QR dengan logo usaha terkini. Logo di-embed sebagai data URI agar
+ * QR yang diunduh tetap utuh offline/saat dicetak. Gagal ambil logo → jatuh ke ikon bell.
+ */
+async function refreshQrLogo() {
+  const logo = menuStore?.menu?.cafe?.logo || '';
+  if (logo === qrLogoPath) return; // tak berubah sejak terakhir
+  qrLogoPath = logo;
+  if (!logo) { qrCenter = { bell: true }; renderQrPreview(); return; }
+  try {
+    const response = await fetch(IMAGE_PREVIEW_BASE + logo, { cache: 'no-store' });
+    if (!response.ok) throw new Error();
+    qrCenter = { href: await blobToDataUri(await response.blob()) };
+  } catch {
+    qrCenter = { bell: true };
+  }
+  renderQrPreview();
 }
 
 qrUrl.value = SITE_URL;

@@ -39,6 +39,13 @@ function iconButton(label, { action, id, className = 'iconbtn', title }) {
 
 const clear = (n) => { while (n.firstChild) n.removeChild(n.firstChild); };
 
+// Harga: masking ribuan bergaya Indonesia ("55000" → "55.000"). Simpan tetap bilangan bulat.
+const priceDigits = (value) => value.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
+const formatRupiahInput = (value) => {
+  const d = priceDigits(value);
+  return d === '' ? '' : Number(d).toLocaleString('id-ID');
+};
+
 const SVG_NS = 'http://www.w3.org/2000/svg';
 function svgEl(tag, attrs) {
   const n = document.createElementNS(SVG_NS, tag);
@@ -90,6 +97,11 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
   const categoryError = el('category-error');
   const cafeForm = el('cafe-form');
   const cafeStatus = el('cafe-status');
+  const logoInput = el('cf-logo');
+  const logoPreview = el('cf-logo-preview');
+  const logoClear = el('cf-logo-clear');
+  const logoNote = el('cf-logo-note');
+  const LOGO_NOTE_DEFAULT = 'Tampil di header halaman menu dan di tengah kode QR. PNG transparan didukung.';
   const socialForm = el('social-form');
   const socialStatus = el('social-status');
 
@@ -101,6 +113,11 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
   let pendingImage = null;
   let uploadedPath = null;
   let removePhoto = false;
+
+  // State logo usaha (form identitas).
+  let logoPending = null;
+  let logoUploadedPath = null;
+  let logoRemove = false;
 
   // State tabel.
   let searchTerm = '';
@@ -181,7 +198,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     categoryId: el('f-category').value,
     name: { id: el('f-name-id').value, en: el('f-name-en').value },
     description: { id: el('f-desc-id').value, en: el('f-desc-en').value },
-    price: el('f-price').value === '' ? Number.NaN : Number(el('f-price').value),
+    price: priceDigits(el('f-price').value) === '' ? Number.NaN : Number(priceDigits(el('f-price').value)),
     available: el('f-available').checked,
     featured: el('f-featured').checked,
     badge: el('f-new').checked ? 'new' : '',
@@ -248,6 +265,14 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     photoNote.textContent = 'Foto akan dihapus dari item ini saat disimpan.';
   });
 
+  // Harga: masking ribuan saat mengetik. Caret di akhir (harga diketik kiri→kanan).
+  el('f-price').addEventListener('input', () => {
+    const input = el('f-price');
+    input.value = formatRupiahInput(input.value);
+    const end = input.value.length;
+    input.setSelectionRange?.(end, end);
+  });
+
   /** URUTAN WAJIB: gambar dulu, menu.json kemudian. */
   async function resolveImagePath(existing, label) {
     if (uploadedPath) return uploadedPath;
@@ -266,7 +291,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     el('f-name-en').value = item?.name?.en ?? '';
     el('f-desc-id').value = item?.description?.id ?? '';
     el('f-desc-en').value = item?.description?.en ?? '';
-    el('f-price').value = item ? String(item.price) : '';
+    el('f-price').value = item ? formatRupiahInput(String(item.price)) : '';
     el('f-available').checked = item ? item.available !== false : true;
     el('f-featured').checked = item ? item.featured === true : false;
     el('f-new').checked = item ? item.badge === 'new' : false;
@@ -315,14 +340,86 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     el('cf-tag-en').value = cafe.tagline?.en ?? '';
     el('cf-desc-id').value = cafe.description?.id ?? '';
     el('cf-desc-en').value = cafe.description?.en ?? '';
-    el('cf-address-id').value = cafe.address?.id ?? '';
-    el('cf-address-en').value = cafe.address?.en ?? '';
+    el('cf-address').value = cafe.address?.id ?? '';
     el('cf-whatsapp').value = cafe.whatsapp ?? '';
     el('cf-instagram').value = cafe.instagram ?? '';
     el('cf-tiktok').value = cafe.tiktok ?? '';
     el('cf-maps').value = cafe.maps ?? '';
     el('brand-name').textContent = cafe.name || 'Menu Cafe';
+    resetLogoState();
+    showExistingLogo(cafe);
   }
+
+  /* ------------------------------------------------------------------ logo */
+
+  function resetLogoState() {
+    if (logoPending?.previewUrl) URL.revokeObjectURL(logoPending.previewUrl);
+    logoPending = null;
+    logoUploadedPath = null;
+    logoRemove = false;
+    logoInput.value = '';
+    logoPreview.hidden = true;
+    logoPreview.removeAttribute('src');
+    logoClear.hidden = true;
+    logoNote.textContent = LOGO_NOTE_DEFAULT;
+  }
+
+  function showExistingLogo(cafe) {
+    if (!cafe?.logo) return;
+    logoPreview.src = imagePreviewBase + cafe.logo;
+    logoPreview.alt = 'Logo saat ini';
+    logoPreview.hidden = false;
+    logoClear.hidden = false;
+    logoNote.textContent = 'Pilih file untuk mengganti logo.';
+  }
+
+  /** URUTAN WAJIB: logo diunggah dulu, menu.json kemudian (sama seperti foto item). */
+  async function resolveLogoPath(existing) {
+    if (logoUploadedPath) return logoUploadedPath;
+    if (logoRemove) return '';
+    if (!logoPending) return existing ?? '';
+    cafeStatus.textContent = 'Mengunggah logo…';
+    const path = imagePath('logo', imageDir);
+    await client.putFile({ path, content: logoPending.bytes, message: 'Unggah logo usaha' });
+    logoUploadedPath = path;
+    return path;
+  }
+
+  logoInput.addEventListener('change', async () => {
+    const file = logoInput.files?.[0];
+    if (!file) return;
+    cafeStatus.textContent = '';
+    logoNote.textContent = 'Memproses logo…';
+    try {
+      if (logoPending?.previewUrl) URL.revokeObjectURL(logoPending.previewUrl);
+      const result = await compressImage(file);
+      logoPending = result;
+      logoUploadedPath = null;
+      logoRemove = false;
+      logoPreview.src = result.previewUrl;
+      logoPreview.alt = 'Pratinjau logo';
+      logoPreview.hidden = false;
+      logoClear.hidden = false;
+      logoNote.textContent = `${result.width}×${result.height} · ${formatBytes(result.size)} · WebP`;
+    } catch (error) {
+      logoPending = null;
+      logoInput.value = '';
+      logoNote.textContent = LOGO_NOTE_DEFAULT;
+      cafeStatus.textContent = error instanceof ImageError ? error.message : 'Gagal memproses logo.';
+    }
+  });
+
+  logoClear.addEventListener('click', () => {
+    if (logoPending?.previewUrl) URL.revokeObjectURL(logoPending.previewUrl);
+    logoPending = null;
+    logoUploadedPath = null;
+    logoRemove = true;
+    logoInput.value = '';
+    logoPreview.hidden = true;
+    logoPreview.removeAttribute('src');
+    logoClear.hidden = true;
+    logoNote.textContent = 'Logo akan dihapus saat disimpan.';
+  });
 
   /* -------------------------------------------------------------- seleksi */
 
@@ -853,13 +950,27 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
   cafeForm.addEventListener('submit', (event) => {
     event.preventDefault();
     return exclusive(async () => {
+      let logo;
+      try {
+        logo = await resolveLogoPath(store.menu.cafe?.logo ?? '');
+      } catch (error) {
+        cafeStatus.textContent = '';
+        if (error instanceof AuthError) { onAuthError(error); return false; }
+        cafeStatus.textContent = error instanceof ImageError ? error.message : 'Gagal mengunggah logo.';
+        return false;
+      }
       const fields = {
         name: el('cf-name').value,
         tagline: { id: el('cf-tag-id').value, en: el('cf-tag-en').value },
         description: { id: el('cf-desc-id').value, en: el('cf-desc-en').value },
-        address: { id: el('cf-address-id').value, en: el('cf-address-en').value },
+        address: { id: el('cf-address').value, en: '' },
+        logo,
       };
-      return writeMenu(mutators.updateCafe(fields), 'Perbarui identitas usaha', { statusEl: cafeStatus });
+      const saved = await writeMenu(mutators.updateCafe(fields), 'Perbarui identitas usaha', { statusEl: cafeStatus });
+      if (!saved && logoUploadedPath) {
+        cafeStatus.textContent = 'Logo sudah tersimpan. Klik Simpan lagi — logo tidak akan diunggah ulang.';
+      }
+      return saved;
     });
   });
 
@@ -894,6 +1005,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     },
     reset() {
       closeForm();
+      resetLogoState();
       selected.clear();
       searchTerm = '';
       filterCategory = 'all';
