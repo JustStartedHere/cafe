@@ -47,7 +47,7 @@
     "instagram": "https://instagram.com/yourrestaurant",
     "tiktok": "https://tiktok.com/@yourrestaurant",
     "maps": "https://maps.google.com/?q=Your+Restaurant",
-    "updatedAt": "2026-07-11T10:59:55.443Z",
+    "updatedAt": "2026-07-11T11:02:17.830Z",
     "description": {
       "id": "",
       "en": ""
@@ -121,7 +121,7 @@
       },
       "price": 55000,
       "image": "showcase/menu-img/bruschetta.webp",
-      "available": true,
+      "available": false,
       "featured": false,
       "badge": "",
       "order": 1
