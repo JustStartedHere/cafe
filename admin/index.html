@@ -15,33 +15,25 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#FBF7F2" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#17120E" media="(prefers-color-scheme: dark)">
-  <title>Admin Menu</title>
+  <title>Dasbor Menu</title>
+  <link rel="icon" href="../assets/img/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/css/styles.css">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="dashboard.css">
 </head>
-<body class="admin">
-  <header class="header">
-    <div class="header__inner header__inner--admin">
-      <div class="header__top">
-        <div class="header__id">
-          <h1 class="header__name">Admin Menu</h1>
-          <p class="header__tagline" id="repo-label"></p>
-        </div>
-        <button type="button" class="button button--quiet" id="logout" hidden>Keluar</button>
-      </div>
-    </div>
-  </header>
+<body class="dash">
 
-  <main class="wrap admin__main">
-    <!-- Layar token -->
-    <section id="auth" class="panel" aria-labelledby="auth-title">
-      <h2 class="panel__title" id="auth-title">Masuk dengan token GitHub</h2>
-      <p class="panel__text">
+  <!-- ======================================================= LAYAR TOKEN -->
+  <!-- Berdiri sendiri, tanpa kerangka dasbor: sebelum login tidak ada apa pun untuk dikelola. -->
+  <main id="auth-view" class="auth-view">
+    <section id="auth" class="auth-card" aria-labelledby="auth-title">
+      <p class="auth-card__brand">Dasbor Menu</p>
+      <h1 class="auth-card__title" id="auth-title">Masuk dengan token GitHub</h1>
+      <p class="auth-card__text">
         Menu disimpan sebagai file di repositori GitHub. Untuk mengubahnya, tempelkan
-        <em>fine-grained personal access token</em> yang punya izin <strong>Contents: Read and write</strong>
-        pada repositori ini saja.
+        <em>fine-grained personal access token</em> yang punya izin
+        <strong>Contents: Read and write</strong> pada repositori ini saja.
       </p>
-      <p class="panel__text">
+      <p class="auth-card__text">
         <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">
           Buka halaman pembuatan token di GitHub
         </a>
@@ -57,7 +49,7 @@
           <li><strong>Permissions → Repository permissions → Contents</strong> — ubah menjadi <strong>Read and write</strong>. Jangan menyalakan izin lain. (<em>Metadata: Read-only</em> menyala sendiri; itu wajib.)</li>
           <li>Klik <strong>Generate token</strong>, salin tokennya, tempelkan di bawah. Token hanya ditampilkan sekali.</li>
         </ol>
-        <p class="panel__hint">
+        <p class="hint">
           Token ini hanya bisa mengubah isi satu repositori publik. Kalau bocor, hapus saja tokennya di
           <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener noreferrer">pengaturan token</a>.
           Penjelasan lengkap ada di
@@ -68,149 +60,355 @@
       <form id="token-form" novalidate>
         <label class="field">
           <span class="field__label">Token</span>
-          <input
-            type="password"
-            id="token"
-            class="field__input"
-            required
-            autocomplete="off"
-            autocapitalize="off"
-            autocorrect="off"
-            spellcheck="false"
-            placeholder="github_pat_..."
-          >
+          <input type="password" id="token" class="field__input" required
+                 autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+                 placeholder="github_pat_...">
         </label>
 
         <label class="check">
           <input type="checkbox" id="remember" class="check__box">
           <span>Ingat di perangkat ini</span>
         </label>
-        <p class="panel__hint" id="remember-warning" hidden>
+        <p class="hint" id="remember-warning" hidden>
           Perangkat ini akan menyimpan kunci untuk mengubah menu. Jangan centang di komputer bersama.
         </p>
 
-        <p class="panel__error" id="auth-error" role="alert" hidden></p>
-
-        <button type="submit" class="button" id="submit">Masuk</button>
+        <p class="error-box" id="auth-error" role="alert" hidden></p>
+        <button type="submit" class="button auth-card__submit" id="submit">Masuk</button>
       </form>
     </section>
+  </main>
 
-    <!-- Editor -->
-    <div id="app" hidden>
-      <p class="status" id="status" role="status" aria-live="polite"></p>
-      <p class="panel__error" id="editor-error" role="alert" hidden></p>
+  <!-- ========================================================= DASBOR -->
+  <div id="app" class="app" hidden>
 
-      <section class="panel" aria-labelledby="cafe-title">
-        <h2 class="panel__title" id="cafe-title">Identitas &amp; sosial</h2>
-        <p class="panel__text">
-          Nama usaha, tagline, dan tautan yang muncul di halaman pelanggan (WhatsApp,
-          Instagram, TikTok, Google Maps).
-        </p>
-        <form id="cafe-form" class="form" novalidate>
-          <div class="field-pair">
-            <label class="field">
-              <span class="field__label">Nama usaha <span aria-hidden="true">*</span></span>
-              <input type="text" id="cf-name" class="field__input" required maxlength="60">
-            </label>
-            <label class="field">
-              <span class="field__label">Nomor WhatsApp (mis. 62812…)</span>
-              <input type="text" id="cf-whatsapp" class="field__input" inputmode="numeric" maxlength="20" placeholder="62812xxxxxxx">
-            </label>
-          </div>
-          <div class="field-pair">
-            <label class="field">
-              <span class="field__label">Tagline (Indonesia)</span>
-              <input type="text" id="cf-tag-id" class="field__input" maxlength="80">
-            </label>
-            <label class="field">
-              <span class="field__label">Tagline (English)</span>
-              <input type="text" id="cf-tag-en" class="field__input" maxlength="80">
-            </label>
-          </div>
-          <div class="field-pair">
-            <label class="field">
-              <span class="field__label">Instagram (https://…)</span>
-              <input type="url" id="cf-instagram" class="field__input" spellcheck="false" placeholder="https://instagram.com/…">
-            </label>
-            <label class="field">
-              <span class="field__label">TikTok (https://…)</span>
-              <input type="url" id="cf-tiktok" class="field__input" spellcheck="false" placeholder="https://tiktok.com/@…">
-            </label>
-          </div>
-          <label class="field">
-            <span class="field__label">Google Maps (https://…)</span>
-            <input type="url" id="cf-maps" class="field__input" spellcheck="false" placeholder="https://maps.google.com/…">
-          </label>
-          <div class="form__actions">
-            <button type="submit" class="button button--small">Simpan identitas</button>
-            <p class="panel__hint" id="cafe-status" role="status" aria-live="polite"></p>
-          </div>
-        </form>
-      </section>
+    <!-- Sidebar navigasi. Di layar sempit ia jadi laci yang bisa dibuka lewat tombol menu. -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigasi dasbor">
+      <div class="sidebar__brand">
+        <span class="sidebar__mark" aria-hidden="true">☕</span>
+        <span class="sidebar__brand-text">
+          <span class="sidebar__brand-name" id="brand-name">Menu Cafe</span>
+          <span class="sidebar__brand-sub">Dasbor pemilik</span>
+        </span>
+      </div>
 
-      <section class="panel" aria-labelledby="items-title">
-        <div class="panel__head">
-          <h2 class="panel__title" id="items-title">Item menu</h2>
-          <button type="button" class="button button--small" id="item-new">Tambah item</button>
-        </div>
+      <nav class="nav" aria-label="Bagian pengelolaan">
+        <button type="button" class="nav__link" data-nav="ringkasan"><span class="nav__ico" aria-hidden="true">▤</span>Ringkasan</button>
+        <button type="button" class="nav__link" data-nav="menu"><span class="nav__ico" aria-hidden="true">🍽</span>Kelola menu</button>
+        <button type="button" class="nav__link" data-nav="kategori"><span class="nav__ico" aria-hidden="true">🏷</span>Kategori</button>
+        <p class="nav__group">Profil usaha</p>
+        <button type="button" class="nav__link" data-nav="identitas"><span class="nav__ico" aria-hidden="true">🏠</span>Identitas</button>
+        <button type="button" class="nav__link" data-nav="sosial"><span class="nav__ico" aria-hidden="true">🔗</span>Media sosial</button>
+        <p class="nav__group">Alat</p>
+        <button type="button" class="nav__link" data-nav="qr"><span class="nav__ico" aria-hidden="true">▦</span>Kode QR</button>
+        <button type="button" class="nav__link" data-nav="maintenance"><span class="nav__ico" aria-hidden="true">🧹</span>Pemeliharaan</button>
+      </nav>
 
-        <!-- novalidate: validasi kita (menu-model.js) yang berbicara, dalam bahasa Indonesia
-             dan dengan aturan lebih ketat (harga harus bilangan BULAT). Atribut required/min/
-             step tetap ada untuk semantik dan keyboard numerik di HP. -->
-        <form id="item-form" class="form" hidden novalidate>
-          <h3 class="form__title" id="item-form-title">Item baru</h3>
+      <div class="sidebar__foot">
+        <p class="sidebar__repo" id="repo-label"></p>
+        <button type="button" class="button button--quiet" id="logout">Keluar</button>
+      </div>
+    </aside>
 
-          <label class="field">
-            <span class="field__label">Kategori</span>
-            <select id="f-category" class="field__input" required></select>
-          </label>
+    <!-- Overlay laci di layar sempit -->
+    <div class="scrim" id="scrim" hidden></div>
 
-          <div class="field-pair">
-            <label class="field">
-              <span class="field__label">Nama (Indonesia) <span aria-hidden="true">*</span></span>
-              <input type="text" id="f-name-id" class="field__input" required maxlength="80">
-            </label>
-            <label class="field">
-              <span class="field__label">Nama (English)</span>
-              <input type="text" id="f-name-en" class="field__input" maxlength="80" placeholder="kosongkan untuk memakai teks Indonesia">
-            </label>
-          </div>
+    <div class="main">
+      <header class="topbar">
+        <button type="button" class="iconbtn topbar__menu" id="menu-toggle" aria-label="Buka navigasi" aria-expanded="false">☰</button>
+        <h1 class="topbar__title" id="view-title">Ringkasan</h1>
+        <p class="topbar__status" id="status" role="status" aria-live="polite"></p>
+      </header>
 
-          <div class="field-pair">
-            <label class="field">
-              <span class="field__label">Deskripsi (Indonesia)</span>
-              <input type="text" id="f-desc-id" class="field__input" maxlength="120">
-            </label>
-            <label class="field">
-              <span class="field__label">Deskripsi (English)</span>
-              <input type="text" id="f-desc-en" class="field__input" maxlength="120" placeholder="kosongkan untuk memakai teks Indonesia">
-            </label>
-          </div>
+      <main class="content">
+        <p class="error-box error-box--block" id="editor-error" role="alert" hidden></p>
 
-          <label class="field field--narrow">
-            <span class="field__label">Harga (rupiah, bulat)</span>
-            <input type="number" id="f-price" class="field__input" required min="0" step="1" inputmode="numeric">
-          </label>
-
-          <div class="photo">
-            <!-- <label for>, bukan <span>: tanpa ini pembaca layar hanya mengumumkan
-                 "file upload" tanpa tahu ini foto apa. -->
-            <label class="field__label" for="f-photo">Foto</label>
-            <div class="photo__body">
-              <img id="f-preview" class="photo__preview" alt="" width="120" height="90" hidden>
-              <div class="photo__controls">
-                <!-- `capture` membuat HP langsung membuka kamera, bukan galeri. -->
-                <input type="file" id="f-photo" class="photo__input" accept="image/*" capture
-                       aria-describedby="f-photo-note">
-                <p class="photo__note" id="f-photo-note">Foto dikecilkan otomatis dan disimpan sebagai WebP.</p>
-                <button type="button" class="button button--quiet button--small" id="f-photo-clear" hidden>Hapus foto</button>
-              </div>
+        <!-- ------------------------------------------------- RINGKASAN -->
+        <section class="view" id="view-ringkasan" data-view="ringkasan" hidden>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat__value" id="stat-items">—</span>
+              <span class="stat__label">Item menu</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value" id="stat-active">—</span>
+              <span class="stat__label">Tersedia</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value stat__value--muted" id="stat-inactive">—</span>
+              <span class="stat__label">Nonaktif</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value" id="stat-categories">—</span>
+              <span class="stat__label">Kategori</span>
             </div>
           </div>
 
+          <div class="card">
+            <h2 class="card__title">Tindakan cepat</h2>
+            <div class="quick">
+              <button type="button" class="button" data-goto="menu" data-then="new">Tambah item baru</button>
+              <button type="button" class="button button--quiet" data-goto="identitas">Ubah identitas usaha</button>
+              <button type="button" class="button button--quiet" data-goto="qr">Buat kode QR meja</button>
+            </div>
+            <p class="hint" id="updated-note"></p>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------ MENU -->
+        <section class="view" id="view-menu" data-view="menu" hidden>
+          <div class="card">
+            <div class="toolbar">
+              <div class="toolbar__search">
+                <label class="sr-only" for="menu-search">Cari item</label>
+                <input type="search" id="menu-search" class="input input--search" placeholder="Cari nama item…"
+                       autocomplete="off" spellcheck="false">
+              </div>
+              <label class="sr-only" for="menu-filter">Saring kategori</label>
+              <select id="menu-filter" class="input input--select"></select>
+              <button type="button" class="button button--small" id="item-new">+ Tambah item</button>
+            </div>
+
+            <!-- Bilah aksi massal — muncul saat ada baris tercentang. -->
+            <div class="bulkbar" id="bulk-bar" hidden>
+              <span class="bulkbar__count" id="bulk-count">0 terpilih</span>
+              <div class="bulkbar__actions">
+                <button type="button" class="btn-text" data-bulk="activate">Aktifkan</button>
+                <button type="button" class="btn-text" data-bulk="deactivate">Nonaktifkan</button>
+                <button type="button" class="btn-text btn-text--danger" data-bulk="delete">Hapus</button>
+                <button type="button" class="btn-text" data-bulk="clear">Batal pilih</button>
+              </div>
+            </div>
+
+            <div class="table-scroll">
+              <table class="dtable" id="menu-table">
+                <thead>
+                  <tr>
+                    <th class="dtable__check" scope="col">
+                      <input type="checkbox" id="check-all" class="check__box" aria-label="Pilih semua item">
+                    </th>
+                    <th scope="col">Foto</th>
+                    <th scope="col"><button type="button" class="th-sort" data-sort="name">Nama</button></th>
+                    <th scope="col"><button type="button" class="th-sort" data-sort="category">Kategori</button></th>
+                    <th scope="col"><button type="button" class="th-sort" data-sort="price">Harga</button></th>
+                    <th scope="col"><button type="button" class="th-sort" data-sort="status">Status</button></th>
+                    <th class="dtable__act" scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="menu-tbody"></tbody>
+              </table>
+            </div>
+            <p class="empty" id="menu-empty" hidden>Tidak ada item yang cocok.</p>
+          </div>
+        </section>
+
+        <!-- -------------------------------------------------- KATEGORI -->
+        <section class="view" id="view-kategori" data-view="kategori" hidden>
+          <div class="card">
+            <h2 class="card__title">Kategori</h2>
+            <p class="card__text">Urutan kategori di sini menentukan urutannya di halaman pelanggan.</p>
+            <ul class="rows" id="category-list"></ul>
+
+            <form id="category-form" class="form-inline" novalidate>
+              <label class="field">
+                <span class="field__label">Nama (Indonesia) <span aria-hidden="true">*</span></span>
+                <input type="text" id="c-name-id" class="input" required maxlength="40">
+              </label>
+              <label class="field">
+                <span class="field__label">Nama (English)</span>
+                <input type="text" id="c-name-en" class="input" maxlength="40">
+              </label>
+              <button type="submit" class="button button--small">Tambah kategori</button>
+            </form>
+            <p class="error-box" id="category-error" role="alert" hidden></p>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------- IDENTITAS -->
+        <section class="view" id="view-identitas" data-view="identitas" hidden>
+          <div class="card">
+            <h2 class="card__title">Identitas usaha</h2>
+            <p class="card__text">Nama, deskripsi, dan alamat yang mewakili usaha Anda.</p>
+            <form id="cafe-form" class="form" novalidate>
+              <label class="field">
+                <span class="field__label">Nama usaha <span aria-hidden="true">*</span></span>
+                <input type="text" id="cf-name" class="input" required maxlength="60">
+              </label>
+              <div class="field-pair">
+                <label class="field">
+                  <span class="field__label">Tagline (Indonesia)</span>
+                  <input type="text" id="cf-tag-id" class="input" maxlength="80">
+                </label>
+                <label class="field">
+                  <span class="field__label">Tagline (English)</span>
+                  <input type="text" id="cf-tag-en" class="input" maxlength="80">
+                </label>
+              </div>
+              <div class="field-pair">
+                <label class="field">
+                  <span class="field__label">Deskripsi (Indonesia)</span>
+                  <textarea id="cf-desc-id" class="input input--area" maxlength="300" rows="3"></textarea>
+                </label>
+                <label class="field">
+                  <span class="field__label">Deskripsi (English)</span>
+                  <textarea id="cf-desc-en" class="input input--area" maxlength="300" rows="3"></textarea>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label class="field">
+                  <span class="field__label">Alamat (Indonesia)</span>
+                  <textarea id="cf-address-id" class="input input--area" maxlength="200" rows="2"></textarea>
+                </label>
+                <label class="field">
+                  <span class="field__label">Alamat (English)</span>
+                  <textarea id="cf-address-en" class="input input--area" maxlength="200" rows="2"></textarea>
+                </label>
+              </div>
+              <div class="form__actions">
+                <button type="submit" class="button button--small">Simpan identitas</button>
+                <p class="hint" id="cafe-status" role="status" aria-live="polite"></p>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ---------------------------------------------------- SOSIAL -->
+        <section class="view" id="view-sosial" data-view="sosial" hidden>
+          <div class="card">
+            <h2 class="card__title">Media sosial</h2>
+            <p class="card__text">Tautan ini muncul di halaman pelanggan. Kosongkan yang tidak dipakai.</p>
+            <form id="social-form" class="form" novalidate>
+              <div class="field-pair">
+                <label class="field">
+                  <span class="field__label">Nomor WhatsApp (mis. 62812…)</span>
+                  <input type="text" id="cf-whatsapp" class="input" inputmode="numeric" maxlength="20" placeholder="62812xxxxxxx">
+                </label>
+                <label class="field">
+                  <span class="field__label">Instagram (https://…)</span>
+                  <input type="url" id="cf-instagram" class="input" spellcheck="false" placeholder="https://instagram.com/…">
+                </label>
+              </div>
+              <div class="field-pair">
+                <label class="field">
+                  <span class="field__label">TikTok (https://…)</span>
+                  <input type="url" id="cf-tiktok" class="input" spellcheck="false" placeholder="https://tiktok.com/@…">
+                </label>
+                <label class="field">
+                  <span class="field__label">Google Maps (https://…)</span>
+                  <input type="url" id="cf-maps" class="input" spellcheck="false" placeholder="https://maps.google.com/…">
+                </label>
+              </div>
+              <div class="form__actions">
+                <button type="submit" class="button button--small">Simpan media sosial</button>
+                <p class="hint" id="social-status" role="status" aria-live="polite"></p>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- -------------------------------------------------------- QR -->
+        <section class="view" id="view-qr" data-view="qr" hidden>
+          <div class="card">
+            <h2 class="card__title">Kode QR untuk meja</h2>
+            <p class="card__text">
+              Cetak dan tempel di meja. URL-nya tidak akan berubah, jadi cukup sekali cetak.
+              Untuk mencetak, pakai <strong>SVG</strong> — ia tetap tajam di ukuran berapa pun.
+            </p>
+            <label class="field">
+              <span class="field__label">Alamat yang di-encode</span>
+              <input type="url" id="qr-url" class="input" spellcheck="false">
+            </label>
+            <div class="qr">
+              <div class="qr__preview" id="qr-preview"></div>
+              <div class="qr__actions">
+                <button type="button" class="button button--small" id="qr-svg">Unduh SVG (cetak)</button>
+                <button type="button" class="button button--quiet button--small" id="qr-png">Unduh PNG</button>
+                <p class="hint" id="qr-status"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ----------------------------------------------- PEMELIHARAAN -->
+        <section class="view" id="view-maintenance" data-view="maintenance" hidden>
+          <div class="card">
+            <h2 class="card__title">Pemeliharaan</h2>
+            <p class="card__text">
+              Setiap kali foto item diganti, foto lama tetap tersimpan di repositori. Itu disengaja —
+              foto lama menjadi cadangan bila penyimpanan gagal di tengah jalan. Tombol ini menyapu
+              foto yang sudah tidak dipakai item mana pun.
+            </p>
+            <button type="button" class="button button--quiet button--small" id="clean-orphans">
+              Bersihkan foto tak terpakai
+            </button>
+            <p class="hint" id="orphan-status"></p>
+            <p class="hint">
+              Perubahan tampil di halaman pelanggan sekitar satu menit setelah disimpan.
+              Sesi ditutup otomatis setelah <span id="idle-minutes"></span> menit tanpa aktivitas.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================================= DIALOG ITEM (tambah/edit) -->
+  <dialog id="item-dialog" class="dialog" aria-labelledby="item-form-title">
+    <form id="item-form" class="form dialog__form" method="dialog" novalidate>
+      <div class="dialog__head">
+        <h2 class="dialog__title" id="item-form-title">Item baru</h2>
+        <button type="button" class="iconbtn" id="f-close" aria-label="Tutup">✕</button>
+      </div>
+
+      <div class="dialog__body">
+        <label class="field">
+          <span class="field__label">Kategori</span>
+          <select id="f-category" class="input" required></select>
+        </label>
+
+        <div class="field-pair">
+          <label class="field">
+            <span class="field__label">Nama (Indonesia) <span aria-hidden="true">*</span></span>
+            <input type="text" id="f-name-id" class="input" required maxlength="80">
+          </label>
+          <label class="field">
+            <span class="field__label">Nama (English)</span>
+            <input type="text" id="f-name-en" class="input" maxlength="80" placeholder="kosongkan untuk memakai teks Indonesia">
+          </label>
+        </div>
+
+        <div class="field-pair">
+          <label class="field">
+            <span class="field__label">Deskripsi (Indonesia)</span>
+            <input type="text" id="f-desc-id" class="input" maxlength="120">
+          </label>
+          <label class="field">
+            <span class="field__label">Deskripsi (English)</span>
+            <input type="text" id="f-desc-en" class="input" maxlength="120" placeholder="kosongkan untuk memakai teks Indonesia">
+          </label>
+        </div>
+
+        <label class="field field--narrow">
+          <span class="field__label">Harga (rupiah, bulat)</span>
+          <input type="number" id="f-price" class="input" required min="0" step="1" inputmode="numeric">
+        </label>
+
+        <div class="photo">
+          <label class="field__label" for="f-photo">Foto</label>
+          <div class="photo__body">
+            <img id="f-preview" class="photo__preview" alt="" width="120" height="90" hidden>
+            <div class="photo__controls">
+              <input type="file" id="f-photo" class="photo__input" accept="image/*" capture aria-describedby="f-photo-note">
+              <p class="photo__note" id="f-photo-note">Foto dikecilkan otomatis dan disimpan sebagai WebP.</p>
+              <button type="button" class="button button--quiet button--small" id="f-photo-clear" hidden>Hapus foto</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggles">
           <label class="check">
             <input type="checkbox" id="f-available" class="check__box" checked>
-            <span>Tersedia</span>
+            <span>Tersedia (tampil aktif di menu)</span>
           </label>
           <label class="check">
             <input type="checkbox" id="f-featured" class="check__box">
@@ -220,80 +418,22 @@
             <input type="checkbox" id="f-new" class="check__box">
             <span>Baru (badge “Baru”)</span>
           </label>
-
-          <div class="form__actions">
-            <button type="submit" class="button" id="f-save">Simpan</button>
-            <button type="button" class="button button--quiet" id="f-cancel">Batal</button>
-          </div>
-        </form>
-
-        <!-- Satu tabel per kategori (dibangun table-editor.js) — dipisah jelas per kategori. -->
-        <div id="menu-tables"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="cats-title">
-        <h2 class="panel__title" id="cats-title">Kategori</h2>
-        <ul class="rows" id="category-list"></ul>
-
-        <form id="category-form" class="form form--inline" novalidate>
-          <label class="field">
-            <span class="field__label">Nama (Indonesia) <span aria-hidden="true">*</span></span>
-            <input type="text" id="c-name-id" class="field__input" required maxlength="40">
-          </label>
-          <label class="field">
-            <span class="field__label">Nama (English)</span>
-            <input type="text" id="c-name-en" class="field__input" maxlength="40">
-          </label>
-          <button type="submit" class="button button--small">Tambah kategori</button>
-        </form>
-      </section>
-
-      <section class="panel" aria-labelledby="qr-title">
-        <h2 class="panel__title" id="qr-title">QR untuk meja</h2>
-        <p class="panel__text">
-          Cetak dan tempel di meja. URL-nya tidak akan berubah, jadi cukup sekali cetak.
-          Untuk mencetak, pakai <strong>SVG</strong> — ia tetap tajam di ukuran berapa pun.
-        </p>
-
-        <label class="field">
-          <span class="field__label">Alamat yang di-encode</span>
-          <input type="url" id="qr-url" class="field__input" spellcheck="false">
-        </label>
-
-        <div class="qr">
-          <div class="qr__preview" id="qr-preview"></div>
-          <div class="qr__actions">
-            <button type="button" class="button button--small" id="qr-svg">Unduh SVG (cetak)</button>
-            <button type="button" class="button button--quiet button--small" id="qr-png">Unduh PNG</button>
-            <p class="panel__hint" id="qr-status"></p>
-          </div>
         </div>
-      </section>
 
-      <section class="panel" aria-labelledby="maint-title">
-        <h2 class="panel__title" id="maint-title">Pemeliharaan</h2>
-        <p class="panel__text">
-          Setiap kali foto item diganti, foto lama tetap tersimpan di repositori. Itu disengaja —
-          foto lama menjadi cadangan bila penyimpanan gagal di tengah jalan. Tombol ini menyapu
-          foto yang sudah tidak dipakai item mana pun.
-        </p>
-        <button type="button" class="button button--quiet button--small" id="clean-orphans">
-          Bersihkan foto tak terpakai
-        </button>
-        <p class="panel__hint" id="orphan-status"></p>
-      </section>
+        <p class="error-box" id="item-form-error" role="alert" hidden></p>
+      </div>
 
-      <p class="panel__hint">
-        Perubahan tampil di halaman pelanggan sekitar satu menit setelah disimpan.
-        Sesi ditutup otomatis setelah <span id="idle-minutes"></span> menit tanpa aktivitas.
-      </p>
-    </div>
-  </main>
+      <div class="dialog__foot">
+        <button type="submit" class="button" id="f-save">Simpan</button>
+        <button type="button" class="button button--quiet" id="f-cancel">Batal</button>
+      </div>
+    </form>
+  </dialog>
 
   <!-- Di-vendor & di-commit, bukan dari CDN. Lihat header file itu. -->
   <script src="vendor/qrcode-generator.js"></script>
   <!-- boot.js: modul same-origin (CSP script-src 'self' melarang <script> inline),
-       men-set window.__ADMIN_CONFIG lalu memuat mesin admin bersama. -->
+       men-set window.__ADMIN_CONFIG lalu memuat mesin dasbor cafe. -->
   <script type="module" src="boot.js"></script>
 </body>
 </html>

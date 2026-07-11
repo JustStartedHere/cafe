@@ -32,7 +32,7 @@ export const STRINGS = {
   errorTitle: { id: 'Menu gagal dimuat', en: "Couldn't load the menu" },
   retry: { id: 'Coba lagi', en: 'Try again' },
 
-  aboutTitle: { id: 'Tentang Savoria', en: 'About Savoria' },
+  aboutTitle: { id: 'Tentang Your Restaurant', en: 'About Your Restaurant' },
   aboutText: {
     id: 'Kami percaya makan enak tak harus mahal. Bahan dipilih tiap pagi, bumbu diracik sendiri, dan setiap piring keluar hangat dari dapur.',
     en: "We believe good food needn't be expensive. Ingredients picked each morning, spices blended in-house, every plate served warm.",

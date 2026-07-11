@@ -152,6 +152,10 @@ export function normalizeCafe(draft, prev = {}) {
   if (name === '') issues.push('Nama usaha wajib diisi.');
 
   const tagline = normalizeBilingual(draft.tagline ?? prev.tagline, 'Tagline', issues, { required: false });
+  // Deskripsi (blurb "tentang") & alamat: bilingual, opsional, EN kosong → fallback ke ID.
+  // Additif — tema showcase yang tidak mengirim field ini mempertahankan nilai `prev`.
+  const description = normalizeBilingual(draft.description ?? prev.description, 'Deskripsi', issues, { required: false });
+  const address = normalizeBilingual(draft.address ?? prev.address, 'Alamat', issues, { required: false });
   const whatsapp = String(draft.whatsapp ?? prev.whatsapp ?? '').replace(/[^0-9]/g, '');
 
   const httpsUrl = (value, fallback, label) => {
@@ -174,6 +178,8 @@ export function normalizeCafe(draft, prev = {}) {
     ...prev,
     name,
     tagline,
+    description,
+    address,
     currency: prev.currency || 'IDR',
     logo: typeof prev.logo === 'string' ? prev.logo : '',
     whatsapp,

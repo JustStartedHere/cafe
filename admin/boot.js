@@ -1,5 +1,10 @@
-// Konfigurasi admin cafe. Men-set window.__ADMIN_CONFIG lalu memuat mesin bersama.
+// Konfigurasi admin cafe. Men-set window.__ADMIN_CONFIG lalu memuat mesin dasbor.
 // CSP `script-src 'self'` melarang <script> inline, jadi config tinggal di modul ini.
+//
+// Cafe memakai dasbor sendiri (dashboard-core.js) — layout sidebar + tabel dengan
+// search/sort/filter. Tema showcase tetap memakai admin-core.js/table-editor.js
+// yang lama; kedua mesin berbagi modul keamanan yang sama (github-api, token-store,
+// menu-store, menu-model, image, qr).
 //
 // SAAT HANDOVER: repo ditransfer ke akun owner. Ubah `owner` di sini (dan `siteUrl`
 // akan ikut benar karena dihitung dari lokasi halaman). Cetak ulang QR setelahnya.
@@ -22,4 +27,4 @@ window.__ADMIN_CONFIG = {
 };
 
 // Dynamic import agar assignment di atas selesai lebih dulu (static import di-hoist).
-await import('./admin-core.js');
+await import('./dashboard-core.js');
