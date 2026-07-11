@@ -1,7 +1,2 @@
-# VSCode Local History extension
-.history/
-
-# OS cruft
-.DS_Store
-Thumbs.db
-desktop.ini
+# Direktori kerja Claude Code (worktree per-sesi) — jangan pernah masuk repo.
+.claude/worktrees/
