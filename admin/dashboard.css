@@ -462,6 +462,8 @@ body.dash {
   cursor: pointer;
 }
 .iconbtn + .iconbtn { margin-left: 0.25rem; }
+/* Jarak lebih lega antar tombol aksi baris (↑ ↓ edit hapus). */
+.drow__actions .iconbtn + .iconbtn { margin-left: 0.5rem; }
 .iconbtn:hover:not([disabled]) { background: var(--bg); }
 .iconbtn[disabled] { opacity: 0.35; cursor: not-allowed; }
 .iconbtn--danger { color: var(--danger-text); border-color: var(--danger-border); }
