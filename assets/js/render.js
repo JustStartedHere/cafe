@@ -118,6 +118,18 @@ export function renderFooter(cafe = {}, lang) {
   if (!footer) return;
 
   let any = false;
+
+  // Deskripsi & alamat (bilingual). Kosong → disembunyikan. textContent (bukan innerHTML).
+  const setText = (id, value) => {
+    const node = document.getElementById(id);
+    if (!node) return;
+    node.textContent = value;
+    node.hidden = value === '';
+    if (value !== '') any = true;
+  };
+  setText('foot-description', pickLang(cafe.description, lang));
+  setText('foot-address', pickLang(cafe.address, lang));
+
   const setLink = (id, url) => {
     const a = document.getElementById(id);
     if (!a) return;

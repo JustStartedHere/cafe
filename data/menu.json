@@ -6,6 +6,14 @@
       "id": "Kopi & camilan, tiap hari",
       "en": "Coffee & bites, every day"
     },
+    "description": {
+      "id": "Kedai kopi kecil di sudut kota — biji lokal, diseduh segar tiap hari, ditemani camilan hangat.",
+      "en": "A little corner coffee shop — local beans brewed fresh daily, with warm bites to match."
+    },
+    "address": {
+      "id": "Jl. Merdeka No. 12, Bandung",
+      "en": "12 Merdeka St., Bandung"
+    },
     "currency": "IDR",
     "logo": "",
     "whatsapp": "6281234567890",

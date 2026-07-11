@@ -92,6 +92,23 @@ Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas
   jadi "Your Restaurant", kartu jadi kembar). Preview tema 2–6 di-regen (framing 1280×880 → 16:11) agar tak basi.
 - **Galeri root `/`** kini berframing "Katalog Menu Restoran" (eyebrow + judul + copy).
 
+### Penyempurnaan galeri + halaman pelanggan + admin (2026-07-11)
+
+- **Galeri `/` diredesain terang**: latar `#F4F4F0`, tipografi **serif system elegan** (`Iowan Old Style`/
+  `Palatino`/`Georgia`) untuk display + sans untuk body, aksen terracotta `#B23A1E`, kartu putih berbayang.
+  CSP galeri `font-src 'self'` → tanpa webfont CDN; pakai system font stack (nol dependensi, sesuai etos).
+- **`/menu/` (pelanggan)** kini menampilkan **deskripsi + alamat** usaha di footer (`renderFooter`,
+  `#foot-description`/`#foot-address`, bilingual via `pickLang`, `textContent`) + link **"← Kembali ke
+  galeri desain"** (`.gallery-back` → `../`, i18n `backToGallery`; **hapus saat handover** — galeri sementara).
+  `data/menu.json` cafe diberi contoh `description`/`address`.
+- **Header tabel admin sticky**: `.table-scroll` diberi `max-height` + `overflow:auto` (jadi scroller
+  vertikal) dan `thead th` `z-index:2` (tbody ada setelah thead → tanpa z-index, sel tergulung menimpa header).
+  Berlaku semua admin (dashboard.css bersama).
+- **URL `menu_showcase` (tugas terbuka)**: mengubah `…github.io/cafe/` → `…/menu_showcase` butuh **rename
+  repo** (URL Pages = nama repo), operasi **admin** yang hanya bisa dilakukan owner `JustStartedHere`
+  (kolaborator `itdevcba` `admin:false`). Setelah rename, ubah `repo:'cafe'`→`'menu_showcase'` di semua
+  `boot.js` + fallback URL + README, lalu cetak QR (jangan sebelum URL final).
+
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
 Selama development: **`JustStartedHere`** — pemilik repo, jadi sudah admin. Fine-grained PAT single-repo tanpa

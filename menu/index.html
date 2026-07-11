@@ -63,6 +63,9 @@
        tak punya URL disembunyikan; footer disembunyikan bila tak ada satu pun. -->
   <footer class="site-footer" id="site-footer" hidden>
     <div class="wrap site-footer__inner">
+      <!-- Deskripsi & alamat usaha, diisi runtime dari menu.cafe (renderFooter). -->
+      <p class="site-footer__about" id="foot-description" hidden></p>
+      <p class="site-footer__address" id="foot-address" hidden></p>
       <p class="site-footer__head" data-i18n="follow">Ikuti &amp; kunjungi kami</p>
       <div class="site-footer__links">
         <a class="wa-button" id="foot-wa" href="#" target="_blank" rel="noopener noreferrer" hidden>
@@ -89,6 +92,12 @@
       </div>
     </div>
   </footer>
+
+  <!-- Kembali ke galeri desain — hanya relevan selama fase showcase (galeri di root
+       bersifat sementara, lihat CLAUDE.md). Hapus baris ini saat handover. -->
+  <nav class="gallery-back" aria-label="Showcase">
+    <a href="../" data-i18n="backToGallery">← Kembali ke galeri desain</a>
+  </nav>
 
   <script type="module" src="../assets/js/menu.js"></script>
 </body>
