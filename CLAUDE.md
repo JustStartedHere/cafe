@@ -25,17 +25,46 @@ permintaan user (QR belum pernah dicetak → jendela aman), murni demi konsisten
 
 | | |
 |---|---|
-| Fase terakhir selesai | **Jam operasional per hari + re-map showcase (`/menu/`→`/showcase/2/`)** — lihat di bawah |
-| Berikutnya | **Serah terima**: transfer repo ke akun client, ganti placeholder sosial, cetak QR |
+| Fase terakhir selesai | **Jam operasional per hari + re-map showcase + custom domain live** — lihat di bawah |
+| Berikutnya | Domain katalog sudah live. Untuk pemakaian client: pilih 1 desain, isi data client, transfer repo, cetak QR |
 | Direktori kerja | `D:\Project\cafe` |
 | Git | `main` → `https://github.com/JustStartedHere/cafe` (publik) |
-| Situs pelanggan | `https://juststartedhere.github.io/cafe/showcase/2/` ← **yang di-encode QR cafe** (dipindah dari `/menu/`) |
-| Admin pelanggan | `https://juststartedhere.github.io/cafe/showcase/2/admin/` (shell di `showcase/2/admin/`; mesin di `/admin/`) |
-| Galeri showcase | `https://juststartedhere.github.io/cafe/` — sementara, boleh dihapus nanti |
-| Tema showcase | `…/cafe/showcase/1,3..7/` (+ `…/showcase/N/admin/`) — slot 2 = situs pelanggan |
+| **Custom domain** | **`https://katalogmenu.juststartedhere.biz.id/`** (HTTPS aktif). Cloudflare DNS-only (CNAME → `juststartedhere.github.io`) → GitHub Pages menerbitkan SSL. File `CNAME` ada di root — **jangan hapus** |
+| Katalog (root) | `…/` = galeri beberapa desain — **user memutuskan TETAP katalog** (bukan diringkas jadi 1 menu) |
+| Situs pelanggan | `…/showcase/2/` (dipindah dari `/menu/`) ← target QR bila mau QR menu spesifik |
+| Admin | `…/showcase/N/admin/` (N=1..7; **showcase/2 = cafe**); mesin dasbor di `/admin/` |
 | Blocker | — |
 
 Update tabel ini setiap kali sebuah fase selesai.
+
+### Deploy, custom domain & jebakan build (2026-07-11)
+
+- **Custom domain LIVE:** `katalogmenu.juststartedhere.biz.id` → GitHub Pages. Di Cloudflare = **DNS-only
+  (awan abu-abu)** CNAME ke `juststartedhere.github.io`; **GitHub yang menerbitkan sertifikat SSL** (bukan
+  Cloudflare — mode "SSL/TLS Full" Cloudflare hanya relevan bila record di-proxy/oranye). "Enforce HTTPS"
+  aktif. GitHub otomatis menaruh file **`CNAME`** di root repo — **jangan hapus** (kalau hilang, domain mati).
+  Semua path di situs relatif, jadi jalan baik di `*.github.io/cafe/` maupun di root domain.
+- **Jebakan build Pages yang sudah ditutup:** folder worktree Claude Code (`.claude/worktrees/…`) pernah
+  tak sengaja ter-`git add` → tercatat sebagai **gitlink/submodule tanpa `.gitmodules`** → **default Pages
+  build GAGAL** di `git submodule update` ("No url found for submodule path"). Diperbaiki: buang gitlink +
+  tambah **`.gitignore`** (`/.claude/worktrees/`). **Jangan `git add -A`/`git add .` di root repo** — bisa
+  menyeret worktree lagi. Add per-file.
+- **`PRD.md` + `TECH_STACK.md`** (spesifikasi lengkap untuk rewrite) sempat dibuat & di-commit, lalu atas
+  permintaan user **di-untrack + di-`.gitignore`** (repo publik, tak mau bisa disalin). **Jangan commit
+  ulang keduanya ke repo publik.** Isinya masih ada di history commit `2d293e3` (`git show 2d293e3:PRD.md`).
+
+### Jam operasional per hari (master, 2026-07-11) — sudah live
+
+`cafe.hours` = array **7 entri** (index 0=Senin..6=Minggu), tiap entri `{closed:true}` atau
+`{closed:false, open:"HH:MM", close:"HH:MM"}`. Dikelola owner di admin (bagian Identitas, 7 baris hari
+dengan toggle "Tutup" + input `type=time`). Ditampilkan di footer situs pelanggan **dan** semua tema.
+- **`assets/js/util.js` `formatHours(hours, lang)`**: gabung hari berturut ber-jam sama jadi rentang
+  ("Senin–Kamis 09.00–22.00"); pemisah jam `.`(ID)/`:`(EN); tutup → "Tutup"/"Closed".
+- **`admin/menu-model.js` `normalizeHours` + `TIME_RE`**: validasi 7 entri; jam tak valid → `{closed:true}`.
+  Additif di `normalizeCafe` (field absen → `prev.hours` dipertahankan, jadi simpan sosial tak hapus jam).
+- **Render**: `showcase/lib.js` `renderHours` (tema, `#foot-hours`) + `assets/js/render.js` `renderFooter`
+  (pelanggan). **Blok jam SENGAJA tanpa `display:` di CSS** agar `[hidden]` tetap menyembunyikan saat kosong
+  (kelas ber-`display:` akan mengalahkan aturan UA `[hidden]` — jebakan yang sama seperti di dashboard.css).
 
 ### Re-map showcase — `/menu/` → `/showcase/2/` (2026-07-11, di branch)
 
