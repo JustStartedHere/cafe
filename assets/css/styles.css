@@ -93,6 +93,22 @@ body {
   gap: 1rem;
 }
 
+/* Logo usaha + nama/tagline sebagai satu blok kiri. Logo opsional (disembunyikan bila kosong). */
+.header__lead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.header__logo {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 .header__name {
   margin: 0;
   font-size: 1.25rem;

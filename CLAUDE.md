@@ -146,6 +146,31 @@ Permintaan user: jangan biarkan layar kosong lalu konten tiba-tiba muncul setela
   fast-path (mock instan) membuat skeleton hanya berkedip. Tes fungsional cek jumlah `.dish--skeleton`/`.drow--skeleton`,
   `animationName`, lalu pastikan **skeleton hilang & konten asli render** setelah data datang.
 
+### Penyempurnaan form admin + logo usaha + QR berlogo (2026-07-11)
+
+- **Field pasangan sejajar**: `.field + .field{margin-top:1rem}` juga mengenai field KEDUA di dalam
+  grid `.field-pair` → kolom kanan turun 16px. Ditutup `.field-pair > .field{margin-top:0}`.
+- **Harga**: input `type=text` + masking ribuan id-ID saat mengetik (`formatRupiahInput`), panah spinner
+  hilang. Disimpan tetap bilangan bulat (`priceDigits` strip titik saat submit; caret dipaksa ke akhir).
+- **Identitas**: alamat jadi SATU field (buang alamat EN; model tetap `{id,en}` dgn en='') dan **field logo
+  usaha** baru. Upload logo lewat pipeline gambar yang SAMA (compress→WebP, nama unik, gambar-dulu-lalu-JSON;
+  state `logoPending/logoUploadedPath/logoRemove`). Disimpan di `cafe.logo`; `normalizeCafe` kini SET+validasi
+  `logo` via `normalizeImage`. `findOrphans` mengecualikan `cafe.logo` agar tak tersapu cleanup.
+- **Media sosial**: WA/IG/TikTok/Maps jadi satu kolom per baris (buang `.field-pair`).
+- **QR berlogo**: EC `M`→`H`. Tengah QR = logo usaha (di-embed **data URI** via `fetch`+`FileReader` agar utuh
+  offline/cetak) atau **ikon bell** (`BELL_PATHS`, terracotta) bila belum ada logo. `qr.js toSvg/toPngBlob`
+  terima opsi `center:{href}|{bell}`. `dashboard-core` refresh logo QR saat load & saat buka bagian QR
+  (`refreshQrLogo`, guard `qrLogoPath`). **Terverifikasi jsQR**: QR tetap terpindai dengan bell & logo di tengah.
+- **Logo tampil di website**:
+  - Cafe `/menu/`: `<img id="cafe-logo" class="header__logo">` di `.header__lead` (kiri nama). `renderHeader`
+    set src via `logoSrc()` (util.js, allowlist sama; '' bila kosong → disembunyikan). CLS tetap 0.0000.
+  - Tema 1–6: `renderBrandLogo(cafe)` (lib.js) **mengganti** mark dekoratif header (♛/🍴/🍰) dengan logo
+    (mewarisi posisi mark tiap tema; emoji disimpan di `dataset.mark` untuk fallback). CSS `.brand__logo`
+    (ukuran `em`, auto-skala) di `showcase/skeleton.css` bersama. Dipanggil dari `applyBrand` (theme.js +
+    menu-view.js).
+- **SEMUA form admin diduplikasi di 7 shell** (cafe `admin/index.html` + 6 `showcase/N/admin/index.html`).
+  Perubahan markup form WAJIB diterapkan ke ketujuhnya (skrip replace exact-string; CSS/JS bersama otomatis).
+
 ### Pemegang token `/admin` (diputuskan 2026-07-10)
 
 Selama development: **`JustStartedHere`** — pemilik repo, jadi sudah admin. Fine-grained PAT single-repo tanpa

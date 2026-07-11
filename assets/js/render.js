@@ -4,7 +4,7 @@
 // `setAttribute`. Tidak pernah `innerHTML`. Repo ini publik dan bisa divandal;
 // halaman pelanggan tidak boleh jadi vektor XSS.
 
-import { pickLang, formatPrice, imageSrc, groupByCategory, PLACEHOLDER_IMAGE } from './util.js';
+import { pickLang, formatPrice, imageSrc, logoSrc, groupByCategory, PLACEHOLDER_IMAGE } from './util.js';
 import { t } from './i18n.js';
 
 // Jumlah kartu teratas yang dimuat eager — sisanya lazy. Menjaga LCP tanpa membanjiri jaringan.
@@ -104,6 +104,13 @@ export function renderHeader(cafe, lang) {
   if (nameNode) nameNode.textContent = name;
   if (taglineNode) taglineNode.textContent = pickLang(cafe?.tagline, lang);
   if (name) document.title = name;
+
+  const logoNode = document.getElementById('cafe-logo');
+  if (logoNode) {
+    const src = logoSrc(cafe);
+    if (src) { logoNode.src = src; logoNode.alt = name ? `Logo ${name}` : ''; logoNode.hidden = false; }
+    else { logoNode.hidden = true; logoNode.removeAttribute('src'); }
+  }
 }
 
 const httpsOk = (v) => (typeof v === 'string' && /^https:\/\//i.test(v.trim()) ? v.trim() : '');

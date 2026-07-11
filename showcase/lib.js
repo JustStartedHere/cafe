@@ -27,6 +27,37 @@ export function resolveImg(path) {
   return new URL(src, SITE_ROOT).href;
 }
 
+/** URL logo usaha (allowlist sama), atau '' bila kosong/tidak tepercaya (bukan placeholder). */
+export function logoSrc(cafe) {
+  const src = typeof cafe?.logo === 'string' ? cafe.logo.trim() : '';
+  if (src === '' || src.includes('..') || !SAFE_IMAGE.test(src)) return '';
+  return new URL(src, SITE_ROOT).href;
+}
+
+/**
+ * Tampilkan logo usaha di header tema: mark dekoratif (♛/🍴/🍰) DIGANTI logo bila ada,
+ * agar mewarisi posisi & ukuran mark tiap tema. Emoji asli disimpan untuk dipulihkan.
+ * Ganti bahasa memanggil ulang applyBrand → idempoten.
+ */
+export function renderBrandLogo(cafe) {
+  const brand = document.querySelector('.brand');
+  const mark = brand?.querySelector('.brand__mark, .brand__crown');
+  if (!mark) return;
+  if (mark.dataset.mark === undefined) mark.dataset.mark = mark.textContent;
+  const src = logoSrc(cafe);
+  clear(mark);
+  if (src) {
+    const img = make('img', 'brand__logo');
+    img.src = src;
+    img.alt = '';
+    mark.append(img);
+    mark.classList.add('brand__mark--logo');
+  } else {
+    mark.textContent = mark.dataset.mark;
+    mark.classList.remove('brand__mark--logo');
+  }
+}
+
 /** Buat elemen; `text` di-set lewat textContent (tidak pernah innerHTML). */
 export function make(tag, className, text) {
   const node = document.createElement(tag);
