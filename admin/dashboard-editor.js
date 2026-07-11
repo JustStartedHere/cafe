@@ -39,6 +39,29 @@ function iconButton(label, { action, id, className = 'iconbtn', title }) {
 
 const clear = (n) => { while (n.firstChild) n.removeChild(n.firstChild); };
 
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs) {
+  const n = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  return n;
+}
+
+// Ikon tempat sampah (garis). Mewarisi currentColor → merah lewat .iconbtn--danger.
+function trashIcon() {
+  const svg = svgEl('svg', {
+    viewBox: '0 0 24 24', width: '18', height: '18', fill: 'none',
+    stroke: 'currentColor', 'stroke-width': '1.8',
+    'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true',
+  });
+  for (const d of [
+    'M4 7h16',
+    'M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2',
+    'M18 7l-.8 12.1A2 2 0 0 1 15.2 21H8.8a2 2 0 0 1-2-1.9L6 7',
+    'M10 11.5v5M14 11.5v5',
+  ]) svg.append(svgEl('path', { d }));
+  return svg;
+}
+
 export function createDashboard({ store, client, onAuthError, imageDir = 'images', imagePreviewBase = '../' }) {
   const statusBox = el('status');
   const errorBox = el('editor-error');
@@ -392,7 +415,7 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     tr.append(cPhoto);
 
     // Nama (id + en + badge)
-    const cName = node('td');
+    const cName = node('td', 'drow__name-cell');
     const nameWrap = node('div', 'drow__name');
     nameWrap.append(node('span', 'drow__name-id', item.name.id));
     if (item.featured) nameWrap.append(node('span', 'tag tag--featured', 'Signature'));
@@ -402,13 +425,17 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
     tr.append(cName);
 
     // Kategori
-    tr.append(node('td', 'drow__cat', categoryName(item.categoryId)));
+    const cCat = node('td', 'drow__cat', categoryName(item.categoryId));
+    cCat.dataset.label = 'Kategori';
+    tr.append(cCat);
 
     // Harga
-    tr.append(node('td', 'drow__price', rupiah.format(item.price)));
+    const cPrice = node('td', 'drow__price', rupiah.format(item.price));
+    cPrice.dataset.label = 'Harga';
+    tr.append(cPrice);
 
     // Status — tombol toggle Aktif/Nonaktif
-    const cStatus = node('td');
+    const cStatus = node('td', 'drow__status');
     const on = item.available !== false;
     const toggle = iconButton(on ? 'Aktif' : 'Nonaktif', {
       action: 'toggle-available', id: item.id,
@@ -432,9 +459,11 @@ export function createDashboard({ store, client, onAuthError, imageDir = 'images
       cActions.append(up, down);
     }
     cActions.append(iconButton('✎', { action: 'item-edit', id: item.id, title: 'Edit item' }));
-    cActions.append(iconButton('✕', {
+    const del = iconButton('', {
       action: 'item-delete', id: item.id, className: 'iconbtn iconbtn--danger', title: 'Hapus item',
-    }));
+    });
+    del.append(trashIcon());
+    cActions.append(del);
     tr.append(cActions);
 
     return tr;

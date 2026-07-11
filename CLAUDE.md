@@ -81,6 +81,15 @@ Dikerjakan dua tahap: cafe dulu (PR #1), lalu di-terapkan ke semua showcase atas
   `[hidden]{display:none}` (author > UA pada spesifisitas sama), jadi atribut `hidden` berhenti menyembunyikan.
   `dashboard.css` memasang `[hidden]{display:none!important}` di awal. Tes fungsional yang cuma cek properti
   `.hidden` tak menangkap ini — screenshot yang menangkapnya.
+- **Subjudul sidebar = "Dashboard Admin"** (dulu "Dasbor pemilik") — hardcoded di 7 shell `index.html`.
+- **Ikon hapus item = tempat sampah SVG merah** (dulu glyph `✕`), dibangun `trashIcon()` di `dashboard-editor.js`
+  via `createElementNS` (CSP-safe), `stroke:currentColor` → merah ikut `.iconbtn--danger`. Berlaku semua admin.
+- **Tata letak KARTU tabel di HP (≤40rem)** — UJI COBA di **showcase 1 saja** (`showcase/1/admin/mobile.css`,
+  ditautkan hanya di shell-nya). Tiap `<tr>` jadi kartu bertumpuk (foto kiri-atas, checkbox kanan-atas,
+  nama + Kategori/Harga berlabel + status + aksi menurun) → **tanpa scroll horizontal**. Enabler di JS bersama
+  bersifat **inert** di desktop: `data-label` pada `<td>` kategori/harga + kelas `drow__name-cell`/`drow__status`.
+  Kalau user setuju, pindahkan blok `@media` dari `mobile.css` ke `dashboard.css` agar semua admin ikut, lalu
+  hapus `mobile.css` + tautannya.
 
 ### Showcase kini generik "Your Restaurant" + galeri "Katalog Menu Restoran" (2026-07-11, di branch)
 
