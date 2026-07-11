@@ -1,2 +1,6 @@
 # Direktori kerja Claude Code (worktree per-sesi) — jangan pernah masuk repo.
 .claude/worktrees/
+
+# Dokumen internal — jangan publikasikan ke repo publik.
+/PRD.md
+/TECH_STACK.md
